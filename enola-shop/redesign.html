@@ -1,0 +1,1060 @@
+<!DOCTYPE html>
+<html lang="mn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ENOLA SHOP | Luxury Streetwear Redesign</title>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:ital,wght@0,400;0,500;0,700;1,400&display=swap" rel="stylesheet">
+    <!-- Lucide Icons (via CDN) -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        :root {
+            --primary-red: #E8001D;
+            --dark-red: #A80015;
+            --black-bg: #0A0A0A;
+            --surface: #111111;
+            --surface-hover: #1A1A1A;
+            --white: #F5F5F0;
+            --white-dim: #DEDDD8;
+            --gray: #3A3A3A;
+            --transition-slow: 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+            --transition-fast: 0.2s ease;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        body {
+            background-color: var(--black-bg);
+            color: var(--white);
+            font-family: 'DM Sans', sans-serif;
+            overflow-x: hidden;
+            line-height: 1.6;
+        }
+
+        h1, h2, h3, .bebas {
+            font-family: 'Bebas Neue', sans-serif;
+            letter-spacing: 1px;
+        }
+
+        ul { list-style: none; }
+        a { text-decoration: none; color: inherit; cursor: pointer; }
+        button { cursor: pointer; border: none; background: none; font-family: inherit; }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: var(--black-bg); }
+        ::-webkit-scrollbar-thumb { background: var(--gray); border-radius: 10px; }
+        ::-webkit-scrollbar-thumb:hover { background: var(--primary-red); }
+
+        /* Navigation */
+        nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 80px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 5%;
+            background: rgba(10, 10, 10, 0.95);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid var(--surface);
+            z-index: 1000;
+        }
+
+        .logo {
+            font-size: 2rem;
+            font-family: 'Bebas Neue', sans-serif;
+            color: var(--white);
+        }
+
+        .logo span { color: var(--primary-red); }
+
+        .nav-links {
+            display: flex;
+            gap: 40px;
+        }
+
+        .nav-links a {
+            text-transform: uppercase;
+            font-size: 0.9rem;
+            font-weight: 500;
+            letter-spacing: 2px;
+            transition: var(--transition-fast);
+        }
+
+        .nav-links a:hover { color: var(--primary-red); }
+
+        .nav-icons {
+            display: flex;
+            align-items: center;
+            gap: 25px;
+        }
+
+        .cart-btn {
+            position: relative;
+        }
+
+        .cart-badge {
+            position: absolute;
+            top: -8px;
+            right: -10px;
+            background: var(--primary-red);
+            color: white;
+            font-size: 10px;
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+        }
+
+        .login-btn {
+            background: var(--primary-red);
+            color: white;
+            padding: 8px 24px;
+            border-radius: 0;
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 1.1rem;
+            transition: var(--transition-fast);
+        }
+
+        .login-btn:hover { background: var(--dark-red); transform: translateY(-2px); }
+
+        /* Main Content Container */
+        main {
+            margin-top: 80px;
+            min-height: calc(100vh - 80px);
+            position: relative;
+        }
+
+        .page {
+            display: none;
+            opacity: 0;
+            transition: opacity 0.5s ease;
+        }
+
+        .page.active {
+            display: block;
+            opacity: 1;
+        }
+
+        /* Marquee */
+        .marquee {
+            background: var(--primary-red);
+            color: white;
+            padding: 10px 0;
+            white-space: nowrap;
+            overflow: hidden;
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 1.2rem;
+            letter-spacing: 2px;
+        }
+
+        .marquee-content {
+            display: inline-block;
+            animation: marquee 20s linear infinite;
+        }
+
+        @keyframes marquee {
+            0% { transform: translateX(0); }
+            100% { transform: translateX(-50%); }
+        }
+
+        /* Hero Slider */
+        .hero {
+            position: relative;
+            height: 85vh;
+            width: 100%;
+            overflow: hidden;
+        }
+
+        .slide {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 0;
+            transition: opacity 1s ease-in-out;
+            background-size: cover;
+            background-position: center;
+        }
+
+        .slide.active { opacity: 1; }
+
+        .slide::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(to right, rgba(10, 10, 10, 0.9), transparent);
+        }
+
+        .slide-content {
+            position: relative;
+            z-index: 10;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            padding-left: 10%;
+            max-width: 800px;
+        }
+
+        .slide-title {
+            font-size: 7rem;
+            line-height: 0.9;
+            margin-bottom: 20px;
+            text-transform: uppercase;
+        }
+
+        .slide-subtitle {
+            font-size: 1.2rem;
+            color: var(--white-dim);
+            margin-bottom: 40px;
+            max-width: 500px;
+        }
+
+        .slide-btns {
+            display: flex;
+            gap: 20px;
+        }
+
+        .btn-primary {
+            background: var(--primary-red);
+            color: white;
+            padding: 15px 40px;
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 1.4rem;
+        }
+
+        .btn-outline {
+            border: 1px solid var(--white);
+            color: var(--white);
+            padding: 15px 40px;
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 1.4rem;
+            transition: var(--transition-fast);
+        }
+
+        .btn-outline:hover { background: var(--white); color: var(--black-bg); }
+
+        .slider-dots {
+            position: absolute;
+            bottom: 40px;
+            left: 10%;
+            display: flex;
+            gap: 15px;
+            z-index: 20;
+        }
+
+        .dot {
+            width: 12px;
+            height: 12px;
+            border: 2px solid var(--white-dim);
+            border-radius: 50%;
+            cursor: pointer;
+        }
+
+        .dot.active { border-color: var(--primary-red); background: var(--primary-red); }
+
+        /* Grid Layouts */
+        .section-padding { padding: 100px 10%; }
+
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+            margin-bottom: 50px;
+        }
+
+        .section-title { font-size: 3.5rem; text-transform: uppercase; }
+
+        .product-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 30px;
+        }
+
+        .product-card {
+            background: var(--surface);
+            transition: var(--transition-fast);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .product-image {
+            aspect-ratio: 3/4;
+            background-size: cover;
+            background-position: center;
+            position: relative;
+        }
+
+        .product-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(232, 0, 29, 0.4);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            transition: var(--transition-fast);
+        }
+
+        .product-card:hover .product-overlay { opacity: 1; }
+        .product-card:hover { outline: 1px solid var(--primary-red); }
+
+        .add-to-cart-quick {
+            background: var(--white);
+            color: var(--black-bg);
+            padding: 12px 25px;
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 1.1rem;
+            transform: translateY(20px);
+            transition: var(--transition-fast);
+        }
+
+        .product-card:hover .add-to-cart-quick { transform: translateY(0); }
+
+        .product-info { padding: 20px; }
+        .product-brand { color: var(--primary-red); text-transform: uppercase; font-size: 0.8rem; font-weight: bold; margin-bottom: 5px; }
+        .product-name { font-size: 1.1rem; margin-bottom: 10px; transition: var(--transition-fast); }
+        .product-price { display: flex; align-items: center; gap: 15px; font-weight: bold; }
+        .old-price { color: var(--gray); text-decoration: line-through; font-weight: normal; font-size: 0.9rem; }
+
+        .badge {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            padding: 5px 15px;
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 0.9rem;
+            z-index: 5;
+        }
+
+        .badge-sale { background: var(--primary-red); }
+        .badge-new { background: var(--white); color: var(--black-bg); }
+
+        /* Categories */
+        .category-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 40px;
+        }
+
+        .category-item {
+            background: var(--surface);
+            padding: 40px;
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            border-left: 2px solid transparent;
+            transition: var(--transition-fast);
+        }
+
+        .category-item:hover {
+            border-left-color: var(--primary-red);
+            background: var(--surface-hover);
+        }
+
+        .category-icon { color: var(--primary-red); }
+        .cat-name { font-size: 1.5rem; text-transform: uppercase; }
+        .cat-count { color: var(--gray); font-size: 0.9rem; }
+
+        /* Promo Banner */
+        .promo-banner {
+            background: var(--primary-red);
+            padding: 80px 10%;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin: 50px 0;
+        }
+
+        .promo-text { font-size: 5rem; line-height: 1; text-transform: uppercase; }
+
+        /* Product Detail Page */
+        .product-detail {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 60px;
+        }
+
+        .detail-gallery { display: flex; gap: 20px; }
+        .thumbnails { display: flex; flex-direction: column; gap: 15px; width: 80px; }
+        .thumbnail { aspect-ratio: 1; background: var(--surface); cursor: pointer; border: 1px solid transparent; }
+        .thumbnail.active { border-color: var(--primary-red); }
+        .main-img { flex: 1; aspect-ratio: 3/4; background: var(--surface); background-size: cover; background-position: center; }
+
+        .detail-info h1 { font-size: 4rem; margin-bottom: 10px; }
+        .detail-price { font-size: 2rem; color: var(--primary-red); margin-bottom: 30px; font-family: 'Bebas Neue'; }
+        
+        .option-label { text-transform: uppercase; font-size: 0.9rem; margin-bottom: 15px; color: var(--gray); display: block; }
+        .size-grid { display: flex; gap: 15px; margin-bottom: 30px; }
+        .size-box { border: 1px solid var(--gray); padding: 10px 20px; cursor: pointer; transition: var(--transition-fast); }
+        .size-box.active { background: var(--white); color: var(--black-bg); border-color: var(--white); }
+
+        .color-grid { display: flex; gap: 15px; margin-bottom: 30px; }
+        .color-dot { width: 30px; height: 30px; border-radius: 50%; cursor: pointer; border: 2px solid transparent; }
+        .color-dot.active { border-color: var(--white); }
+
+        .qty-control { display: flex; align-items: center; border: 1px solid var(--gray); width: fit-content; margin-bottom: 40px; }
+        .qty-btn { padding: 10px 20px; font-size: 1.2rem; }
+        .qty-input { width: 60px; text-align: center; font-weight: bold; }
+
+        .buy-btns { display: flex; gap: 20px; }
+        .btn-full { flex: 1; background: var(--primary-red); color: white; padding: 20px; font-family: 'Bebas Neue'; font-size: 1.5rem; text-align: center; }
+
+        /* Auth Page */
+        .auth-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            min-height: calc(100vh - 180px);
+        }
+
+        .auth-decoration {
+            background: linear-gradient(45deg, var(--primary-red), var(--dark-red));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .auth-decoration::before {
+            content: 'ENOLA';
+            font-family: 'Bebas Neue';
+            font-size: 20rem;
+            opacity: 0.1;
+            transform: rotate(-90deg);
+        }
+
+        .auth-form {
+            padding: 80px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .auth-tabs { display: flex; gap: 40px; margin-bottom: 50px; }
+        .auth-tab { font-size: 2.5rem; color: var(--gray); cursor: pointer; }
+        .auth-tab.active { color: var(--white); border-bottom: 2px solid var(--primary-red); }
+
+        .form-group { margin-bottom: 25px; }
+        .form-group label { display: block; margin-bottom: 10px; color: var(--gray); text-transform: uppercase; font-size: 0.8rem; }
+        .form-input { width: 100%; background: var(--surface); border: 1px solid var(--gray); padding: 15px; color: white; font-family: inherit; }
+        .form-input:focus { outline: 1px solid var(--primary-red); border-color: var(--primary-red); }
+
+        /* Cart Page */
+        .cart-layout { display: grid; grid-template-columns: 2fr 1fr; gap: 50px; }
+        .cart-items { display: flex; flex-direction: column; gap: 20px; }
+        .cart-item { background: var(--surface); padding: 20px; display: flex; gap: 20px; align-items: center; }
+        .cart-item-img { width: 120px; aspect-ratio: 1; background-size: cover; background-position: center; }
+        .cart-item-info { flex: 1; }
+        .cart-item-info h3 { font-size: 1.4rem; }
+        .cart-summary { background: var(--surface); padding: 40px; height: fit-content; }
+        .summary-row { display: flex; justify-content: space-between; margin-bottom: 20px; }
+        .summary-total { border-top: 1px solid var(--gray); padding-top: 20px; margin-top: 20px; font-size: 1.5rem; font-weight: bold; }
+
+        /* Admin / Account */
+        .dashboard-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 30px; margin-bottom: 50px; }
+        .stat-card { background: var(--surface); padding: 30px; border-top: 3px solid var(--primary-red); }
+        .stat-val { font-size: 2.5rem; font-family: 'Bebas Neue'; }
+        .stat-label { color: var(--gray); text-transform: uppercase; font-size: 0.8rem; }
+
+        table { width: 100%; border-collapse: collapse; margin-top: 30px; }
+        th { text-align: left; padding: 20px; color: var(--gray); font-family: 'Bebas Neue'; font-size: 1.2rem; border-bottom: 1px solid var(--surface); }
+        td { padding: 20px; border-bottom: 1px solid var(--surface); }
+
+        .badge-status { padding: 5px 15px; font-size: 0.8rem; font-weight: bold; text-transform: uppercase; }
+        .status-paid { background: #22c55e20; color: #22c55e; }
+        .status-pending { background: #eab30820; color: #eab308; }
+        .status-cancelled { background: #ef444420; color: #ef4444; }
+
+        /* Transitions */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .animate-in { animation: fadeIn 0.8s forwards; }
+
+    </style>
+</head>
+<body>
+
+    <!-- Navigation -->
+    <nav>
+        <a href="#" onclick="navigateTo('home')" class="logo">ENOLA<span> SHOP</span></a>
+        
+        <div class="nav-links">
+            <a onclick="navigateTo('home')">Нүүр</a>
+            <a onclick="navigateTo('catalog')">Каталог</a>
+            <a onclick="navigateTo('home')">Борлуулалт</a>
+            <a onclick="navigateTo('home')">Бидний тухай</a>
+        </div>
+
+        <div class="nav-icons">
+            <button id="search-trigger"><i data-lucide="search"></i></button>
+            <button onclick="navigateTo('cart')" class="cart-btn">
+                <i data-lucide="shopping-cart"></i>
+                <span class="cart-badge" id="cart-count">0</span>
+            </button>
+            <button onclick="navigateTo('account')"><i data-lucide="user"></i></button>
+            <button onclick="navigateTo('login')" class="login-btn">LOGIN</button>
+        </div>
+    </nav>
+
+    <main id="main-content">
+        <!-- MARQUEE (Always visible on home) -->
+        <div id="home-marquee" class="marquee" style="display: none;">
+            <div class="marquee-content">
+                ҮНЭГҮЙ ХҮРГЭЛТ / ШИНЭ ЦУГЛУУЛГА / FLASH SALE / УЛААНБААТАР ХОТ ДОТОР 24 ЦАГТ / WORLDWIDE SHIPPING / ENOLA SHOP PREMIUM STREETWEAR / &nbsp;
+                ҮНЭГҮЙ ХҮРГЭЛТ / ШИНЭ ЦУГЛУУЛГА / FLASH SALE / УЛААНБААТАР ХОТ ДОТОР 24 ЦАГТ / WORLDWIDE SHIPPING / ENOLA SHOP PREMIUM STREETWEAR / &nbsp;
+            </div>
+        </div>
+
+        <!-- PAGE: HOME -->
+        <section id="page-home" class="page active">
+            <!-- Hero Slider -->
+            <div class="hero">
+                <div class="slide active" id="slide-0">
+                    <div class="slide-content">
+                        <h2 class="slide-title">NEW<br>REBELLION</h2>
+                        <p class="slide-subtitle">2026 оны шинэ цуглуулга худалдаанд гарлаа. Өөрийн хэв маягийг тодорхойл.</p>
+                        <div class="slide-btns">
+                            <button class="btn-primary" onclick="navigateTo('catalog')">ДЭЛГҮҮРЛЭХ</button>
+                            <button class="btn-outline">ИЛҮҮ ҮЗЭХ</button>
+                        </div>
+                    </div>
+                </div>
+                <!-- Other slides will be background injected by JS -->
+                <div class="slider-dots" id="hero-dots">
+                    <div class="dot active" onclick="setSlide(0)"></div>
+                    <div class="dot" onclick="setSlide(1)"></div>
+                    <div class="dot" onclick="setSlide(2)"></div>
+                </div>
+            </div>
+
+            <!-- Categories -->
+            <div class="section-padding">
+                <div class="category-grid">
+                    <div class="category-item">
+                        <div class="category-icon"><i data-lucide="zap" size="40"></i></div>
+                        <div>
+                            <div class="cat-name">Эрэгтэй</div>
+                            <div class="cat-count">124 Бараа</div>
+                        </div>
+                    </div>
+                    <div class="category-item">
+                        <div class="category-icon"><i data-lucide="flame" size="40"></i></div>
+                        <div>
+                            <div class="cat-name">Эмэгтэй</div>
+                            <div class="cat-count">86 Бараа</div>
+                        </div>
+                    </div>
+                    <div class="category-item">
+                        <div class="category-icon"><i data-lucide="layers" size="40"></i></div>
+                        <div>
+                            <div class="cat-name">Аксесуар</div>
+                            <div class="cat-count">42 Бараа</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- New Arrivals -->
+            <div class="section-padding">
+                <div class="section-header">
+                    <h2 class="section-title">Шинэ бараа</h2>
+                    <a href="#" class="btn-outline" style="padding: 10px 20px; font-size: 1rem;">БҮГДИЙГ ҮЗЭХ</a>
+                </div>
+                <div class="product-grid" id="featured-products">
+                    <!-- Products will be rendered by JS -->
+                </div>
+            </div>
+
+            <!-- Promo -->
+            <div class="promo-banner">
+                <div class="promo-text">SEASONAL<br>CLEARANCE</div>
+                <button class="btn-outline" style="background: white; color: black; border: none;">70% ХҮРТЭЛ ХЯМДРАЛ</button>
+            </div>
+        </section>
+
+        <!-- PAGE: CATALOG/SHOP -->
+        <section id="page-catalog" class="page">
+            <div class="section-padding">
+                <h1 class="section-title">БҮХ БАРАА</h1>
+                <div class="product-grid" style="margin-top: 50px;" id="catalog-products">
+                    <!-- Full catalog -->
+                </div>
+            </div>
+        </section>
+
+        <!-- PAGE: PRODUCT DETAIL -->
+        <section id="page-product-detail" class="page">
+            <div class="section-padding">
+                <div class="product-detail">
+                    <div class="detail-gallery">
+                        <div class="thumbnails">
+                            <div class="thumbnail active"></div>
+                            <div class="thumbnail"></div>
+                            <div class="thumbnail"></div>
+                        </div>
+                        <div class="main-img" id="detail-main-img"></div>
+                    </div>
+                    <div class="detail-info">
+                        <div class="product-brand">ENOLA ORIGINALS</div>
+                        <h1 id="detail-title">OVERSIZED GRAPHIC HOODIE</h1>
+                        <div class="detail-price" id="detail-price">185,000₮</div>
+                        
+                        <span class="option-label">Хэмжээ сонгох</span>
+                        <div class="size-grid">
+                            <div class="size-box active">S</div>
+                            <div class="size-box">M</div>
+                            <div class="size-box">L</div>
+                            <div class="size-box">XL</div>
+                        </div>
+
+                        <span class="option-label">Өнгө</span>
+                        <div class="color-grid">
+                            <div class="color-dot active" style="background: #000;"></div>
+                            <div class="color-dot" style="background: #E8001D;"></div>
+                            <div class="color-dot" style="background: #F5F5F0;"></div>
+                        </div>
+
+                        <span class="option-label">Тоо ширхэг</span>
+                        <div class="qty-control">
+                            <button class="qty-btn" onclick="updateQty(-1)">-</button>
+                            <input type="text" class="qty-input" id="detail-qty" value="1" readonly>
+                            <button class="qty-btn" onclick="updateQty(1)">+</button>
+                        </div>
+
+                        <div class="buy-btns">
+                            <button class="btn-full" id="add-to-cart-action">САГСАНД НЭМЭХ</button>
+                            <button class="btn-outline" style="width: 60px; padding: 0;"><i data-lucide="heart"></i></button>
+                        </div>
+
+                        <div style="margin-top: 40px; border-top: 1px solid var(--surface); padding-top: 20px;">
+                            <p style="color: var(--white-dim);">Streetwear сонирхогчдод зориулсан oversized загварын хувцас. Материал: 100% Хөвөн. Өндөр чанарын хэвлэл.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- PAGE: LOGIN -->
+        <section id="page-login" class="page">
+            <div class="auth-container">
+                <div class="auth-decoration"></div>
+                <div class="auth-form animate-in">
+                    <div class="auth-tabs">
+                        <div class="auth-tab active" onclick="toggleAuth(this, 'login')">НЭВТРЭХ</div>
+                        <div class="auth-tab" onclick="toggleAuth(this, 'register')">БҮРТГҮҮЛЭХ</div>
+                    </div>
+                    <div id="auth-fields">
+                        <div class="form-group">
+                            <label>Имэйл хаяг</label>
+                            <input type="email" class="form-input" placeholder="example@mail.com">
+                        </div>
+                        <div class="form-group">
+                            <label>Нууц үг</label>
+                            <input type="password" class="form-input" placeholder="••••••••">
+                        </div>
+                        <button class="btn-full" style="width: 100%; margin-top: 20px;">НЭВТРЭХ</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- PAGE: CART -->
+        <section id="page-cart" class="page">
+            <div class="section-padding">
+                <h1 class="section-title">Таны сагс</h1>
+                <div class="cart-layout animate-in">
+                    <div class="cart-items" id="cart-list">
+                        <!-- Items rendered by JS -->
+                    </div>
+                    <div class="cart-summary">
+                        <h2 class="bebas" style="font-size: 2rem; margin-bottom: 30px;">Нийт дүн</h2>
+                        <div class="summary-row">
+                            <span>Барааны дүн:</span>
+                            <span id="summary-subtotal">0₮</span>
+                        </div>
+                        <div class="summary-row">
+                            <span>Хүргэлт:</span>
+                            <span>ҮНЭГҮЙ</span>
+                        </div>
+                        <div class="form-group" style="margin-top: 20px;">
+                            <input type="text" class="form-input" placeholder="Купон код">
+                        </div>
+                        <div class="summary-total">
+                            <span>Нийт:</span>
+                            <span id="summary-total">0₮</span>
+                        </div>
+                        <button class="btn-full" style="width: 100%; margin-top: 30px;" onclick="navigateTo('account')">ЗАХИАЛАХ</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- PAGE: ACCOUNT -->
+        <section id="page-account" class="page">
+            <div class="section-padding">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 50px;">
+                    <h1 class="section-title">Миний бүртгэл</h1>
+                    <button class="btn-outline" onclick="navigateTo('admin')" style="font-size: 0.9rem;">ADMIN PANEL</button>
+                </div>
+                
+                <div style="display: grid; grid-template-columns: 300px 1fr; gap: 50px;">
+                    <div class="cart-summary">
+                        <div style="text-align: center; margin-bottom: 30px;">
+                            <div style="width: 100px; height: 100px; border-radius: 50%; background: var(--primary-red); margin: 0 auto 20px; display: flex; align-items: center; justify-content: center; font-size: 3rem; font-family: 'Bebas Neue';">T</div>
+                            <h3 class="bebas">Тэмүүлэн.Б</h3>
+                            <p style="color: var(--gray);">temuulen@gmail.com</p>
+                        </div>
+                        <button class="btn-outline" style="width: 100%;">Мэдээлэл засах</button>
+                    </div>
+
+                    <div>
+                        <h2 class="bebas" style="font-size: 2rem;">Захиалгын түүх</h2>
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Дугаар</th>
+                                    <th>Огноо</th>
+                                    <th>Байдал</th>
+                                    <th>Дүн</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>#ORD-4921</td>
+                                    <td>2026.04.05</td>
+                                    <td><span class="badge-status status-paid">Хүргэгдсэн</span></td>
+                                    <td>185,000₮</td>
+                                </tr>
+                                <tr>
+                                    <td>#ORD-5012</td>
+                                    <td>2026.04.10</td>
+                                    <td><span class="badge-status status-pending">Хүлээгдэж байна</span></td>
+                                    <td>240,000₮</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- PAGE: ADMIN -->
+        <section id="page-admin" class="page">
+            <div class="section-padding">
+                <h1 class="section-title">ADMIN DASHBOARD</h1>
+                
+                <div class="dashboard-grid animate-in">
+                    <div class="stat-card">
+                        <div class="stat-label">Нийт орлого</div>
+                        <div class="stat-val">₮42.8M</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-label">Захиалга</div>
+                        <div class="stat-val">1,204</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-label">Хэрэглэгчид</div>
+                        <div class="stat-val">2.5K</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-label">Хөрвөлт</div>
+                        <div class="stat-val">3.8%</div>
+                    </div>
+                </div>
+
+                <div style="background: var(--surface); padding: 40px;">
+                    <h2 class="bebas">Сүүлийн борлуулалт</h2>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Бараа</th>
+                                <th>Хэрэглэгч</th>
+                                <th>Дүн</th>
+                                <th>Хугацаа</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Red Street Sneaker</td>
+                                <td>Ганзориг.М</td>
+                                <td>320,000₮</td>
+                                <td>2 минутын өмнө</td>
+                            </tr>
+                            <tr>
+                                <td>Enola Black Tee</td>
+                                <td>Анударь.Б</td>
+                                <td>75,000₮</td>
+                                <td>15 минутын өмнө</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <script>
+        // STATE
+        let cart = [];
+        let currentSlide = 0;
+        const products = [
+            { id: 1, name: "REBELS LOGO HOODIE", brand: "ENOLA BLACK", price: 185000, oldPrice: 245000, image: "product_hoodie_red", badge: "SALE" },
+            { id: 2, name: "URBAN RED SNKR", brand: "ENOLA FOOTWEAR", price: 320000, image: "product_sneakers_red", badge: "NEW" },
+            { id: 3, name: "MINIMAL OVERSIZED TEE", brand: "ENOLA ORIGINALS", price: 85000, image: "hero_streetwear_1", badge: "" },
+            { id: 4, name: "UTILITY CARGO PANTS", brand: "STREET TECH", price: 155000, image: "hero_streetwear_2", badge: "" },
+            { id: 5, name: "ENOLA TRUCKER CAP", brand: "ACCESSORIES", price: 45000, image: "hero_streetwear_3", badge: "NEW" },
+            { id: 6, name: "GRAPHIC WINDBREAKER", brand: "ENOLA OUTER", price: 195000, image: "product_hoodie_red", badge: "" },
+            { id: 7, name: "VINTAGE WASHED TEE", brand: "ENOLA BLACK", price: 75000, image: "hero_streetwear_1", badge: "SALE" },
+            { id: 8, name: "LEATHER DUFFEL BAG", brand: "ACCESSORIES", price: 280000, image: "hero_streetwear_2", badge: "" }
+        ];
+
+        const slides = [
+            { title: "NEW<br>REBELLION", img: "hero_streetwear_1" },
+            { title: "STREET<br>EDITORIAL", img: "hero_streetwear_2" },
+            { title: "FUTURE<br>CLASSIC", img: "hero_streetwear_3" }
+        ];
+
+        // INITIALIZE
+        function init() {
+            lucide.createIcons();
+            renderFeatured();
+            renderCatalog();
+            setupAutoSlider();
+            handleRouting();
+            
+            // Re-render icons after dynamic changes
+            setInterval(() => lucide.createIcons(), 500);
+        }
+
+        // NAVIGATION
+        function navigateTo(pageId) {
+            const pages = document.querySelectorAll('.page');
+            pages.forEach(p => p.classList.remove('active'));
+            
+            const target = document.getElementById(`page-${pageId}`);
+            if(target) {
+                target.classList.add('active');
+                window.scrollTo(0, 0);
+            }
+
+            // Marquee only on home
+            document.getElementById('home-marquee').style.display = (pageId === 'home') ? 'block' : 'none';
+        }
+
+        function handleRouting() {
+            const hash = window.location.hash.substring(1);
+            if(hash) navigateTo(hash);
+        }
+
+        // SLIDER
+        function setSlide(index) {
+            currentSlide = index;
+            const slideEl = document.getElementById('slide-0');
+            const dots = document.querySelectorAll('.dot');
+            
+            slideEl.style.backgroundImage = `url('${getImgPath(slides[currentSlide].img)}')`;
+            slideEl.querySelector('.slide-title').innerHTML = slides[currentSlide].title;
+            
+            dots.forEach((dot, i) => {
+                dot.classList.toggle('active', i === currentSlide);
+            });
+        }
+
+        function setupAutoSlider() {
+            setSlide(0);
+            setInterval(() => {
+                currentSlide = (currentSlide + 1) % slides.length;
+                setSlide(currentSlide);
+            }, 4000);
+        }
+
+        // RENDER PRODUCTS
+        function renderFeatured() {
+            const container = document.getElementById('featured-products');
+            container.innerHTML = products.slice(0, 4).map(p => genProductHTML(p)).join('');
+        }
+
+        function renderCatalog() {
+            const container = document.getElementById('catalog-products');
+            container.innerHTML = products.map(p => genProductHTML(p)).join('');
+        }
+
+        function genProductHTML(p) {
+            return `
+                <div class="product-card animate-in">
+                    <div class="product-image" style="background-image: url('${getImgPath(p.image)}')">
+                        ${p.badge ? `<span class="badge ${p.badge === 'SALE' ? 'badge-sale' : 'badge-new'}">${p.badge}</span>` : ''}
+                        <div class="product-overlay">
+                            <button class="add-to-cart-quick" onclick="addToCart(${p.id})">САГСАНД НЭМЭХ</button>
+                        </div>
+                    </div>
+                    <div class="product-info">
+                        <div class="product-brand">${p.brand}</div>
+                        <div class="product-name" onclick="openDetail(${p.id})">${p.name}</div>
+                        <div class="product-price">
+                            ${p.price.toLocaleString()}₮
+                            ${p.oldPrice ? `<span class="old-price">${p.oldPrice.toLocaleString()}₮</span>` : ''}
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        // ASSET HELPER (In real world this would be actual paths)
+        // I'll map the generated names to the ones used in code.
+        const imageMap = {
+            "hero_streetwear_1": "hero_streetwear_1_1775792932827.png",
+            "hero_streetwear_2": "hero_streetwear_2_1775793114453.png",
+            "hero_streetwear_3": "hero_streetwear_3_1775793199678.png",
+            "product_hoodie_red": "product_hoodie_red_1775793135539.png",
+            "product_sneakers_red": "product_sneakers_red_1775793158095.png"
+        };
+
+        function getImgPath(name) {
+            // Using the current workspace path structure
+            const fname = imageMap[name] || name;
+            return `./${fname}`;
+        }
+
+        // CART LOGIC
+        function addToCart(productId) {
+            const product = products.find(p => p.id === productId);
+            cart.push(product);
+            updateCartCount();
+            alert(`${product.name} сагсанд нэмэгдлээ!`);
+        }
+
+        function updateCartCount() {
+            document.getElementById('cart-count').innerText = cart.length;
+            renderCart();
+        }
+
+        function renderCart() {
+            const container = document.getElementById('cart-list');
+            const subtotalEl = document.getElementById('summary-subtotal');
+            const totalEl = document.getElementById('summary-total');
+            
+            if(cart.length === 0) {
+                container.innerHTML = `<p style="padding: 40px; text-align: center; color: var(--gray);">Сагс хоосон байна.</p>`;
+                subtotalEl.innerText = '0₮';
+                totalEl.innerText = '0₮';
+                return;
+            }
+
+            let total = 0;
+            container.innerHTML = cart.map((item, index) => {
+                total += item.price;
+                return `
+                    <div class="cart-item">
+                        <div class="cart-item-img" style="background-image: url('${getImgPath(item.image)}')"></div>
+                        <div class="cart-item-info">
+                            <div class="product-brand">${item.brand}</div>
+                            <h3>${item.name}</h3>
+                            <p style="color: var(--primary-red); font-weight: bold;">${item.price.toLocaleString()}₮</p>
+                        </div>
+                        <div class="qty-control">
+                            <button class="qty-btn" onclick="removeFromCart(${index})"><i data-lucide="trash-2" size="18"></i></button>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+
+            subtotalEl.innerText = `${total.toLocaleString()}₮`;
+            totalEl.innerText = `${total.toLocaleString()}₮`;
+        }
+
+        function removeFromCart(index) {
+            cart.splice(index, 1);
+            updateCartCount();
+        }
+
+        // PRODUCT DETAIL
+        function openDetail(productId) {
+            const p = products.find(prod => prod.id === productId);
+            document.getElementById('detail-title').innerText = p.name;
+            document.getElementById('detail-price').innerText = `${p.price.toLocaleString()}₮`;
+            document.getElementById('detail-main-img').style.backgroundImage = `url('${getImgPath(p.image)}')`;
+            
+            const thumb = document.querySelector('.thumbnail');
+            thumb.style.backgroundImage = `url('${getImgPath(p.image)}')`;
+            
+            document.getElementById('add-to-cart-action').onclick = () => {
+                addToCart(p.id);
+            };
+            
+            navigateTo('product-detail');
+        }
+
+        function updateQty(val) {
+            const input = document.getElementById('detail-qty');
+            let v = parseInt(input.value) + val;
+            if(v < 1) v = 1;
+            input.value = v;
+        }
+
+        // AUTH TOGGLE
+        function toggleAuth(el, type) {
+            document.querySelectorAll('.auth-tab').forEach(t => t.classList.remove('active'));
+            el.classList.add('active');
+            const fields = document.getElementById('auth-fields');
+            if(type === 'register') {
+                fields.innerHTML = `
+                    <div class="form-group">
+                        <label>Овог нэр</label>
+                        <input type="text" class="form-input" placeholder="Таны нэр">
+                    </div>
+                    <div class="form-group">
+                        <label>Имэйл хаяг</label>
+                        <input type="email" class="form-input" placeholder="example@mail.com">
+                    </div>
+                    <div class="form-group">
+                        <label>Нууц үг</label>
+                        <input type="password" class="form-input" placeholder="••••••••">
+                    </div>
+                    <button class="btn-full" style="width: 100%; margin-top: 20px;">БҮРТГҮҮЛЭХ</button>
+                `;
+            } else {
+                fields.innerHTML = `
+                    <div class="form-group">
+                        <label>Имэйл хаяг</label>
+                        <input type="email" class="form-input" placeholder="example@mail.com">
+                    </div>
+                    <div class="form-group">
+                        <label>Нууц үг</label>
+                        <input type="password" class="form-input" placeholder="••••••••">
+                    </div>
+                    <button class="btn-full" style="width: 100%; margin-top: 20px;">НЭВТРЭХ</button>
+                `;
+            }
+        }
+
+        window.onload = init;
+    </script>
+</body>
+</html>
