@@ -6,7 +6,7 @@ import ProductCard from '@/components/product/ProductCard'
 import { useState, useMemo, useEffect, useRef } from 'react'
 import { ShoppingBag, Search, SlidersHorizontal, ChevronLeft, ChevronRight, Loader2, ChevronDown } from 'lucide-react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { ProductSkeleton } from '@/components/product/ProductSkeleton'
+import { SkeletonCard } from '@/components/common/SkeletonCard'
 
 const ITEMS_PER_PAGE = 12
 
@@ -227,7 +227,7 @@ export default function ShopPage() {
               {isLoading ? (
                 <div className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-4 md:gap-x-6 md:gap-y-10">
                   {Array.from({ length: 8 }).map((_, i) => (
-                    <ProductSkeleton key={i} />
+                    <SkeletonCard key={i} />
                   ))}
                 </div>
               ) : paginatedProducts.length > 0 ? (

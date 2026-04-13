@@ -1,7 +1,7 @@
 import { useProductStore } from '@/store/productStore'
 import ProductCard from '@/components/product/ProductCard'
 import { Link } from 'react-router'
-import { ProductSkeleton } from '@/components/product/ProductSkeleton'
+import { SkeletonCard } from '@/components/common/SkeletonCard'
 
 export default function NewArrivals() {
   const { products, isLoading } = useProductStore()
@@ -21,11 +21,10 @@ export default function NewArrivals() {
         {isLoading ? (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
             {Array.from({ length: 4 }).map((_, i) => (
-              <ProductSkeleton key={i} />
+              <SkeletonCard key={i} />
             ))}
           </div>
         ) : (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
             {newProducts.map((product) => (
               <ProductCard key={product.id} product={product} />
             ))}

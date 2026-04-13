@@ -1,6 +1,6 @@
 import { cn } from '@/lib/utils'
 
-export function ProductSkeleton() {
+export function SkeletonCard() {
   return (
     <div className="space-y-4">
       <div className="aspect-[4/5] w-full bg-gray-200 animate-pulse rounded-xl" />

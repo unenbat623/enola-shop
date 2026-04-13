@@ -3,7 +3,7 @@ import { motion, AnimatePresence } from 'framer-motion'
 import { useProductStore } from '@/store/productStore'
 import ProductCard from '@/components/product/ProductCard'
 import { cn } from '@/lib/utils'
-import { ProductSkeleton } from '@/components/product/ProductSkeleton'
+import { SkeletonCard } from '@/components/common/SkeletonCard'
 
 const tabs = [
   { id: 'featured', label: 'Онцлох' },
@@ -53,7 +53,7 @@ export default function FeaturedProducts() {
         {isLoading ? (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
             {Array.from({ length: 4 }).map((_, i) => (
-              <ProductSkeleton key={i} />
+              <SkeletonCard key={i} />
             ))}
           </div>
         ) : (

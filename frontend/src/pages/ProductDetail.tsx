@@ -9,7 +9,7 @@ import { Star, ShoppingBag, Heart, ShieldCheck, Truck, ChevronRight, ChevronLeft
 import { Link } from 'react-router'
 import { useState, useMemo } from 'react'
 import { cn } from '@/lib/utils'
-import { ProductDetailSkeleton } from '@/components/product/ProductSkeleton'
+import { ProductDetailSkeleton } from '@/components/common/SkeletonCard'
 import ProductCard from '@/components/product/ProductCard'
 
 export default function ProductDetail() {
