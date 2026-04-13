@@ -1,26 +1,44 @@
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router'
+import { useEffect } from 'react'
+import { useAuthStore } from '@/store/authStore'
+import { Loader2 } from 'lucide-react'
 import RootLayout from '@/components/layout/RootLayout'
 import AdminLayout from '@/components/layout/AdminLayout'
 import AdminRoute from '@/components/auth/AdminRoute'
-import HomePage from '@/routes/index'
-import ShopPage from '@/routes/shop'
-import ProductPage from '@/routes/product.$slug'
-import CartPage from '@/routes/cart'
-import WishlistPage from '@/routes/wishlist'
-import CheckoutPage from '@/routes/checkout'
-import CheckoutPaymentPage from '@/routes/checkout.payment'
-import CheckoutSuccessPage from '@/routes/checkout.success'
-import LoginPage from '@/routes/auth/login'
-import RegisterPage from '@/routes/auth/signup'
-import OrdersPage from '@/routes/orders'
+import HomePage from '@/pages/Home'
+import ShopPage from '@/pages/Shop'
+import ProductPage from '@/pages/ProductDetail'
+import CartPage from '@/pages/Cart'
+import WishlistPage from '@/pages/Wishlist'
+import CheckoutPage from '@/pages/Checkout'
+import CheckoutPaymentPage from '@/pages/CheckoutPayment'
+import CheckoutSuccessPage from '@/pages/CheckoutSuccess'
+import LoginPage from '@/pages/Login'
+import RegisterPage from '@/pages/Register'
+import OrdersPage from '@/pages/Orders'
 
 // Admin Pages
-import AdminDashboard from '@/routes/admin/dashboard'
-import AdminProducts from '@/routes/admin/products'
-import AdminOrders from '@/routes/admin/orders'
-import AdminUsers from '@/routes/admin/users'
+import AdminDashboard from '@/pages/admin/Dashboard'
+import AdminProducts from '@/pages/admin/Products'
+import AdminOrders from '@/pages/admin/Orders'
+import AdminUsers from '@/pages/admin/Users'
 
 export default function App() {
+  const initAuth = useAuthStore(state => state.initAuth)
+  const isLoading = useAuthStore(state => state.isLoading)
+
+  useEffect(() => {
+    initAuth()
+  }, [initAuth])
+
+  if (isLoading) {
+    return (
+      <div className="min-h-screen bg-brand-base flex items-center justify-center">
+        <Loader2 className="w-8 h-8 animate-spin text-brand-ink" />
+      </div>
+    )
+  }
+
   return (
     <BrowserRouter>
       <Routes>

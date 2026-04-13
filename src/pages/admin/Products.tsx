@@ -1,10 +1,11 @@
 import { useEffect, useState } from 'react'
-import { api } from '@/services/api'
+import { productsApi } from '@/api/products'
 import { Plus, Edit, Trash2, Loader2, Image as ImageIcon } from 'lucide-react'
 import { formatCurrency } from '@/lib/utils'
+import { Product } from '@/lib/types'
 
 export default function AdminProducts() {
-  const [products, setProducts] = useState<any[]>([])
+  const [products, setProducts] = useState<Product[]>([])
   const [isLoading, setIsLoading] = useState(true)
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [currentEditId, setCurrentEditId] = useState<string | null>(null)
@@ -23,7 +24,7 @@ export default function AdminProducts() {
   const loadProducts = async () => {
     setIsLoading(true)
     try {
-      const data = await api.get('/api/products')
+      const data = await productsApi.getProducts()
       setProducts(Array.isArray(data) ? data : [])
     } catch {
       setProducts([])
@@ -36,7 +37,7 @@ export default function AdminProducts() {
     loadProducts()
   }, [])
 
-  const openModal = (product?: any) => {
+  const openModal = (product?: Product) => {
     if (product) {
       setCurrentEditId(product.id)
       setFormData({
@@ -61,7 +62,7 @@ export default function AdminProducts() {
   const handleDelete = async (id: string) => {
     if (window.confirm('Энэ барааг устгах уу?')) {
       try {
-        await api.delete(`/api/products/${id}`)
+        await productsApi.deleteProduct(id)
         loadProducts()
       } catch (err) {
         alert('Устгахад алдаа гарлаа')
@@ -80,9 +81,9 @@ export default function AdminProducts() {
       }
       
       if (currentEditId) {
-        await api.put(`/api/products/${currentEditId}`, payload)
+        await productsApi.updateProduct(currentEditId, payload as Partial<Product>)
       } else {
-        await api.post('/api/products', payload)
+        await productsApi.createProduct(payload as Partial<Product>)
       }
       
       setIsModalOpen(false)

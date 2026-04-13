@@ -1,6 +1,7 @@
 import { ChevronDown, Menu } from 'lucide-react'
 import { Link, useLocation } from 'react-router'
-import { categories } from '@/lib/mock-data'
+import { categories } from '@/lib/constants'
+import { Category } from '@/lib/types'
 import { useState } from 'react'
 import { cn } from '@/lib/utils'
 
@@ -36,7 +37,7 @@ export default function Navbar() {
               onMouseLeave={() => setIsCatOpen(false)}
               className="absolute top-12 left-0 w-64 bg-brand-base border border-brand-border py-2 z-50 transition-all rounded-b-[6px]"
             >
-              {categories.map((cat) => (
+              {categories.map((cat: Category) => (
                 <Link
                   key={cat.id}
                   to={`/shop?category=${cat.slug}`}

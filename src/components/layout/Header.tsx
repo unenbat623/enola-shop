@@ -1,13 +1,15 @@
-import { Search, Heart, ShoppingBag } from 'lucide-react'
+import { Search, Heart, ShoppingBag, User } from 'lucide-react'
 import { Link } from 'react-router'
 import { useCartStore } from '@/store/cartStore'
 import { useWishlistStore } from '@/store/wishlistStore'
+import { useAuthStore } from '@/store/authStore'
 import { formatCurrency } from '@/lib/utils'
 
 export default function Header() {
   const cartTotal = useCartStore((state) => state.totalItems())
   const cartPrice = useCartStore((state) => state.totalPrice())
   const wishlistTotal = useWishlistStore((state) => state.totalItems())
+  const { user, isAuthenticated, logout } = useAuthStore()
 
   return (
     <header className="sticky top-0 bg-brand-base border-b border-brand-border z-50">
@@ -33,7 +35,7 @@ export default function Header() {
 
         {/* Icons */}
         <div className="flex items-center gap-2 md:gap-4">
-          <Link to="/wishlist" className="p-2 transition-colors group relative">
+          <Link to="/wishlist" className="p-2 transition-colors group relative hidden sm:block">
             <Heart className="w-5 h-5 text-brand-sub group-hover:text-brand-ink transition-colors" />
             {wishlistTotal > 0 && (
               <span className="absolute top-1 right-1 bg-brand-sale text-[9px] font-bold text-brand-base w-4 h-4 rounded-full flex items-center justify-center">
@@ -55,6 +57,31 @@ export default function Header() {
               <span className="text-[11px] font-medium text-brand-ink">{formatCurrency(cartPrice)}</span>
             </div>
           </Link>
+
+          <div className="h-6 w-px bg-brand-border mx-2 hidden sm:block"></div>
+          
+          {isAuthenticated && user ? (
+            <div className="relative group hidden sm:block">
+              <Link to={user.role === 'admin' ? '/admin' : '/orders'} className="flex items-center gap-2 p-2 text-brand-ink">
+                <User className="w-4 h-4" />
+                <span className="text-[12px] font-bold uppercase tracking-widest">{user.name}</span>
+              </Link>
+              <div className="absolute right-0 top-full mt-2 w-48 bg-white border border-brand-border rounded-[8px] shadow-sm opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all">
+                <div className="p-2 space-y-1">
+                  <Link to={user.role === 'admin' ? '/admin' : '/orders'} className="block px-4 py-2 text-[12px] text-brand-ink hover:bg-brand-surface rounded-[4px]">
+                    {user.role === 'admin' ? 'Админ самбар' : 'Миний захиалга'}
+                  </Link>
+                  <button onClick={() => logout()} className="w-full text-left px-4 py-2 text-[12px] text-brand-danger hover:bg-brand-danger/10 rounded-[4px]">
+                    Гарах
+                  </button>
+                </div>
+              </div>
+            </div>
+          ) : (
+            <Link to="/login" className="text-[12px] font-bold uppercase tracking-widest text-brand-ink hover:text-brand-sub transition-colors hidden sm:block px-2">
+              Нэвтрэх
+            </Link>
+          )}
         </div>
       </div>
       

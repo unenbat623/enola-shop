@@ -5,6 +5,8 @@ import paymentRoutes from './routes/payment'
 import productRoutes from './routes/products'
 import orderRoutes from './routes/orders'
 import userRoutes from './routes/users'
+import authRoutes from './routes/auth'
+import seedRoutes from './routes/seed'
 import { connectDB } from './lib/db'
 
 // Connect to MongoDB
@@ -15,10 +17,12 @@ const app = new Hono()
 app.use('/api/*', cors())
 
 // Register routes
+app.route('/api/auth', authRoutes)
 app.route('/api/payment', paymentRoutes)
 app.route('/api/products', productRoutes)
 app.route('/api/orders', orderRoutes)
 app.route('/api/users', userRoutes)
+app.route('/api/seed', seedRoutes)
 
 app.get('/', (c) => c.text('Antigravity API is running'))
 

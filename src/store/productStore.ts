@@ -1,7 +1,6 @@
 import { create } from 'zustand'
-import { api } from '@/services/api'
+import { productsApi } from '@/api/products'
 import { Product } from '@/lib/types'
-import { products as mockProducts } from '@/lib/mock-data'
 
 interface ProductState {
   products: Product[]
@@ -17,18 +16,15 @@ export const useProductStore = create<ProductState>((set) => ({
   fetchProducts: async () => {
     try {
       set({ isLoading: true, error: null })
-      const data = await api.get('/api/products')
+      const data = await productsApi.getProducts()
       
       if (Array.isArray(data) && data.length > 0) {
         set({ products: data, isLoading: false })
       } else {
-        // Fallback to mock data if empty DB
-        console.warn('DB empty, using mock data fallback')
-        set({ products: mockProducts, isLoading: false })
+        set({ products: [], isLoading: false })
       }
     } catch (error: any) {
-      console.warn('Failed to fetch products, using mock data fallback:', error)
-      set({ products: mockProducts, isLoading: false })
+      set({ error: error.message || 'Failed to fetch products', isLoading: false })
     }
   }
 }))

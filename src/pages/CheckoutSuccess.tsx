@@ -6,6 +6,7 @@ import { useCheckoutStore } from '@/store/checkoutStore'
 import { useCartStore } from '@/store/cartStore'
 import CheckoutSteps from '@/components/checkout/CheckoutSteps'
 import { cn } from '@/lib/utils'
+import { Order } from '@/lib/types'
 
 export default function CheckoutSuccessPage() {
   const { orderId } = useParams()
@@ -24,8 +25,8 @@ export default function CheckoutSuccessPage() {
     setStep(3)
 
     // Save order to localStorage and API if not already saved
-    const savedOrders = JSON.parse(localStorage.getItem('orders') || '[]')
-    const exists = savedOrders.some((o: any) => o.id === orderId)
+    const savedOrders: Order[] = JSON.parse(localStorage.getItem('orders') || '[]')
+    const exists = savedOrders.some((o: Order) => o.id === orderId)
     
     if (!exists && items.length > 0) {
       const userStr = localStorage.getItem('user')
@@ -57,8 +58,8 @@ export default function CheckoutSuccessPage() {
       localStorage.setItem('orders', JSON.stringify([...savedOrders, localOrder]))
 
       // Send to server
-      import('@/services/api').then(({ api }) => {
-        api.post('/api/orders', newOrderInfo).catch(err => console.warn('API save failed', err))
+      import('@/api/orders').then(({ ordersApi }) => {
+        ordersApi.createOrder(newOrderInfo as unknown as Partial<Order>).catch(err => console.warn('API save failed', err))
       })
 
       clearCart()

@@ -1,5 +1,6 @@
 import { Hono } from 'hono';
 import Product from '../models/Product';
+import { authMiddleware, adminMiddleware } from '../lib/auth';
 
 const products = new Hono();
 
@@ -14,7 +15,7 @@ products.get('/', async (c) => {
 });
 
 // Create product
-products.post('/', async (c) => {
+products.post('/', authMiddleware, adminMiddleware, async (c) => {
   try {
     const body = await c.req.json();
     const newProduct = new Product(body);
@@ -26,7 +27,7 @@ products.post('/', async (c) => {
 });
 
 // Update product
-products.put('/:id', async (c) => {
+products.put('/:id', authMiddleware, adminMiddleware, async (c) => {
   try {
     const id = c.req.param('id');
     const body = await c.req.json();
@@ -39,7 +40,7 @@ products.put('/:id', async (c) => {
 });
 
 // Delete product
-products.delete('/:id', async (c) => {
+products.delete('/:id', authMiddleware, adminMiddleware, async (c) => {
   try {
     const id = c.req.param('id');
     const deletedProduct = await Product.findByIdAndDelete(id);

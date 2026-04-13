@@ -1,7 +1,9 @@
 import { LayoutDashboard, ShoppingBag, Users, Package, ArrowUpRight } from 'lucide-react'
 import { Link } from 'react-router'
 import { useEffect, useState } from 'react'
-import { api } from '@/services/api'
+import { productsApi } from '@/api/products'
+import { ordersApi } from '@/api/orders'
+import { usersApi } from '@/api/users'
 import { formatCurrency } from '@/lib/utils'
 
 export default function AdminDashboard() {
@@ -17,9 +19,9 @@ export default function AdminDashboard() {
     async function loadDashboard() {
       try {
         const [ordersRes, productsRes, usersRes] = await Promise.all([
-          api.get('/api/orders').catch(() => []),
-          api.get('/api/products').catch(() => []),
-          api.get('/api/users').catch(() => [])
+          ordersApi.getAllOrders().catch(() => []),
+          productsApi.getProducts().catch(() => []),
+          usersApi.getAllUsers().catch(() => [])
         ])
 
         const orders = Array.isArray(ordersRes) ? ordersRes : []

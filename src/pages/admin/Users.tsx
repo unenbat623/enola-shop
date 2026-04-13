@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { api } from '@/services/api'
+import { usersApi } from '@/api/users'
 import { Loader2, Mail, Shield } from 'lucide-react'
 
 export default function AdminUsers() {
@@ -9,7 +9,7 @@ export default function AdminUsers() {
   useEffect(() => {
     async function loadUsers() {
       try {
-        const data = await api.get('/api/users')
+        const data = await usersApi.getAllUsers()
         setUsers(Array.isArray(data) ? data : [])
       } catch {
         setUsers([])

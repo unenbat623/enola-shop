@@ -1,6 +1,7 @@
 import { motion } from 'framer-motion'
 import { Link } from 'react-router'
-import { categories } from '@/lib/mock-data'
+import { categories } from '@/lib/constants'
+import { Category } from '@/lib/types'
 
 export default function CategoryGrid() {
   return (
@@ -15,7 +16,7 @@ export default function CategoryGrid() {
         </div>
 
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-0 border-l border-t border-brand-border">
-          {categories.map((cat, i) => (
+          {categories.map((cat: Category, i: number) => (
             <motion.div
               key={cat.id}
               initial={{ opacity: 0 }}

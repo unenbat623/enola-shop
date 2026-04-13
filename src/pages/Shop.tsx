@@ -1,5 +1,6 @@
 import { useSearchParams } from 'react-router'
-import { categories } from '@/lib/mock-data'
+import { categories } from '@/lib/constants'
+import { Category } from '@/lib/types'
 import { useProductStore } from '@/store/productStore'
 import ProductCard from '@/components/product/ProductCard'
 import { useState, useMemo } from 'react'
@@ -106,7 +107,7 @@ export default function ShopPage() {
                           Бүгд
                         </button>
                       </li>
-                      {categories.map((cat) => (
+                      {categories.map((cat: Category) => (
                         <li key={cat.id}>
                           <button 
                             onClick={() => {

@@ -1,4 +1,4 @@
-import { brands } from '@/lib/mock-data'
+import { brands } from '@/lib/constants'
 
 export default function BrandCarousel() {
   const items = [...brands, ...brands]

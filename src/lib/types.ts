@@ -9,6 +9,7 @@ export interface Product {
   badge?: 'New' | 'Хямдрал' | 'Hot'
   images: string[]
   description: string
+  stock?: number
   inStock: boolean
   rating: number
   reviewCount: number
@@ -52,6 +53,22 @@ export interface Order {
     city: string
   }
   paymentMethod: 'qpay' | 'socialpay' | 'bank'
-  status: 'pending' | 'processing' | 'shipped' | 'delivered'
+  status: 'pending' | 'processing' | 'shipped' | 'delivered' | 'Хүлээгдэж буй' | 'Илгээгдсэн' | 'Хүргэгдсэн' | 'Цуцлагдсан'
   createdAt: string
+}
+
+export interface LoginCredentials {
+  email: string
+  password?: string
+}
+
+export interface RegisterCredentials {
+  name: string
+  email: string
+  password?: string
+}
+
+export interface AuthResponse {
+  user: User
+  token: string
 }

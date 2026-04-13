@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { api } from '@/services/api'
+import { ordersApi } from '@/api/orders'
 import { Eye, Loader2 } from 'lucide-react'
 import { formatCurrency } from '@/lib/utils'
 
@@ -11,7 +11,7 @@ export default function AdminOrders() {
 
   const loadOrders = async () => {
     try {
-      const data = await api.get('/api/orders')
+      const data = await ordersApi.getAllOrders()
       setOrders(Array.isArray(data) ? data : [])
     } catch {
       setOrders([])
@@ -26,7 +26,7 @@ export default function AdminOrders() {
 
   const handleStatusChange = async (id: string, newStatus: string) => {
     try {
-      await api.patch(`/api/orders/${id}/status`, { status: newStatus })
+      await ordersApi.updateOrderStatus(id, newStatus)
       loadOrders()
     } catch {
       alert('Алдаа гарлаа')

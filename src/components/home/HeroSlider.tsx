@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { heroSlides } from '@/lib/mock-data'
+import { heroSlides } from '@/lib/constants'
 import { Link } from 'react-router'
 import { cn } from '@/lib/utils'
 

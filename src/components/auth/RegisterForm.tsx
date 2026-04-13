@@ -3,9 +3,12 @@ import { Link, useNavigate } from 'react-router'
 import { User, Mail, Lock, ArrowRight, Loader2 } from 'lucide-react'
 import { toast } from '@/components/common/Toast'
 
+import { useAuthStore } from '@/store/authStore'
+
 export default function RegisterForm() {
   const navigate = useNavigate()
-  const [loading, setLoading] = useState(false)
+  const register = useAuthStore(state => state.register)
+  const loading = useAuthStore(state => state.isLoading)
   const [formData, setFormData] = useState({ name: '', email: '', password: '' })
   const [errors, setErrors] = useState({ name: '', email: '', password: '' })
 
@@ -29,13 +32,20 @@ export default function RegisterForm() {
 
     if (hasError) return
 
-    setLoading(true)
-    setTimeout(() => {
-      setLoading(false)
-      localStorage.setItem('user', JSON.stringify({ id: Date.now().toString(), name: formData.name, role: 'user' }))
+    try {
+      await register({ name: formData.name, email: formData.email, password: formData.password })
+      const { authApi } = await import('@/api/auth')
+      const { user: fetchedUser } = await authApi.getMe().catch(() => ({ user: null }))
+      
+      if(fetchedUser) {
+        localStorage.setItem('user', JSON.stringify(fetchedUser))
+      }
+      
       toast.success('Бүртгэл амжилттай үүслээ')
       navigate('/')
-    }, 1500)
+    } catch (err: any) {
+      toast.error(err.message || 'Бүртгүүлэхэд алдаа гарлаа')
+    }
   }
 
   return (

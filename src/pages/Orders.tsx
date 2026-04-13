@@ -32,19 +32,19 @@ export default function OrdersPage() {
         const user = userStr ? JSON.parse(userStr) : null
         
         if (user && user.id) {
-          const { api } = await import('@/services/api')
-          const data = await api.get(`/api/orders?userId=${user.id}`)
+          const { ordersApi } = await import('@/api/orders')
+          const data = await ordersApi.getMyOrders()
           if (Array.isArray(data) && data.length > 0) {
             // Map db format to local component format
             const mapped = data.map((o: any) => ({
-              id: o.id || o._id,
-              date: o.createdAt,
-              items: o.items,
-              total: o.totalAmount,
-              status: o.status,
-              paymentMethod: o.paymentMethod
+              id: o.id || o._id || '',
+              date: o.createdAt || new Date().toISOString(),
+              items: o.items || [],
+              total: o.totalAmount || 0,
+              status: o.status || 'Хүлээгдэж буй',
+              paymentMethod: o.paymentMethod || ''
             }))
-            setOrders(mapped)
+            setOrders(mapped as unknown as Order[])
             setIsLoading(false)
             return
           }
@@ -54,8 +54,8 @@ export default function OrdersPage() {
       }
 
       // Fallback
-      const savedOrders = JSON.parse(localStorage.getItem('orders') || '[]')
-      setOrders(savedOrders.sort((a: any, b: any) => new Date(b.date).getTime() - new Date(a.date).getTime()))
+      const savedOrders: Order[] = JSON.parse(localStorage.getItem('orders') || '[]')
+      setOrders(savedOrders.sort((a: Order, b: Order) => new Date(b.date).getTime() - new Date(a.date).getTime()))
       setIsLoading(false)
     }
 

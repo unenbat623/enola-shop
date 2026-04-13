@@ -3,9 +3,12 @@ import { Link, useNavigate } from 'react-router'
 import { Mail, Lock, ArrowRight, Loader2 } from 'lucide-react'
 import { toast } from '@/components/common/Toast'
 
+import { useAuthStore } from '@/store/authStore'
+
 export default function LoginForm() {
   const navigate = useNavigate()
-  const [loading, setLoading] = useState(false)
+  const login = useAuthStore(state => state.login)
+  const loading = useAuthStore(state => state.isLoading)
   const [formData, setFormData] = useState({ email: '', password: '' })
   const [errors, setErrors] = useState({ email: '', password: '' })
 
@@ -25,20 +28,25 @@ export default function LoginForm() {
 
     if (hasError) return
 
-    setLoading(true)
-    // Mock API call
-    setTimeout(() => {
-      setLoading(false)
-      if (formData.email === 'admin@enola.mn' && formData.password === 'admin123') {
-        localStorage.setItem('user', JSON.stringify({ id: '1', name: 'Admin', role: 'admin' }))
-        toast.success('Админ амжилттай нэвтэрлээ')
-        navigate('/admin')
+    try {
+      await login({ email: formData.email, password: formData.password })
+      const userStr = localStorage.getItem('user')
+      let user = null
+      
+      const { authApi } = await import('@/api/auth')
+      const { user: fetchedUser } = await authApi.getMe().catch(() => ({ user: null }))
+      
+      if(fetchedUser) {
+        localStorage.setItem('user', JSON.stringify(fetchedUser))
+        toast.success(fetchedUser.role === 'admin' ? 'Админ амжилттай нэвтэрлээ' : 'Амжилттай нэвтэрлээ')
+        navigate(fetchedUser.role === 'admin' ? '/admin' : '/')
       } else {
-        localStorage.setItem('user', JSON.stringify({ id: '2', name: 'Хэрэглэгч', role: 'user' }))
         toast.success('Амжилттай нэвтэрлээ')
         navigate('/')
       }
-    }, 1500)
+    } catch (err: any) {
+      toast.error(err.message || 'Нэвтрэхэд алдаа гарлаа')
+    }
   }
 
   return (

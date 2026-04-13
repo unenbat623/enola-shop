@@ -1,17 +1,27 @@
 import { Hono } from 'hono';
 import Order from '../models/Order';
+import { authMiddleware, adminMiddleware } from '../lib/auth';
 
 const orders = new Hono();
 
-// Get all orders
-orders.get('/', async (c) => {
+// Get all orders (admin)
+orders.get('/', authMiddleware, adminMiddleware, async (c) => {
   try {
-    const userId = c.req.query('userId');
-    const query = userId ? { userId } : {};
-    const allOrders = await Order.find(query).sort({ createdAt: -1 });
+    const allOrders = await Order.find({}).sort({ createdAt: -1 });
     return c.json(allOrders);
   } catch (error) {
     return c.json({ error: 'Failed to fetch orders' }, 500);
+  }
+});
+
+// Get my orders
+orders.get('/my', authMiddleware, async (c) => {
+  try {
+    const user = c.get('user');
+    const myOrders = await Order.find({ userId: user._id.toString() }).sort({ createdAt: -1 });
+    return c.json(myOrders);
+  } catch (error) {
+    return c.json({ error: 'Failed to fetch my orders' }, 500);
   }
 });
 
@@ -28,7 +38,7 @@ orders.post('/', async (c) => {
 });
 
 // Update order status
-orders.patch('/:id/status', async (c) => {
+orders.patch('/:id/status', authMiddleware, adminMiddleware, async (c) => {
   try {
     const id = c.req.param('id');
     const { status } = await c.req.json();
