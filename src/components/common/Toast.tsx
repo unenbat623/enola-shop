@@ -59,21 +59,21 @@ export function Toaster() {
         {toasts.map((t) => (
           <motion.div
             key={t.id}
-            initial={{ opacity: 0, x: 100, scale: 0.9 }}
-            animate={{ opacity: 1, x: 0, scale: 1 }}
-            exit={{ opacity: 0, scale: 0.9, transition: { duration: 0.2 } }}
+            initial={{ opacity: 0, y: 20, scale: 0.95 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            exit={{ opacity: 0, scale: 0.9, transition: { duration: 0.15 } }}
             className={`
-              flex items-center gap-3 px-5 py-3 rounded-lg shadow-xl border bg-white min-w-[300px]
-              ${t.type === 'success' ? 'border-green-100' : t.type === 'error' ? 'border-red-100' : 'border-blue-100'}
+              flex items-center gap-3 px-5 py-3 rounded-[6px] border min-w-[300px] bg-white shadow-sm
+              ${t.type === 'success' ? 'border-brand-success/20' : t.type === 'error' ? 'border-brand-danger/20' : 'border-brand-border'}
             `}
           >
-            {t.type === 'success' && <CheckCircle className="w-5 h-5 text-green-500" />}
-            {t.type === 'error' && <XCircle className="w-5 h-5 text-red-500" />}
-            {t.type === 'info' && <Info className="w-5 h-5 text-blue-500" />}
+            {t.type === 'success' && <CheckCircle className="w-4 h-4 text-brand-success" />}
+            {t.type === 'error' && <XCircle className="w-4 h-4 text-brand-danger" />}
+            {t.type === 'info' && <Info className="w-4 h-4 text-brand-ink" />}
             
-            <p className="text-sm font-medium text-foreground flex-1">{t.message}</p>
+            <p className="text-[13px] font-normal text-brand-ink flex-1">{t.message}</p>
             
-            <button onClick={() => removeToast(t.id)} className="text-gray-400 hover:text-gray-600 transition-colors">
+            <button onClick={() => removeToast(t.id)} className="text-brand-hint hover:text-brand-ink transition-colors">
               <X className="w-4 h-4" />
             </button>
           </motion.div>

@@ -1,6 +1,5 @@
 import { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { ChevronLeft, ChevronRight } from 'lucide-react'
 import { heroSlides } from '@/lib/mock-data'
 import { Link } from 'react-router'
 import { cn } from '@/lib/utils'
@@ -14,92 +13,90 @@ export default function HeroSlider() {
     setCurrent((prev) => (prev + 1) % heroSlides.length)
   }
 
-  const slidePrev = () => {
-    setDirection(-1)
-    setCurrent((prev) => (prev - 1 + heroSlides.length) % heroSlides.length)
-  }
-
   useEffect(() => {
-    const timer = setInterval(slideNext, 4000)
+    const timer = setInterval(slideNext, 5000)
     return () => clearInterval(timer)
   }, [])
 
   return (
-    <div className="relative h-[300px] md:h-[500px] lg:h-[600px] bg-gray-50 overflow-hidden">
-      <AnimatePresence initial={false} custom={direction} mode="wait">
-        <motion.div
-          key={heroSlides[current].id}
-          custom={direction}
-          initial={{ opacity: 0, x: direction > 0 ? 100 : -100 }}
-          animate={{ opacity: 1, x: 0 }}
-          exit={{ opacity: 0, x: direction > 0 ? -100 : 100 }}
-          transition={{ duration: 0.5, ease: 'easeInOut' }}
-          className={cn(
-            "absolute inset-0 flex items-center bg-gradient-to-r",
-            heroSlides[current].gradient
-          )}
-        >
-          <div className="max-w-7xl mx-auto px-4 w-full grid md:grid-cols-2 items-center gap-12">
-            <div className="space-y-6 md:space-y-8">
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.3 }}
-              >
-                <span className="inline-block bg-primary/10 text-primary text-xs font-black tracking-widest uppercase px-3 py-1 rounded-full mb-4">
-                  Онцгой цуглуулга
-                </span>
-                <h1 className="text-3xl md:text-5xl lg:text-7xl font-black text-foreground leading-[1.1] tracking-tighter">
-                  {heroSlides[current].title}
-                </h1>
-              </motion.div>
-              
-              <motion.p
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.4 }}
-                className="text-muted text-sm md:text-lg max-w-md font-medium"
-              >
-                {heroSlides[current].subtitle}
-              </motion.p>
-              
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.5 }}
-              >
-                <Link
-                  to={heroSlides[current].buttonHref}
-                  className="inline-flex items-center justify-center h-12 md:h-14 px-8 md:px-12 bg-primary text-white font-black text-sm md:text-base rounded-md hover:bg-primary-dark transition-all shadow-xl shadow-primary/30"
+    <div className="relative">
+      <div className="relative h-[500px] md:h-[650px] bg-brand-base overflow-hidden border-b border-brand-border">
+        <AnimatePresence initial={false} custom={direction} mode="wait">
+          <motion.div
+            key={heroSlides[current].id}
+            custom={direction}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.8 }}
+            className={cn(
+              "absolute inset-0 flex items-center",
+              current === 0 ? "bg-brand-surface" : "bg-brand-muted"
+            )}
+          >
+            <div className="max-w-7xl mx-auto px-4 w-full grid md:grid-cols-2 items-center gap-12">
+              <div className="space-y-6 md:space-y-8">
+                <motion.div
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.2 }}
                 >
-                  {heroSlides[current].buttonText}
-                </Link>
-              </motion.div>
+                  <span className="text-brand-hint text-[11px] font-bold tracking-[2px] normal-case mb-4 block">
+                    {current === 0 ? "New season" : "Stay classic"}
+                  </span>
+                  <h1 className="text-[40px] md:text-[64px] font-normal text-brand-ink leading-[1.1] tracking-[1px] font-serif">
+                    {current === 0 ? (
+                      <>Minimalist <br /> Aesthetic Edit</>
+                    ) : (
+                      <>Essential <br /> Capsule Wardrobe</>
+                    )}
+                  </h1>
+                </motion.div>
+                
+                <motion.p
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  transition={{ delay: 0.3 }}
+                  className="text-brand-sub text-[14px] max-w-sm leading-relaxed"
+                >
+                  {heroSlides[current].subtitle}
+                </motion.p>
+                
+                <motion.div
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  transition={{ delay: 0.4 }}
+                  className="flex gap-4 pt-4"
+                >
+                  <Link
+                    to={heroSlides[current].buttonHref}
+                    className="inline-flex items-center justify-center h-12 px-10 bg-brand-ink text-brand-base font-medium text-[12px] tracking-[1.5px] rounded-[6px] hover:bg-brand-ink2 transition-all normal-case"
+                  >
+                    Дэлгүүр орох
+                  </Link>
+                  <Link
+                    to="/shop"
+                    className="inline-flex items-center justify-center h-12 px-10 border border-brand-border text-brand-sub font-medium text-[12px] tracking-[1.5px] rounded-[6px] hover:border-brand-sub hover:text-brand-ink transition-all normal-case"
+                  >Бүгдийг харах</Link>
+                </motion.div>
+              </div>
+              
+              <div className="hidden md:flex justify-end pr-10">
+                <motion.div
+                  initial={{ opacity: 0, scale: 0.95 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  transition={{ delay: 0.3 }}
+                  className="relative w-72 h-72 lg:w-[400px] lg:h-[400px] bg-brand-card/20 rounded-full border border-brand-border/30 flex items-center justify-center italic font-serif text-brand-ink/5 text-[150px] select-none"
+                >
+                  {current === 0 ? "Ag" : "Est"}
+                </motion.div>
+              </div>
             </div>
-            
-            <div className="hidden md:flex justify-center relative">
-              <motion.div
-                initial={{ opacity: 0, scale: 0.8, rotate: -10 }}
-                animate={{ opacity: 1, scale: 1, rotate: 0 }}
-                transition={{ delay: 0.4, type: 'spring' }}
-                className="w-72 h-72 lg:w-96 lg:h-96 bg-white/40 backdrop-blur-md rounded-full border border-white/60 flex items-center justify-center p-8 overflow-hidden"
-              >
-                 <div className="w-full h-full bg-gradient-to-br from-primary/20 to-primary-dark/20 rounded-full animate-pulse" />
-              </motion.div>
-            </div>
-          </div>
-        </motion.div>
-      </AnimatePresence>
+          </motion.div>
+        </AnimatePresence>
 
-      {/* Controls */}
-      <div className="absolute inset-x-0 bottom-10 flex items-center justify-center gap-4">
-        <button 
-          onClick={slidePrev}
-          className="w-10 h-10 rounded-full border border-gray-200 bg-white shadow-sm flex items-center justify-center hover:bg-primary hover:text-white transition-all cursor-pointer"
-        >
-          <ChevronLeft className="w-5 h-5" />
-        </button>
-        <div className="flex gap-2">
+        {/* Dots */}
+        <div className="absolute inset-x-0 bottom-10 flex items-center justify-center gap-2 z-20 px-4">
           {heroSlides.map((_, i) => (
             <button
               key={i}
@@ -108,19 +105,29 @@ export default function HeroSlider() {
                 setCurrent(i)
               }}
               className={cn(
-                "h-2 rounded-full transition-all cursor-pointer",
-                current === i ? "w-8 bg-primary" : "w-2 bg-gray-300 hover:bg-gray-400"
+                "h-px transition-all cursor-pointer",
+                current === i ? "w-10 bg-brand-ink" : "w-6 bg-brand-border hover:bg-brand-sub"
               )}
             />
           ))}
         </div>
-        <button 
-          onClick={slideNext}
-          className="w-10 h-10 rounded-full border border-gray-200 bg-white shadow-sm flex items-center justify-center hover:bg-primary hover:text-white transition-all cursor-pointer"
-        >
-          <ChevronRight className="w-5 h-5" />
-        </button>
       </div>
+
+      {/* Marquee Bar */}
+      <div className="bg-brand-muted py-3 overflow-hidden whitespace-nowrap border-b border-brand-border relative z-10">
+        <div className="inline-block animate-marquee font-normal text-brand-sub text-[10px] tracking-[2.5px] normal-case">Free shipping on all orders ✦ new collection 2025 ✦ flash sale ✦ limited edition ✦ free shipping on all orders ✦ new collection 2025 ✦ flash sale ✦ limited edition ✦</div>
+      </div>
+
+      <style>{`
+        @keyframes marquee {
+          0% { transform: translateX(0); }
+          100% { transform: translateX(-50%); }
+        }
+        .animate-marquee {
+          display: inline-block;
+          animation: marquee 40s linear infinite;
+        }
+      `}</style>
     </div>
   )
 }

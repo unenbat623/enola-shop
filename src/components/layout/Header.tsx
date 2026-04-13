@@ -10,67 +10,60 @@ export default function Header() {
   const wishlistTotal = useWishlistStore((state) => state.totalItems())
 
   return (
-    <header className="sticky top-0 bg-white shadow-sm z-50">
-      <div className="max-w-7xl mx-auto px-4 h-20 flex items-center justify-between gap-4 md:gap-8">
+    <header className="sticky top-0 bg-brand-base border-b border-brand-border z-50">
+      <div className="max-w-7xl mx-auto px-4 h-16 flex items-center justify-between gap-4">
         {/* Logo */}
-        <Link to="/" className="text-2xl font-black text-primary flex-shrink-0">
-          Enola <span className="text-foreground">Shop</span>
+        <Link to="/" className="text-[18px] font-normal text-brand-ink flex-shrink-0 tracking-[4px] normal-case italic-none">
+          Enola Shop
         </Link>
 
         {/* Search */}
-        <div className="hidden md:flex flex-1 max-w-xl">
-          <div className="relative w-full flex">
+        <div className="hidden md:flex flex-1 max-w-md mx-8">
+          <div className="relative w-full">
+            <span className="absolute left-3 top-1/2 -translate-y-1/2 text-brand-hint">
+              <Search className="w-4 h-4 cursor-default" />
+            </span>
             <input
               type="text"
               placeholder="Бүтээгдэхүүн хайх..."
-              className="w-full h-11 border border-gray-200 rounded-l-md px-4 outline-none focus:border-primary focus:ring-1 focus:ring-primary/20 transition-all text-sm"
+              className="w-full h-10 bg-brand-surface border border-brand-border rounded-[6px] pl-10 pr-4 outline-none focus:border-brand-ink transition-all text-sm text-brand-ink placeholder:text-brand-hint"
             />
-            <button className="h-11 px-6 bg-primary text-white rounded-r-md hover:bg-primary-dark transition-all flex items-center gap-2 font-medium">
-              <Search className="w-4 h-4" />
-              <span>Хайх</span>
-            </button>
           </div>
         </div>
 
         {/* Icons */}
-        <div className="flex items-center gap-2 md:gap-5">
-          <Link to="/wishlist" className="relative p-2 hover:bg-gray-50 rounded-full transition-colors group">
-            <Heart className="w-6 h-6 text-foreground group-hover:text-primary transition-colors" />
-            {wishlistTotal > 0 && (
-              <span className="absolute -top-1 -right-1 bg-primary text-white text-[10px] font-bold w-5 h-5 rounded-full flex items-center justify-center border-2 border-white">
-                {wishlistTotal}
-              </span>
-            )}
+        <div className="flex items-center gap-2 md:gap-4">
+          <Link to="/wishlist" className="p-2 transition-colors group">
+            <Heart className="w-5 h-5 text-brand-sub group-hover:text-brand-ink transition-colors" />
           </Link>
 
-          <Link to="/cart" className="flex items-center gap-3 p-2 hover:bg-gray-50 rounded-lg transition-colors group border border-transparent hover:border-gray-100">
-            <div className="relative">
-              <ShoppingBag className="w-6 h-6 text-foreground group-hover:text-primary transition-colors" />
+          <Link to="/cart" className="flex items-center gap-2 p-1 transition-colors group">
+            <div className="relative p-1">
+              <ShoppingBag className="w-5 h-5 text-brand-sub group-hover:text-brand-ink transition-colors" />
               {cartTotal > 0 && (
-                <span className="absolute -top-1 -right-1 bg-primary text-white text-[10px] font-bold w-5 h-5 rounded-full flex items-center justify-center border-2 border-white">
+                <span className="absolute -top-1 -right-1 bg-brand-ink text-[9px] font-bold text-brand-base w-4 h-4 rounded-full flex items-center justify-center">
                   {cartTotal}
                 </span>
               )}
             </div>
             <div className="hidden lg:flex flex-col text-left leading-tight">
-              <span className="text-[11px] text-muted font-medium">Сагс</span>
-              <span className="text-sm font-bold">{formatCurrency(cartPrice)}</span>
+              <span className="text-[11px] font-medium text-brand-ink">{formatCurrency(cartPrice)}</span>
             </div>
           </Link>
         </div>
       </div>
       
       {/* Mobile Search */}
-      <div className="md:hidden px-4 pb-4">
-        <div className="relative flex">
+      <div className="md:hidden px-4 pb-3">
+        <div className="relative">
+          <span className="absolute left-3 top-1/2 -translate-y-1/2 text-brand-hint">
+            <Search className="w-4 h-4" />
+          </span>
           <input
             type="text"
             placeholder="Хайх..."
-            className="w-full h-10 border border-gray-100 bg-gray-50 rounded-l-md px-4 outline-none text-sm"
+            className="w-full h-10 border border-brand-border bg-brand-surface pl-10 pr-4 outline-none text-sm text-brand-ink rounded-[6px] focus:border-brand-ink"
           />
-          <button className="h-10 px-4 bg-primary text-white rounded-r-md">
-            <Search className="w-4 h-4" />
-          </button>
         </div>
       </div>
     </header>

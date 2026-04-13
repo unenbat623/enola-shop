@@ -4,38 +4,37 @@ import { categories } from '@/lib/mock-data'
 
 export default function CategoryGrid() {
   return (
-    <section className="py-20 bg-white">
+    <section className="py-24 bg-brand-base">
       <div className="max-w-7xl mx-auto px-4">
-        <div className="flex justify-between items-end mb-12">
+        <div className="flex justify-between items-end mb-16 px-2">
           <div className="space-y-4">
-            <span className="text-primary font-black uppercase tracking-[0.2em] text-[11px]">Дэлгүүр хэсэх</span>
-            <h2 className="text-3xl md:text-5xl font-black tracking-tighter">Ангиллаар харах</h2>
+            <span className="text-brand-hint font-medium normal-case tracking-[2px] text-[10px]">Shop by style</span>
+            <h2 className="text-3xl md:text-4xl font-normal text-brand-ink tracking-tight normal-case">Ангилал</h2>
           </div>
-          <Link to="/shop" className="text-sm font-bold text-muted hover:text-primary transition-colors pb-2 border-b border-transparent hover:border-primary">
-            Бүгдийг үзэх →
-          </Link>
+          <Link to="/shop" className="text-[11px] font-medium text-brand-sub hover:text-brand-ink transition-colors pb-2 border-b border-transparent hover:border-brand-ink normal-case normal-case">View all →</Link>
         </div>
 
-        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-6">
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-0 border-l border-t border-brand-border">
           {categories.map((cat, i) => (
             <motion.div
               key={cat.id}
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
+              initial={{ opacity: 0 }}
+              whileInView={{ opacity: 1 }}
               viewport={{ once: true }}
-              transition={{ delay: i * 0.1 }}
+              transition={{ delay: i * 0.05 }}
             >
               <Link
                 to={`/shop?category=${cat.slug}`}
-                className="group flex flex-col items-center gap-4 p-8 rounded-2xl border border-gray-100 bg-white hover:border-primary/20 hover:shadow-2xl hover:shadow-primary/5 transition-all duration-500 hover:-translate-y-2"
+                className="group flex flex-col items-center gap-6 p-10 border-r border-b border-brand-border bg-white hover:bg-brand-surface transition-all duration-300 relative overflow-hidden"
               >
-                <div className="w-20 h-20 rounded-full bg-gray-50 flex items-center justify-center text-4xl group-hover:scale-110 group-hover:bg-primary/5 transition-all duration-500">
+                <div className="text-4xl transition-transform duration-500 group-hover:scale-110 z-10 grayscale-[0.5] group-hover:grayscale-0">
                   {cat.icon}
                 </div>
-                <div className="text-center space-y-1">
-                  <h3 className="font-bold text-sm group-hover:text-primary transition-colors">{cat.name}</h3>
-                  <p className="text-[11px] text-muted font-medium">{cat.productCount}+ бараа</p>
+                <div className="text-center space-y-1.5 z-10">
+                  <h3 className="font-normal text-[13px] text-brand-ink group-hover:text-brand-ink transition-colors normal-case normal-case">{cat.name}</h3>
+                  <p className="text-[9px] text-brand-hint font-medium normal-case tracking-[1.5px] opacity-70 group-hover:opacity-100">{cat.productCount} ITEMS</p>
                 </div>
+                <div className="absolute inset-0 bg-brand-ink/0 group-hover:bg-brand-ink/[0.01] transition-colors" />
               </Link>
             </motion.div>
           ))}

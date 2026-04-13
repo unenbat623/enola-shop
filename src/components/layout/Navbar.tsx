@@ -1,40 +1,49 @@
 import { ChevronDown, Menu } from 'lucide-react'
-import { Link } from 'react-router'
+import { Link, useLocation } from 'react-router'
 import { categories } from '@/lib/mock-data'
 import { useState } from 'react'
+import { cn } from '@/lib/utils'
 
 export default function Navbar() {
   const [isCatOpen, setIsCatOpen] = useState(false)
+  const location = useLocation()
+
+  const navLinks = [
+    { name: 'Нүүр', path: '/' },
+    { name: 'Дэлгүүр', path: '/shop' },
+    { name: 'Шинэ цуглуулга', path: '/shop?filter=new' },
+    { name: 'Хямдрал', path: '/shop?filter=sale' },
+    { name: 'Холбоо барих', path: '/contact' },
+  ]
 
   return (
-    <nav className="border-b bg-white relative z-40">
+    <nav className="border-b border-brand-border bg-brand-base relative z-40">
       <div className="max-w-7xl mx-auto px-4 flex items-center h-12">
         {/* Category Dropdown */}
         <div className="relative h-full">
           <button 
             onMouseEnter={() => setIsCatOpen(true)}
             onMouseLeave={() => setIsCatOpen(false)}
-            className="h-full flex items-center gap-3 px-4 bg-primary text-white font-bold text-sm hover:bg-primary-dark transition-all cursor-pointer rounded-t-sm"
+            className="h-full flex items-center gap-3 px-6 bg-brand-muted text-brand-ink font-medium text-[12px] tracking-wider hover:bg-brand-card transition-all cursor-pointer border-r border-brand-border"
           >
             <Menu className="w-4 h-4" />
-            <span>Бүх ангилал</span>
-            <ChevronDown className="w-4 h-4 ml-2" />
+            <span>Ангилал</span>
           </button>
 
           {isCatOpen && (
             <div 
               onMouseEnter={() => setIsCatOpen(true)}
               onMouseLeave={() => setIsCatOpen(false)}
-              className="absolute top-12 left-0 w-64 bg-white border border-gray-100 shadow-xl py-2 rounded-b-md z-50 transition-all animate-in fade-in slide-in-from-top-2"
+              className="absolute top-12 left-0 w-64 bg-brand-base border border-brand-border py-2 z-50 transition-all rounded-b-[6px]"
             >
               {categories.map((cat) => (
                 <Link
                   key={cat.id}
                   to={`/shop?category=${cat.slug}`}
-                  className="flex items-center gap-4 px-6 py-3 hover:bg-gray-50 text-sm font-medium transition-colors"
+                  className="flex items-center gap-4 px-6 py-3 hover:bg-brand-surface text-[13px] font-normal transition-colors text-brand-ink"
                 >
-                  <span className="text-xl">{cat.icon}</span>
-                  <span>{cat.name}</span>
+                  <span className="text-lg">{cat.icon}</span>
+                  <span className="tracking-tight">{cat.name}</span>
                 </Link>
               ))}
             </div>
@@ -42,19 +51,28 @@ export default function Navbar() {
         </div>
 
         {/* Links */}
-        <div className="hidden lg:flex items-center gap-8 ml-10">
-          <Link to="/" className="text-sm font-bold hover:text-primary transition-colors">Нүүр</Link>
-          <Link to="/shop" className="text-sm font-bold hover:text-primary transition-colors">Дэлгүүр</Link>
-          <Link to="/shop?filter=new" className="text-sm font-bold hover:text-primary transition-colors uppercase">Шинэ ирэлт</Link>
-          <Link to="/shop?filter=sale" className="text-sm font-bold hover:text-primary transition-colors uppercase">Хямдрал</Link>
-          <Link to="/contact" className="text-sm font-bold hover:text-primary transition-colors">Холбоо барих</Link>
+        <div className="hidden lg:flex items-center gap-8 ml-10 h-full">
+          {navLinks.map((link) => {
+            const isActive = location.pathname === link.path
+            return (
+              <Link 
+                key={link.name}
+                to={link.path} 
+                className={cn(
+                  "text-[12px] tracking-[1px] transition-all normal-case h-full flex items-center border-b-px",
+                  isActive 
+                    ? "text-brand-ink border-brand-ink" 
+                    : "text-brand-hint hover:text-brand-ink border-transparent"
+                )}
+              >
+                {link.name}
+              </Link>
+            )
+          })}
         </div>
 
         {/* Right Label */}
-        <div className="ml-auto hidden xl:flex items-center gap-2 text-primary font-black uppercase text-[11px] tracking-widest">
-          <span className="flex items-center justify-center w-5 h-5 bg-primary text-white rounded-full text-[9px] animate-pulse">🔥</span>
-          Зуны цуглуулга −20%
-        </div>
+        <div className="ml-auto hidden xl:flex items-center gap-2 text-brand-sale font-medium text-[11px] tracking-[2px]">Flash sale −30%</div>
       </div>
     </nav>
   )

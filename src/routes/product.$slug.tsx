@@ -20,7 +20,7 @@ export default function ProductDetail() {
   const { toggleCart } = useUIStore()
 
   if (!product) {
-    return <div className="py-40 text-center font-black text-2xl">Бүтээгдэхүүн олдсонгүй.</div>
+    return <div className="bg-brand-base min-h-screen py-40 text-center font-medium text-2xl text-brand-white">Product not found.</div>
   }
 
   const isWishlisted = isInWishlist(product.id)
@@ -30,115 +30,118 @@ export default function ProductDetail() {
     for(let i=0; i<qty; i++) {
        addItem(product)
     }
-    toast.success(`"${product.name}" сагсанд нэмэгдлээ.`)
+    toast.success(`"${product.name}" added to cart.`)
     toggleCart(true)
   }
 
   const handleWishlist = () => {
     toggleItem(product)
-    if(!isWishlisted) toast.info(`"${product.name}" хүслийн жагсаалтад орлоо.`)
+    if(!isWishlisted) toast.info(`"${product.name}" added to wishlist.`)
   }
 
   return (
-    <div className="bg-white min-h-screen pb-20">
+    <div className="bg-brand-base min-h-screen pb-40">
       {/* Breadcrumb limit */}
-      <div className="border-b border-gray-100 bg-gray-50 h-10 flex items-center">
-         <div className="max-w-7xl mx-auto px-4 w-full flex items-center gap-2 text-xs font-bold text-muted">
-            <Link to="/" className="hover:text-primary transition-colors">Нүүр</Link>
+      <div className="border-b border-brand-border bg-brand-muted h-10 flex items-center">
+         <div className="max-w-7xl mx-auto px-4 w-full flex items-center gap-2 text-[11px] font-bold text-brand-sub normal-case tracking-wider">
+            <Link to="/" className="hover:text-brand-mint transition-colors">Нүүр</Link>
             <span>/</span>
-            <Link to={`/shop?category=${product.categorySlug}`} className="hover:text-primary transition-colors">{product.category}</Link>
+            <Link to={`/shop?category=${product.categorySlug}`} className="hover:text-brand-mint transition-colors">{product.category}</Link>
             <span>/</span>
-            <span className="text-foreground line-clamp-1">{product.name}</span>
+            <span className="text-brand-white line-clamp-1">{product.name}</span>
          </div>
       </div>
       
-      <div className="max-w-7xl mx-auto px-4 mt-8 flex flex-col md:flex-row gap-12">
+      <div className="max-w-7xl mx-auto px-4 mt-12 flex flex-col md:flex-row gap-16">
         {/* Images */}
-        <div className="w-full md:w-1/2 space-y-4">
-          <div className="aspect-[4/5] bg-gray-100 rounded-3xl overflow-hidden relative">
-             <img src={product.images[0]} alt={product.name} className="w-full h-full object-cover" />
+        <div className="w-full md:w-[50%] space-y-4">
+          <div className="aspect-[4/5] bg-brand-muted rounded-[24px] overflow-hidden relative border border-brand-border">
+             <img src={product.images[0]} alt={product.name} className="w-full h-full object-cover opacity-90" />
              {product.badge && (
                <div className="absolute top-6 left-6">
                  <span className={cn(
-                  "px-4 py-2 rounded-md text-[11px] font-black tracking-widest uppercase text-white shadow-xl",
-                  product.badge === 'NEW' ? 'bg-green-500' : product.badge === 'SALE' ? 'bg-red-500' : 'bg-primary'
-                 )}>{product.badge}</span>
+                   "px-4 py-1.5 rounded-[6px] text-[10px] font-bold tracking-[2px] normal-case shadow-none",
+                   product.badge === 'New' ? 'bg-brand-mint' : product.badge === 'Хямдрал' ? 'bg-brand-sale text-white' : 'bg-brand-muted border border-brand-mint text-brand-mint'
+                 )}
+                 style={product.badge === 'New' ? { color: 'var(--accent-dark)' } : undefined}
+               >{product.badge}</span>
                </div>
              )}
           </div>
         </div>
 
         {/* Info */}
-        <div className="w-full md:w-1/2 flex flex-col pt-4">
-          <Link to={`/shop?category=${product.categorySlug}`} className="text-primary font-black uppercase tracking-widest text-[11px] hover:underline w-fit mb-2">
+        <div className="w-full md:w-[50%] flex flex-col pt-4">
+          <Link to={`/shop?category=${product.categorySlug}`} className="text-brand-mint font-bold normal-case tracking-[2px] text-[11px] hover:underline w-fit mb-4">
             {product.category}
           </Link>
-          <h1 className="text-3xl lg:text-4xl font-black leading-tight mb-4">{product.name}</h1>
+          <h1 className="text-3xl lg:text-4xl font-medium text-brand-white leading-tight mb-6 normal-case tracking-tight">{product.name}</h1>
           
-          <div className="flex items-center gap-4 mb-6">
-            <div className="flex items-center gap-1 text-amber-400">
+          <div className="flex items-center gap-4 mb-8">
+            <div className="flex items-center gap-1 text-brand-mint">
                {Array.from({ length: 5 }).map((_, i) => (
-                 <Star key={i} className={cn("w-4 h-4", i < Math.floor(product.rating) ? "fill-current" : "text-gray-200")} />
+                 <Star key={i} className={cn("w-4 h-4", i < Math.floor(product.rating) ? "fill-current" : "text-brand-muted")} />
                ))}
-               <span className="text-sm text-foreground font-black ml-2">{product.rating}</span>
+               <span className="text-sm text-brand-white font-bold ml-2">{product.rating}</span>
             </div>
-            <span className="text-gray-300">|</span>
-            <span className="text-sm font-bold text-muted">{product.reviewCount} сэтгэгдэл</span>
+            <span className="text-brand-border">|</span>
+            <span className="text-sm font-medium text-brand-sub">{product.reviewCount} customer reviews</span>
           </div>
 
-          <div className="flex items-baseline gap-4 mb-8">
-            <span className="text-4xl font-black text-primary">{formatCurrency(product.price)}</span>
+          <div className="flex items-baseline gap-4 mb-10">
+            <span className="text-4xl font-bold text-brand-white">{formatCurrency(product.price)}</span>
             {product.originalPrice && (
               <>
-                <span className="text-xl text-muted font-medium line-through">{formatCurrency(product.originalPrice)}</span>
-                <span className="bg-[#111827] text-white px-2 py-1 rounded text-xs font-black">
+                <span className="text-xl text-brand-hint font-medium line-through">{formatCurrency(product.originalPrice)}</span>
+                <span className="bg-brand-sale/10 text-brand-sale px-2 py-1 rounded-[4px] text-xs font-bold border border-brand-sale/20">
                   -{calculateDiscountPercentage(product.price, product.originalPrice)}%
                 </span>
               </>
             )}
           </div>
 
-          <p className="text-muted leading-relaxed font-medium mb-10 pb-10 border-b border-gray-100">
+          <p className="text-brand-sub leading-relaxed font-medium mb-12 pb-12 border-b border-brand-border">
             {product.description}
           </p>
 
-          <div className="flex items-center gap-4 mb-10">
-            <div className="flex items-center border-2 border-gray-100 rounded-xl h-14 w-32 bg-gray-50">
-               <button onClick={() => setQty(q => Math.max(1, q - 1))} className="w-10 h-full flex items-center justify-center font-bold text-gray-400 hover:text-foreground cursor-pointer">-</button>
-               <span className="flex-1 text-center font-black">{qty}</span>
-               <button onClick={() => setQty(q => q + 1)} className="w-10 h-full flex items-center justify-center font-bold text-gray-400 hover:text-foreground cursor-pointer">+</button>
+          <div className="flex items-center gap-4 mb-12">
+            <div className="flex items-center border border-brand-border rounded-[8px] h-12 w-32 bg-brand-muted">
+               <button onClick={() => setQty(q => Math.max(1, q - 1))} className="w-10 h-full flex items-center justify-center font-bold text-brand-hint hover:text-brand-mint cursor-pointer transition-colors">-</button>
+               <span className="flex-1 text-center font-bold text-brand-white">{qty}</span>
+               <button onClick={() => setQty(q => q + 1)} className="w-10 h-full flex items-center justify-center font-bold text-brand-hint hover:text-brand-mint cursor-pointer transition-colors">+</button>
             </div>
             <button 
               onClick={handleAddToCart}
-              className="flex-1 h-14 bg-primary text-white rounded-xl flex items-center justify-center gap-3 font-black text-sm uppercase tracking-wider hover:bg-primary-dark transition-all shadow-xl shadow-primary/20 cursor-pointer"
+              className="flex-1 h-12 bg-brand-mint rounded-[8px] flex items-center justify-center gap-3 font-bold text-sm normal-case tracking-wide hover:bg-brand-mint-dk transition-all shadow-none cursor-pointer"
+              style={{ color: 'var(--accent-dark)' }}
             >
-              <ShoppingBag className="w-5 h-5" /> Сагсанд нэмэх
-            </button>
+              <ShoppingBag className="w-5 h-5" />Сагсанд нэмэх</button>
             <button 
               onClick={handleWishlist}
               className={cn(
-                "w-14 h-14 rounded-xl border-2 flex items-center justify-center transition-all cursor-pointer shadow-sm",
-                isWishlisted ? "border-primary bg-primary text-white shadow-primary/20" : "border-gray-100 bg-white text-gray-400 hover:border-primary hover:text-primary"
+                "w-12 h-12 rounded-[8px] border flex items-center justify-center transition-all cursor-pointer",
+                isWishlisted ? "border-brand-mint bg-brand-mint" : "border-brand-border bg-brand-surface text-brand-hint hover:border-brand-mint hover:text-brand-mint"
               )}
+              style={isWishlisted ? { color: 'var(--accent-dark)' } : undefined}
             >
-              <Heart className={cn("w-6 h-6", isWishlisted && "fill-current")} />
+              <Heart className={cn("w-5 h-5", isWishlisted && "fill-current")} />
             </button>
           </div>
 
           {/* Features */}
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-auto">
-            <div className="flex items-center gap-3 p-4 bg-green-50/50 rounded-xl border border-green-100/50">
-              <ShieldCheck className="w-6 h-6 text-green-500" />
+            <div className="flex items-center gap-4 p-5 bg-brand-surface rounded-[12px] border border-brand-border">
+              <ShieldCheck className="w-6 h-6 text-brand-mint" />
               <div className="flex flex-col">
-                <span className="text-sm font-black text-green-900">Баталгаат хугацаа</span>
-                <span className="text-xs text-green-600 font-medium">100% оригнал</span>
+                <span className="text-[11px] font-bold text-brand-white normal-case tracking-wider">Quality Assurance</span>
+                <span className="text-xs text-brand-sub font-medium">100% Original Product</span>
               </div>
             </div>
-            <div className="flex items-center gap-3 p-4 bg-blue-50/50 rounded-xl border border-blue-100/50">
-              <Truck className="w-6 h-6 text-blue-500" />
+            <div className="flex items-center gap-4 p-5 bg-brand-surface rounded-[12px] border border-brand-border">
+              <Truck className="w-6 h-6 text-brand-mint" />
               <div className="flex flex-col">
-                <span className="text-sm font-black text-blue-900">Шуурхай хүргэлт</span>
-                <span className="text-xs text-blue-600 font-medium">УБ хот дотор 24ц</span>
+                <span className="text-[11px] font-bold text-brand-white normal-case tracking-wider">Fast Delivery</span>
+                <span className="text-xs text-brand-sub font-medium">Within 24-48 hours</span>
               </div>
             </div>
           </div>

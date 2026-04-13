@@ -19,112 +19,115 @@ export default function CartDrawer() {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             onClick={() => toggleCart(false)}
-            className="fixed inset-0 bg-black/40 backdrop-blur-[2px] z-[200] cursor-pointer"
+            className="fixed inset-0 bg-brand-ink/10 backdrop-blur-[2px] z-[200] cursor-pointer"
           />
 
           {/* Drawer */}
-          <motion.div
-            initial={{ x: '100%' }}
-            animate={{ x: 0 }}
-            exit={{ x: '100%' }}
-            transition={{ type: 'spring', damping: 25, stiffness: 200 }}
-            className="fixed top-0 right-0 h-full w-full max-w-[400px] bg-white z-[201] shadow-2xl flex flex-col"
-          >
-            {/* Header */}
-            <div className="flex items-center justify-between p-6 border-b">
-              <div className="flex items-center gap-3">
-                <ShoppingBag className="w-6 h-6 text-primary" />
-                <h2 className="text-xl font-black">Таны сагс</h2>
-                <span className="bg-primary/10 text-primary text-xs font-bold px-2 py-1 rounded-full">
-                  {items.length}
-                </span>
-              </div>
-              <button 
-                onClick={() => toggleCart(false)}
-                className="p-2 hover:bg-gray-100 rounded-full transition-colors cursor-pointer"
-              >
-                <X className="w-6 h-6" />
-              </button>
-            </div>
-
-            {/* List */}
-            <div className="flex-1 overflow-y-auto p-6 space-y-6">
-              {items.length === 0 ? (
-                <div className="h-full flex flex-col items-center justify-center text-center space-y-4">
-                  <div className="w-20 h-20 bg-gray-50 rounded-full flex items-center justify-center">
-                    <ShoppingBag className="w-10 h-10 text-gray-300" />
-                  </div>
-                  <p className="text-gray-500 font-medium">Таны сагс хоосон байна.</p>
-                  <Link 
-                    to="/shop" 
-                    onClick={() => toggleCart(false)}
-                    className="bg-primary text-white px-8 py-3 rounded-md font-bold text-sm hover:bg-primary-dark transition-all"
-                  >
-                    Дэлгүүрээр зочлох
-                  </Link>
+            <motion.div
+              initial={{ x: '100%' }}
+              animate={{ x: 0 }}
+              exit={{ x: '100%' }}
+              transition={{ type: 'spring', damping: 25, stiffness: 200 }}
+              className="fixed top-0 right-0 h-full w-full max-w-[420px] bg-brand-base z-[201] flex flex-col border-l border-brand-border"
+            >
+              {/* Header */}
+              <div className="flex items-center justify-between p-6 border-b border-brand-border">
+                <div className="flex items-center gap-3">
+                  <h2 className="text-[15px] font-normal text-brand-ink normal-case tracking-[2px]">Миний сагс</h2>
+                  <span className="bg-brand-muted text-[10px] font-bold px-2 py-0.5 rounded-full text-brand-sub">
+                    {items.length}
+                  </span>
                 </div>
-              ) : (
-                items.map((item) => (
-                  <div key={item.id} className="flex gap-4 group">
-                    <div className="w-20 h-24 bg-gray-50 rounded-lg overflow-hidden flex-shrink-0">
-                      <img src={item.images[0]} alt={item.name} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" loading="lazy" />
+                <button 
+                  onClick={() => toggleCart(false)}
+                  className="p-2 hover:bg-brand-surface rounded-full transition-colors cursor-pointer text-brand-sub"
+                >
+                  <X className="w-5 h-5" />
+                </button>
+              </div>
+
+              {/* List */}
+              <div className="flex-1 overflow-y-auto p-6 space-y-4 custom-scrollbar">
+                {items.length === 0 ? (
+                  <div className="h-full flex flex-col items-center justify-center text-center space-y-4">
+                    <div className="w-16 h-16 bg-brand-surface border border-brand-border rounded-full flex items-center justify-center text-brand-ghost">
+                      <ShoppingBag className="w-6 h-6" />
                     </div>
-                    <div className="flex-1 flex flex-col justify-between">
-                      <div className="space-y-1">
-                        <h3 className="text-sm font-bold line-clamp-1">{item.name}</h3>
-                        <p className="text-primary font-black text-sm">{formatCurrency(item.price)}</p>
+                    <p className="text-brand-sub text-[13px]">Сагс хоосон байна</p>
+                    <Link 
+                      to="/shop" 
+                      onClick={() => toggleCart(false)}
+                      className="text-brand-ink text-[12px] font-medium tracking-wider normal-case border-b border-brand-ink"
+                    >
+                      Дэлгүүр рүү буцах
+                    </Link>
+                  </div>
+                ) : (
+                  items.map((item) => (
+                    <div key={item.id} className="flex gap-4 py-4 border-b border-brand-border last:border-0 group">
+                      <div className="w-20 h-24 bg-brand-surface rounded-[6px] overflow-hidden flex-shrink-0 border border-brand-border">
+                        <img src={item.images[0]} alt={item.name} className="w-full h-full object-cover opacity-90 group-hover:opacity-100 transition-all duration-300" loading="lazy" />
                       </div>
-                      <div className="flex items-center justify-between">
-                        <div className="flex items-center border rounded-md">
+                      <div className="flex-1 flex flex-col justify-between">
+                        <div className="space-y-1">
+                          <h3 className="text-[13px] font-normal text-brand-ink line-clamp-1">{item.name}</h3>
+                          <p className="text-brand-ink font-medium text-[13px]">{formatCurrency(item.price)}</p>
+                        </div>
+                        <div className="flex items-center justify-between mt-auto">
+                          <div className="flex items-center border border-brand-border rounded-[4px] bg-brand-surface">
+                            <button 
+                              onClick={() => updateQuantity(item.id, item.quantity - 1)}
+                              className="p-1 px-2 hover:text-brand-ink transition-colors cursor-pointer text-brand-hint"
+                            >
+                              <Minus className="w-3 h-3" />
+                            </button>
+                            <span className="w-6 text-center text-[12px] font-medium text-brand-ink">{item.quantity}</span>
+                            <button 
+                              onClick={() => updateQuantity(item.id, item.quantity + 1)}
+                              className="p-1 px-2 hover:text-brand-ink transition-colors cursor-pointer text-brand-hint"
+                            >
+                              <Plus className="w-3 h-3" />
+                            </button>
+                          </div>
                           <button 
-                            onClick={() => updateQuantity(item.id, item.quantity - 1)}
-                            className="p-1 hover:text-primary transition-colors cursor-pointer"
+                            onClick={() => removeItem(item.id)}
+                            className="text-brand-hint hover:text-brand-ink transition-colors p-1"
                           >
-                            <Minus className="w-4 h-4" />
-                          </button>
-                          <span className="w-8 text-center text-xs font-bold">{item.quantity}</span>
-                          <button 
-                            onClick={() => updateQuantity(item.id, item.quantity + 1)}
-                            className="p-1 hover:text-primary transition-colors cursor-pointer"
-                          >
-                            <Plus className="w-4 h-4" />
+                            <Trash2 className="w-4 h-4" />
                           </button>
                         </div>
-                        <button 
-                          onClick={() => removeItem(item.id)}
-                          className="text-gray-300 hover:text-red-500 transition-colors p-1"
-                        >
-                          <Trash2 className="w-4 h-4" />
-                        </button>
                       </div>
                     </div>
-                  </div>
-                ))
-              )}
-            </div>
-
-            {/* Footer */}
-            {items.length > 0 && (
-              <div className="p-6 border-t bg-gray-50 space-y-4">
-                <div className="flex justify-between items-center">
-                  <span className="text-gray-500 font-medium">Нийт дүн:</span>
-                  <span className="text-2xl font-black text-primary">{formatCurrency(totalPrice())}</span>
-                </div>
-                <div className="grid grid-cols-2 gap-4">
-                  <Link 
-                    to="/cart" 
-                    onClick={() => toggleCart(false)}
-                    className="flex items-center justify-center bg-white border border-gray-200 py-4 rounded-md font-bold text-sm hover:border-primary hover:text-primary transition-all"
-                  >
-                    Сагс руу очих
-                  </Link>
-                  <button className="bg-[#111827] text-white py-4 rounded-md font-bold text-sm hover:bg-black transition-all shadow-lg hover:shadow-primary/20">
-                    Худалдан авах
-                  </button>
-                </div>
+                  ))
+                )}
               </div>
-            )}
-          </motion.div>
+
+              {/* Footer */}
+              {items.length > 0 && (
+                <div className="p-8 border-t border-brand-border bg-brand-base space-y-6">
+                  <div className="flex justify-between items-center">
+                    <span className="text-brand-sub font-normal text-[11px] normal-case tracking-wider">Дүн:</span>
+                    <span className="text-[16px] font-medium text-brand-ink">{formatCurrency(totalPrice())}</span>
+                  </div>
+                  <div className="flex flex-col gap-3">
+                    <Link 
+                      to="/checkout"
+                      onClick={() => toggleCart(false)}
+                      className="w-full h-12 bg-brand-ink text-brand-base flex items-center justify-center rounded-[6px] font-medium text-[12px] tracking-[1.5px] hover:bg-brand-ink2 transition-all normal-case"
+                    >
+                      Захиалга өгөх
+                    </Link>
+                    <Link 
+                      to="/cart" 
+                      onClick={() => toggleCart(false)}
+                      className="flex items-center justify-center bg-transparent border border-brand-border h-12 rounded-[6px] font-medium text-[11px] tracking-wider text-brand-sub normal-case hover:bg-brand-surface transition-all"
+                    >
+                      Сагс харах
+                    </Link>
+                  </div>
+                </div>
+              )}
+            </motion.div>
         </>
       )}
     </AnimatePresence>

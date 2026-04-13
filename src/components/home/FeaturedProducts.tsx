@@ -15,32 +15,34 @@ export default function FeaturedProducts() {
   const [activeTab, setActiveTab] = useState('featured')
 
   const filteredProducts = products.filter((p) => {
-    if (activeTab === 'sale') return p.badge === 'SALE'
-    if (activeTab === 'new') return p.badge === 'NEW'
-    if (activeTab === 'hot') return p.badge === 'HOT'
+    if (activeTab === 'sale') return p.badge === 'Хямдрал'
+    if (activeTab === 'new') return p.badge === 'New'
+    if (activeTab === 'hot') return p.badge === 'Hot'
     return true // featured case or default
   }).slice(0, 8)
 
   return (
-    <section className="py-20 bg-gray-50/50">
+    <section className="py-24 bg-brand-base border-y border-brand-border">
       <div className="max-w-7xl mx-auto px-4">
-        <div className="text-center mb-12 space-y-4">
-          <span className="text-primary font-black uppercase tracking-[0.2em] text-[11px]">Шилдэг бүтээгдэхүүн</span>
-          <h2 className="text-3xl md:text-5xl font-black tracking-tighter">Таны сонголтод</h2>
+        <div className="text-center mb-16 space-y-4">
+          <span className="text-brand-hint font-medium normal-case tracking-[2px] text-[10px]">Shop collections</span>
+          <h2 className="text-3xl md:text-4xl font-normal text-brand-ink tracking-tight normal-case">Selective editorial</h2>
           
-          <div className="flex flex-wrap justify-center gap-2 md:gap-4 pt-4">
+          <div className="flex flex-wrap justify-center gap-10 pt-8 h-12">
             {tabs.map((tab) => (
               <button
                 key={tab.id}
                 onClick={() => setActiveTab(tab.id)}
                 className={cn(
-                  "px-6 py-2 rounded-full text-sm font-bold transition-all cursor-pointer border-2",
+                  "px-1 h-full text-[11px] font-medium tracking-[2px] transition-all cursor-pointer normal-case border-b",
                   activeTab === tab.id 
-                    ? "bg-primary border-primary text-white shadow-xl shadow-primary/20 scale-105" 
-                    : "bg-white border-transparent text-muted hover:border-gray-200"
+                    ? "border-brand-ink text-brand-ink" 
+                    : "border-transparent text-brand-hint hover:text-brand-ink"
                 )}
               >
-                {tab.label}
+                {tab.id === 'featured' ? 'Онцлох' : 
+                 tab.id === 'sale' ? 'Хямдрал' : 
+                 tab.id === 'new' ? 'New in' : 'Trending'}
               </button>
             ))}
           </div>
@@ -49,10 +51,10 @@ export default function FeaturedProducts() {
         <AnimatePresence mode="wait">
           <motion.div
             key={activeTab}
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -20 }}
-            transition={{ duration: 0.4 }}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.3 }}
             className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8"
           >
             {filteredProducts.map((product) => (

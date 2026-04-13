@@ -1,8 +1,8 @@
 import { motion } from 'framer-motion'
-import { Heart, ShoppingBag, Star, Eye } from 'lucide-react'
+import { Heart, ShoppingBag } from 'lucide-react'
 import { Link } from 'react-router'
 import { type Product } from '@/lib/types'
-import { formatCurrency, calculateDiscountPercentage, cn } from '@/lib/utils'
+import { formatCurrency, cn } from '@/lib/utils'
 import { useCartStore } from '@/store/cartStore'
 import { useWishlistStore } from '@/store/wishlistStore'
 import { toast } from '@/components/common/Toast'
@@ -27,104 +27,57 @@ export default function ProductCard({ product }: Props) {
     toggleCart(true)
   }
 
-  const handleWishlist = (e: React.MouseEvent) => {
-    e.preventDefault()
-    e.stopPropagation()
-    toggleItem(product)
-    if (!isWishlisted) {
-      toast.info(`"${product.name}" хүслийн жагсаалтад орлоо.`)
-    }
-  }
-
   return (
-    <div className="group bg-white rounded-xl overflow-hidden border border-gray-100 hover:border-primary/20 hover:shadow-2xl hover:shadow-primary/5 transition-all duration-500 h-full flex flex-col">
-      {/* Image Panel */}
-      <div className="relative aspect-[4/5] bg-gray-50 overflow-hidden">
-        <img 
-          src={product.images[0]} 
-          alt={product.name} 
-          className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" 
-          loading="lazy"
-        />
-        
-        {/* Badges */}
-        <div className="absolute top-4 left-4 flex flex-col gap-2">
-          {product.badge && (
-            <span className={cn(
-              "px-3 py-1 rounded text-[10px] font-black tracking-widest uppercase text-white shadow-sm",
-              product.badge === 'NEW' ? 'bg-green-500' : product.badge === 'SALE' ? 'bg-red-500' : 'bg-primary'
-            )}>
-              {product.badge}
-            </span>
-          )}
-          {product.originalPrice && (
-            <span className="bg-[#111827] text-white px-3 py-1 rounded text-[10px] font-black tracking-widest uppercase">
-              -{calculateDiscountPercentage(product.price, product.originalPrice)}%
-            </span>
-          )}
-        </div>
-
-        {/* Actions Overlay */}
-        <div className="absolute inset-0 bg-black/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500 flex items-center justify-center gap-3">
-          <button 
-            onClick={handleWishlist}
-            className={cn(
-              "w-12 h-12 rounded-full flex items-center justify-center shadow-lg transition-all duration-300 translate-y-4 group-hover:translate-y-0 cursor-pointer",
-              isWishlisted ? "bg-primary text-white" : "bg-white text-foreground hover:bg-primary hover:text-white"
+    <div className="group bg-white rounded-[10px] overflow-hidden border border-brand-border hover:border-brand-ghost hover:-translate-y-0.5 transition-all duration-200 h-full flex flex-col relative">
+      <Link to={`/product/${product.slug}`} className="flex-1 flex flex-col">
+        {/* Image Panel */}
+        <div className="relative aspect-[3/4] bg-brand-surface overflow-hidden">
+          <img 
+            src={product.images[0]} 
+            alt={product.name} 
+            className="w-full h-full object-cover transition-transform duration-400 group-hover:scale-[1.03]" 
+            loading="lazy"
+          />
+          
+          {/* Badges */}
+          <div className="absolute top-[10px] left-[10px] flex flex-col gap-2 z-10">
+            {product.badge === 'New' && (
+              <span className="bg-brand-ink text-brand-base text-[9px] font-bold tracking-[1.5px] normal-case px-2 py-0.5 rounded-[3px]">New</span>
             )}
-          >
-            <Heart className={cn("w-5 h-5", isWishlisted && "fill-current")} />
-          </button>
-          <Link 
-            to={`/product/${product.slug}`}
-            className="w-12 h-12 bg-white text-foreground rounded-full flex items-center justify-center shadow-lg hover:bg-primary hover:text-white transition-all duration-300 translate-y-4 group-hover:translate-y-0 delay-[50ms] cursor-pointer"
-          >
-            <Eye className="w-5 h-5" />
-          </Link>
-        </div>
-
-        {/* Quick Add Button */}
-        <div className="absolute inset-x-4 bottom-4 translate-y-12 group-hover:translate-y-0 transition-transform duration-500 delay-100">
-           <button 
-            onClick={handleAdd}
-            className="w-full h-11 bg-white text-foreground hover:bg-primary hover:text-white rounded-md flex items-center justify-center gap-2 font-black text-[12px] uppercase tracking-widest shadow-xl transition-all border border-gray-100 cursor-pointer"
-          >
-            <ShoppingBag className="w-4 h-4" />
-            Сагсанд нэмэх
-          </button>
-        </div>
-      </div>
-
-      {/* Info Panel */}
-      <div className="p-6 flex-1 flex flex-col gap-3">
-        <div className="space-y-1">
-          <Link to={`/product/${product.slug}`} className="text-muted text-[11px] font-bold uppercase tracking-widest hover:text-primary transition-colors">
-            {product.category}
-          </Link>
-          <h3 className="font-bold text-base leading-tight">
-            <Link to={`/product/${product.slug}`} className="hover:text-primary transition-colors line-clamp-2">
-              {product.name}
-            </Link>
-          </h3>
-        </div>
-
-        {/* Rating */}
-        <div className="flex items-center gap-1">
-          <div className="flex text-amber-400">
-            {Array.from({ length: 5 }).map((_, i) => (
-              <Star key={i} className={cn("w-3 h-3", i < Math.floor(product.rating) ? "fill-current" : "text-gray-200")} />
-            ))}
+            {product.badge === 'Хямдрал' && (
+              <span className="bg-brand-muted text-brand-sale border border-brand-border text-[9px] font-bold tracking-[1.5px] normal-case px-2 py-0.5 rounded-[3px]">Хямдрал</span>
+            )}
           </div>
-          <span className="text-[10px] text-muted font-bold ml-1">({product.reviewCount})</span>
         </div>
 
-        {/* Price */}
-        <div className="flex items-baseline gap-3 pt-2">
-          <span className="text-xl font-black text-primary">{formatCurrency(product.price)}</span>
-          {product.originalPrice && (
-            <span className="text-sm text-muted font-medium line-through">{formatCurrency(product.originalPrice)}</span>
-          )}
+        {/* Info Panel */}
+        <div className="p-[14px] flex-1 flex flex-col gap-2">
+          <div className="space-y-1">
+            <span className="text-brand-hint text-[9px] font-bold normal-case tracking-[1.5px]">
+              {product.category}
+            </span>
+            <h3 className="text-brand-ink text-[13px] font-normal leading-[1.4] line-clamp-2">
+              {product.name}
+            </h3>
+          </div>
+
+          {/* Price */}
+          <div className="flex items-baseline gap-2 mt-auto">
+            <span className="text-[14px] font-medium text-brand-ink">{formatCurrency(product.price)}</span>
+            {product.originalPrice && (
+              <span className="text-[11px] text-brand-ghost font-normal line-through">{formatCurrency(product.originalPrice)}</span>
+            )}
+          </div>
         </div>
+      </Link>
+
+      {/* Button */}
+      <div className="px-[14px] pb-[14px]">
+        <button 
+          onClick={handleAdd}
+          className="w-full h-9 bg-brand-ink text-brand-base flex items-center justify-center gap-2 font-medium text-[11px] normal-case tracking-wider rounded-[6px] hover:bg-brand-ink2 transition-colors cursor-pointer"
+        >
+          <ShoppingBag className="w-3.5 h-3.5" />Сагсанд нэмэх</button>
       </div>
     </div>
   )
