@@ -1,6 +1,6 @@
 import { Routes, Route, Navigate } from 'react-router'
 import RootLayout from '@/components/layout/RootLayout'
-import AdminLayout from '@/pages/admin/AdminLayout'
+import AdminLayout from '@/admin/layout/AdminLayout'
 import AdminRoute from '@/components/auth/AdminRoute'
 import { useAuthStore } from '@/store/authStore'
 import HomePage from '@/pages/Home'
@@ -15,10 +15,10 @@ import RegisterPage from '@/pages/Register'
 import OrdersPage from '@/pages/Orders'
 
 // Admin Pages
-import AdminDashboard from '@/pages/admin/Dashboard'
-import AdminProducts from '@/pages/admin/Products'
-import AdminOrders from '@/pages/admin/Orders'
-import AdminUsers from '@/pages/admin/Users'
+import AdminDashboard from '@/admin/pages/Dashboard'
+import AdminProducts from '@/admin/pages/Products'
+import AdminOrders from '@/admin/pages/Orders'
+import AdminUsers from '@/admin/pages/Users'
 
 export function ProtectedRoute({ children }: { children: React.ReactNode }) {
   const { isAuthenticated, user } = useAuthStore()
