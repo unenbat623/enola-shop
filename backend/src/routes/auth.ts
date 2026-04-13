@@ -84,7 +84,7 @@ auth.get('/google', googleAuth({
 }), async (c) => {
   const googleUser = c.get('user-google')
   
-  if (!googleUser) {
+  if (!googleUser || !googleUser.email) {
     return c.redirect(`${process.env.FRONTEND_URL}/login?error=oauth_failed`)
   }
 
