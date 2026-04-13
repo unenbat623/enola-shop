@@ -18,7 +18,7 @@ export default function FeaturedProducts() {
 
   const filteredProducts = products.filter((p) => {
     if (activeTab === 'sale') return p.badge === 'Хямдрал'
-    if (activeTab === 'new') return p.badge === 'New'
+    if (activeTab === 'new') return p.badge === 'Шинэ'
     if (activeTab === 'hot') return p.badge === 'Hot'
     return true // featured case or default
   }).slice(0, 8)
@@ -27,8 +27,8 @@ export default function FeaturedProducts() {
     <section className="py-24 bg-brand-base border-y border-brand-border">
       <div className="max-w-7xl mx-auto px-4">
         <div className="text-center mb-16 space-y-4">
-          <span className="text-brand-hint font-medium normal-case tracking-[2px] text-[10px]">Shop collections</span>
-          <h2 className="text-3xl md:text-4xl font-normal text-brand-ink tracking-tight normal-case">Selective editorial</h2>
+          <span className="text-brand-hint font-medium normal-case tracking-[2px] text-[10px]">Цуглуулга</span>
+          <h2 className="text-3xl md:text-4xl font-normal text-brand-ink tracking-tight normal-case">Онцлох загварууд</h2>
           
           <div className="flex flex-wrap justify-center gap-10 pt-8 h-12">
             {tabs.map((tab) => (
@@ -43,8 +43,8 @@ export default function FeaturedProducts() {
                 )}
               >
                 {tab.id === 'featured' ? 'Онцлох' : 
-                 tab.id === 'sale' ? 'Хямдрал' : 
-                 tab.id === 'new' ? 'New in' : 'Trending'}
+                 tab.id === 'sale' ? 'Хямдралтай' : 
+                 tab.id === 'new' ? 'Шинэ ирэлт' : 'Тренд'}
               </button>
             ))}
           </div>

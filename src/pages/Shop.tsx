@@ -23,7 +23,7 @@ export default function ShopPage() {
       let matches = true
       if (categoryFilter) matches = matches && p.categorySlug === categoryFilter
       if (generalFilter === 'sale') matches = matches && p.badge === 'Хямдрал'
-      if (generalFilter === 'new') matches = matches && p.badge === 'New'
+      if (generalFilter === 'new') matches = matches && p.badge === 'Шинэ'
       if (searchQuery) {
         matches = matches && p.name.toLowerCase().includes(searchQuery.toLowerCase())
       }

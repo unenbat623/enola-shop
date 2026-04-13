@@ -42,13 +42,13 @@ export default function HeroSlider() {
                   transition={{ delay: 0.2 }}
                 >
                   <span className="text-brand-hint text-[11px] font-bold tracking-[2px] normal-case mb-4 block">
-                    {current === 0 ? "New season" : "Stay classic"}
+                    {current === 0 ? "Шинэ цуглуулга" : "Үргэлж загварлаг"}
                   </span>
                   <h1 className="text-[40px] md:text-[64px] font-normal text-brand-ink leading-[1.1] tracking-[1px] font-serif">
                     {current === 0 ? (
-                      <>Minimalist <br /> Aesthetic Edit</>
+                      <>Хамгийн цэвэрхэн <br /> Элементүүд</>
                     ) : (
-                      <>Essential <br /> Capsule Wardrobe</>
+                      <>Үндсэн <br /> Капсул хувцаслалт</>
                     )}
                   </h1>
                 </motion.div>
@@ -115,7 +115,7 @@ export default function HeroSlider() {
 
       {/* Marquee Bar */}
       <div className="bg-brand-muted py-3 overflow-hidden whitespace-nowrap border-b border-brand-border relative z-10">
-        <div className="inline-block animate-marquee font-normal text-brand-sub text-[10px] tracking-[2.5px] normal-case">Free shipping on all orders ✦ new collection 2025 ✦ flash sale ✦ limited edition ✦ free shipping on all orders ✦ new collection 2025 ✦ flash sale ✦ limited edition ✦</div>
+        <div className="inline-block animate-marquee font-normal text-brand-sub text-[10px] tracking-[2.5px] normal-case">Захиалга бүрт үнэгүй хүргэлт ✦ шинэ цуглуулга 2025 ✦ онцгой хямдрал ✦ хязгаарлагдмал тоо ✦ үнэгүй хүргэлт ✦ шинэ цуглуулга 2025 ✦ онцгой хямдрал ✦</div>
       </div>
 
       <style>{`

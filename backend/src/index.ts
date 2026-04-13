@@ -24,9 +24,9 @@ app.route('/api/orders', orderRoutes)
 app.route('/api/users', userRoutes)
 app.route('/api/seed', seedRoutes)
 
-app.get('/', (c) => c.text('Antigravity API is running'))
+app.get('/', (c) => c.text('Enola Shop API is running'))
 
-const port = Number(process.env.PORT) || 3001
+const port = Number(process.env.PORT) || 3000
 console.log(`Server is running on port ${port}`)
 
 serve({

@@ -41,8 +41,8 @@ export default function ProductCard({ product }: Props) {
           
           {/* Badges */}
           <div className="absolute top-[10px] left-[10px] flex flex-col gap-2 z-10">
-            {product.badge === 'New' && (
-              <span className="bg-brand-ink text-brand-base text-[9px] font-bold tracking-[1.5px] normal-case px-2 py-0.5 rounded-[3px]">New</span>
+            {product.badge === 'Шинэ' && (
+              <span className="bg-brand-ink text-brand-base text-[9px] font-bold tracking-[1.5px] normal-case px-2 py-0.5 rounded-[3px]">Шинэ</span>
             )}
             {product.badge === 'Хямдрал' && (
               <span className="bg-brand-muted text-brand-sale border border-brand-border text-[9px] font-bold tracking-[1.5px] normal-case px-2 py-0.5 rounded-[3px]">Хямдрал</span>

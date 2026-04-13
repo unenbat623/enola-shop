@@ -8,7 +8,7 @@ export interface IProduct extends Document {
   originalPrice?: number;
   category: string;
   categorySlug: string;
-  badge?: 'New' | 'Хямдрал' | 'Hot';
+  badge?: 'Шинэ' | 'Хямдрал' | 'Hot';
   images: string[];
   description: string;
   inStock: boolean;

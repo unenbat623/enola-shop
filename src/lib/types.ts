@@ -6,7 +6,7 @@ export interface Product {
   originalPrice?: number
   category: string
   categorySlug: string
-  badge?: 'New' | 'Хямдрал' | 'Hot'
+  badge?: 'Шинэ' | 'Хямдрал' | 'Hot'
   images: string[]
   description: string
   stock?: number

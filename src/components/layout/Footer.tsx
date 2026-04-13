@@ -12,7 +12,7 @@ export default function Footer() {
               Enola Shop
             </Link>
             <p className="text-[#78716c] text-[13px] leading-relaxed max-w-xs">
-              Ultimate streetwear experience. Defining the future of fashion with bold designs and premium quality.
+              Төгс Streetwear туршлага. Бид загварын ирээдүйг зоригтой шийдэл, хамгийн сайн чанартайгаар тодорхойлж байна.
             </p>
           </div>
 

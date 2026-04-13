@@ -8,7 +8,7 @@ export default function Newsletter() {
           <span className="text-brand-mint font-bold normal-case tracking-[2px] text-[11px]">Мэдээлэл авах</span>
           <h2 className="text-4xl md:text-5xl font-medium text-brand-white tracking-tight normal-case">Бидэнтэй нэгдэх</h2>
           <p className="text-brand-sub text-sm md:text-md font-medium max-w-xl mx-auto leading-relaxed">
-            Be the first to receive exclusive drops, special promotions and the latest AG news directly to your inbox.
+            Шинэ цуглуулга, онцгой хямдрал болон хамгийн сүүлийн үеийн мэдээ мэдээллийг и-мэйлээрээ хамгийн түрүүнд хүлээн аваарай.
           </p>
         </div>
 
@@ -24,7 +24,7 @@ export default function Newsletter() {
         </form>
         
         <p className="text-brand-hint text-[10px] font-bold normal-case tracking-[2px]">
-           No spam. Just pure excellence. Unsubscribe anytime.
+           Бид спам явуулахгүй. Зөвхөн хэрэгцээт мэдээлэл. Хэзээ ч цуцлах боломжтой.
         </p>
       </div>
     </section>

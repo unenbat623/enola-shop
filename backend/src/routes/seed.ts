@@ -37,7 +37,7 @@ seed.post('/', async (c) => {
         images: [`https://picsum.photos/seed/${i + 1}/400/400`],
         description: `Гоёмсог шинэ загварын ${categories[catIdx].toLowerCase()}. Өдөр тутам болон гоёлд төгс зохицно.`,
         stock: 50,
-        badge: i % 3 === 0 ? 'New' : i % 5 === 0 ? 'Хямдрал' : '',
+        badge: i % 3 === 0 ? 'Шинэ' : i % 5 === 0 ? 'Хямдрал' : '',
         inStock: true,
         rating: 4.5 + Math.random() * 0.5,
         reviewCount: Math.floor(Math.random() * 100)

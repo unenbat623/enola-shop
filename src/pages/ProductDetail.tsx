@@ -95,7 +95,7 @@ export default function ProductDetail() {
                <div className="absolute top-6 left-6">
                  <span className={cn(
                    "px-4 py-1.5 rounded-[4px] text-[10px] font-bold tracking-[2px] uppercase",
-                   product.badge === 'New' ? 'bg-brand-ink text-brand-base' : 'bg-brand-sale text-brand-base'
+                   product.badge === 'Шинэ' ? 'bg-brand-ink text-brand-base' : 'bg-brand-sale text-brand-base'
                  )}>
                    {product.badge}
                  </span>

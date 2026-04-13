@@ -5,7 +5,7 @@ import { Loader2 } from 'lucide-react'
 
 export default function NewArrivals() {
   const { products, isLoading } = useProductStore()
-  const newProducts = products.filter(p => p.badge === 'New').slice(0, 4)
+  const newProducts = products.filter(p => p.badge === 'Шинэ').slice(0, 4)
 
   return (
     <section className="py-24 bg-brand-base">

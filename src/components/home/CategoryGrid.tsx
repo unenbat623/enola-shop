@@ -9,10 +9,10 @@ export default function CategoryGrid() {
       <div className="max-w-7xl mx-auto px-4">
         <div className="flex justify-between items-end mb-16 px-2">
           <div className="space-y-4">
-            <span className="text-brand-hint font-medium normal-case tracking-[2px] text-[10px]">Shop by style</span>
+            <span className="text-brand-hint font-medium normal-case tracking-[2px] text-[10px]">Загвараар сонгох</span>
             <h2 className="text-3xl md:text-4xl font-normal text-brand-ink tracking-tight normal-case">Ангилал</h2>
           </div>
-          <Link to="/shop" className="text-[11px] font-medium text-brand-sub hover:text-brand-ink transition-colors pb-2 border-b border-transparent hover:border-brand-ink normal-case normal-case">View all →</Link>
+          <Link to="/shop" className="text-[11px] font-medium text-brand-sub hover:text-brand-ink transition-colors pb-2 border-b border-transparent hover:border-brand-ink normal-case normal-case">Бүгдийг харах →</Link>
         </div>
 
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-0 border-l border-t border-brand-border">
@@ -33,7 +33,7 @@ export default function CategoryGrid() {
                 </div>
                 <div className="text-center space-y-1.5 z-10">
                   <h3 className="font-normal text-[13px] text-brand-ink group-hover:text-brand-ink transition-colors normal-case normal-case">{cat.name}</h3>
-                  <p className="text-[9px] text-brand-hint font-medium normal-case tracking-[1.5px] opacity-70 group-hover:opacity-100">{cat.productCount} ITEMS</p>
+                  <p className="text-[9px] text-brand-hint font-medium normal-case tracking-[1.5px] opacity-70 group-hover:opacity-100">{cat.productCount} БАРАА</p>
                 </div>
                 <div className="absolute inset-0 bg-brand-ink/0 group-hover:bg-brand-ink/[0.01] transition-colors" />
               </Link>
