@@ -34,13 +34,6 @@ export default function RegisterForm() {
 
     try {
       await register({ name: formData.name, email: formData.email, password: formData.password })
-      const { authApi } = await import('@/api/auth')
-      const { user: fetchedUser } = await authApi.getMe().catch(() => ({ user: null }))
-      
-      if(fetchedUser) {
-        localStorage.setItem('user', JSON.stringify(fetchedUser))
-      }
-      
       toast.success('Бүртгэл амжилттай үүслээ')
       navigate('/')
     } catch (err: any) {

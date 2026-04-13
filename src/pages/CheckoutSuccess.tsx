@@ -7,6 +7,7 @@ import { useCartStore } from '@/store/cartStore'
 import CheckoutSteps from '@/components/checkout/CheckoutSteps'
 import { cn } from '@/lib/utils'
 import { Order } from '@/lib/types'
+import { ordersApi } from '@/api/orders'
 
 export default function CheckoutSuccessPage() {
   const [searchParams] = useSearchParams()
@@ -59,9 +60,7 @@ export default function CheckoutSuccessPage() {
       localStorage.setItem('orders', JSON.stringify([...savedOrders, localOrder]))
 
       // Send to server
-      import('@/api/orders').then(({ ordersApi }) => {
-        ordersApi.createOrder(newOrderInfo as unknown as Partial<Order>).catch(err => console.warn('API save failed', err))
-      })
+      ordersApi.createOrder(newOrderInfo as unknown as Partial<Order>).catch(err => console.warn('API save failed', err))
 
       clearCart()
     }
@@ -168,25 +167,25 @@ export default function CheckoutSuccessPage() {
             )}
           </motion.div>
 
-          <motion.div 
+          <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 1 }}
             className="flex flex-col sm:flex-row gap-4 pt-4"
           >
-            <Link 
+            <Link
               to="/orders"
               onClick={() => reset()}
               className="flex-1 h-12 bg-brand-ink text-brand-base flex items-center justify-center gap-2 font-normal text-[12px] normal-case tracking-[1.5px] rounded-[6px] hover:bg-brand-ink2 transition-all"
             >
               <ShoppingBag className="w-4 h-4" /> Захиалга харах
             </Link>
-            <Link 
+            <Link
               to="/shop"
               onClick={() => reset()}
               className="flex-1 h-12 bg-transparent border border-brand-border text-brand-sub flex items-center justify-center gap-2 font-normal text-[11px] normal-case tracking-wider rounded-[6px] hover:bg-brand-surface transition-all"
             >
-              <Home className="w-4 h-4" /> Дэлгүүр рүү
+              <Home className="w-4 h-4" /> Дэлгүүр рүү буцах
             </Link>
           </motion.div>
         </div>

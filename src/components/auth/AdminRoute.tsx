@@ -1,32 +1,20 @@
 import { Navigate, Outlet } from 'react-router'
-import { useEffect, useState } from 'react'
+import { useAuthStore } from '@/store/authStore'
+import { Loader2 } from 'lucide-react'
 
 export default function AdminRoute() {
-  const [isAdmin, setIsAdmin] = useState<boolean | null>(null)
+  const { user, isAuthenticated, isLoading } = useAuthStore()
 
-  useEffect(() => {
-    try {
-      const userStr = localStorage.getItem('user')
-      if (userStr) {
-        const user = JSON.parse(userStr)
-        setIsAdmin(user?.role === 'admin')
-      } else {
-        setIsAdmin(false)
-      }
-    } catch {
-      setIsAdmin(false)
-    }
-  }, [])
+  if (isLoading) {
+    return (
+      <div className="min-h-screen bg-brand-base flex items-center justify-center">
+        <Loader2 className="animate-spin text-brand-ink w-6 h-6" />
+      </div>
+    )
+  }
 
-  if (isAdmin === null) return <div className="min-h-screen bg-brand-base" />
-
-  if (!isAdmin) {
-    // Check if user is logged in at all
-    const isLogged = !!localStorage.getItem('user')
-    if (isLogged) {
-      return <Navigate to="/" replace />
-    }
-    return <Navigate to="/login" replace />
+  if (!isAuthenticated || user?.role !== 'admin') {
+    return <Navigate to="/" replace />
   }
 
   return <Outlet />

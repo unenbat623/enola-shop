@@ -1,53 +1,59 @@
-import { Hono } from 'hono';
-import Order from '../models/Order';
-import { authMiddleware, adminMiddleware } from '../lib/auth';
+import { Hono } from 'hono'
+import Order from '../models/Order'
+import { authMiddleware, adminMiddleware } from '../lib/auth'
 
-const orders = new Hono();
+const orders = new Hono()
 
-// Get all orders (admin)
+// GET /api/orders — all orders (admin only)
 orders.get('/', authMiddleware, adminMiddleware, async (c) => {
   try {
-    const allOrders = await Order.find({}).sort({ createdAt: -1 });
-    return c.json(allOrders);
-  } catch (error) {
-    return c.json({ error: 'Failed to fetch orders' }, 500);
+    const allOrders = await Order.find({}).sort({ createdAt: -1 })
+    return c.json(allOrders)
+  } catch {
+    return c.json({ error: 'Failed to fetch orders' }, 500)
   }
-});
+})
 
-// Get my orders
+// GET /api/orders/my — authenticated user's orders
 orders.get('/my', authMiddleware, async (c) => {
   try {
-    const user = c.get('user');
-    const myOrders = await Order.find({ userId: user._id.toString() }).sort({ createdAt: -1 });
-    return c.json(myOrders);
-  } catch (error) {
-    return c.json({ error: 'Failed to fetch my orders' }, 500);
-  }
-});
-
-// Create order
-orders.post('/', async (c) => {
-  try {
-    const body = await c.req.json();
-    const newOrder = new Order(body);
-    await newOrder.save();
-    return c.json(newOrder, 201);
+    const user = c.get('user')
+    const userId = user._id.toString()
+    // Match orders where userId equals the user's ID string
+    const myOrders = await Order.find({ userId }).sort({ createdAt: -1 })
+    return c.json(myOrders)
   } catch (error: any) {
-    return c.json({ error: error.message || 'Failed to create order' }, 400);
+    return c.json({ error: error.message || 'Failed to fetch orders' }, 500)
   }
-});
+})
 
-// Update order status
+// POST /api/orders — create order (authenticated)
+orders.post('/', authMiddleware, async (c) => {
+  try {
+    const user = c.get('user')
+    const body = await c.req.json()
+    const newOrder = new Order({
+      ...body,
+      userId: user._id.toString(), // always attach real userId
+    })
+    await newOrder.save()
+    return c.json(newOrder, 201)
+  } catch (error: any) {
+    return c.json({ error: error.message || 'Failed to create order' }, 400)
+  }
+})
+
+// PATCH /api/orders/:id/status — update status (admin only)
 orders.patch('/:id/status', authMiddleware, adminMiddleware, async (c) => {
   try {
-    const id = c.req.param('id');
-    const { status } = await c.req.json();
-    const updatedOrder = await Order.findByIdAndUpdate(id, { status }, { new: true });
-    if (!updatedOrder) return c.json({ error: 'Order not found' }, 404);
-    return c.json(updatedOrder);
+    const id = c.req.param('id')
+    const { status } = await c.req.json()
+    const updated = await Order.findByIdAndUpdate(id, { status }, { new: true })
+    if (!updated) return c.json({ error: 'Order not found' }, 404)
+    return c.json(updated)
   } catch (error: any) {
-    return c.json({ error: error.message || 'Failed to update order status' }, 400);
+    return c.json({ error: error.message || 'Failed to update status' }, 400)
   }
-});
+})
 
-export default orders;
+export default orders

@@ -174,8 +174,15 @@ export default function ShopPage() {
               </div>
 
               {isLoading ? (
-                <div className="py-20 flex justify-center items-center">
-                   <Loader2 className="w-8 h-8 animate-spin text-brand-ink" />
+                <div className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-4 md:gap-x-6 md:gap-y-10">
+                  {Array.from({ length: 8 }).map((_, i) => (
+                    <div key={i} className="animate-pulse space-y-3">
+                      <div className="aspect-[3/4] bg-brand-muted rounded-[8px]" />
+                      <div className="h-3 bg-brand-muted rounded w-1/3" />
+                      <div className="h-4 bg-brand-muted rounded w-3/4" />
+                      <div className="h-4 bg-brand-muted rounded w-1/2" />
+                    </div>
+                  ))}
                 </div>
               ) : paginatedProducts.length > 0 ? (
                 <>

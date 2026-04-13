@@ -2,12 +2,11 @@ import { useState } from 'react'
 import { Link, useNavigate } from 'react-router'
 import { Mail, Lock, ArrowRight, Loader2 } from 'lucide-react'
 import { toast } from '@/components/common/Toast'
-
 import { useAuthStore } from '@/store/authStore'
 
 export default function LoginForm() {
   const navigate = useNavigate()
-  const login = useAuthStore(state => state.login)
+  const { login, user: storeUser } = useAuthStore()
   const loading = useAuthStore(state => state.isLoading)
   const [formData, setFormData] = useState({ email: '', password: '' })
   const [errors, setErrors] = useState({ email: '', password: '' })
@@ -30,20 +29,10 @@ export default function LoginForm() {
 
     try {
       await login({ email: formData.email, password: formData.password })
-      const userStr = localStorage.getItem('user')
-      let user = null
-      
-      const { authApi } = await import('@/api/auth')
-      const { user: fetchedUser } = await authApi.getMe().catch(() => ({ user: null }))
-      
-      if(fetchedUser) {
-        localStorage.setItem('user', JSON.stringify(fetchedUser))
-        toast.success(fetchedUser.role === 'admin' ? 'Админ амжилттай нэвтэрлээ' : 'Амжилттай нэвтэрлээ')
-        navigate(fetchedUser.role === 'admin' ? '/admin' : '/')
-      } else {
-        toast.success('Амжилттай нэвтэрлээ')
-        navigate('/')
-      }
+      // user is set in authStore after login
+      const user = useAuthStore.getState().user
+      toast.success(user?.role === 'admin' ? 'Админ амжилттай нэвтэрлээ' : 'Амжилттай нэвтэрлээ')
+      navigate(user?.role === 'admin' ? '/admin/dashboard' : '/')
     } catch (err: any) {
       toast.error(err.message || 'Нэвтрэхэд алдаа гарлаа')
     }
