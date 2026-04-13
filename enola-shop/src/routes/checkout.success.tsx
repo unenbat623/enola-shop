@@ -11,15 +11,59 @@ export default function CheckoutSuccessPage() {
   const { orderId } = useParams()
   const navigate = useNavigate()
   const { delivery, status, paymentMethod, reset, setStep } = useCheckoutStore()
-  const clearCart = useCartStore(state => state.clearCart)
-
-  useEffect(() => {
-    if (!orderId) navigate('/')
-    setStep(3)
-    clearCart()
-  }, [orderId, navigate, clearCart, setStep])
+  const { items, totalPrice, clearCart } = useCartStore()
 
   const isPaid = status === 'paid'
+
+  useEffect(() => {
+    if (!orderId) {
+      navigate('/')
+      return
+    }
+    
+    setStep(3)
+
+    // Save order to localStorage and API if not already saved
+    const savedOrders = JSON.parse(localStorage.getItem('orders') || '[]')
+    const exists = savedOrders.some((o: any) => o.id === orderId)
+    
+    if (!exists && items.length > 0) {
+      const userStr = localStorage.getItem('user')
+      const user = userStr ? JSON.parse(userStr) : null
+
+      const newOrderInfo = {
+        id: orderId, // keep it formatted for local fallback
+        userId: user?.id || 'anonymous',
+        shippingAddress: {
+          fullName: delivery.name,
+          phone: delivery.phone,
+          address: delivery.address,
+          city: delivery.city
+        },
+        items: items.map(item => ({
+          id: item.id,
+          name: item.name,
+          price: item.price,
+          quantity: item.quantity,
+          image: item.images[0]
+        })),
+        totalAmount: totalPrice() + (totalPrice() > 100000 ? 0 : 5000),
+        status: isPaid ? 'Хүргэгдсэн' : 'Хүлээгдэж буй',
+        paymentMethod: paymentMethod === 'qpay' ? 'QPay' : paymentMethod === 'socialpay' ? 'SocialPay' : 'Дансаар'
+      }
+      
+      // Save locally as fallback/quick access
+      const localOrder = { ...newOrderInfo, date: new Date().toISOString(), total: newOrderInfo.totalAmount }
+      localStorage.setItem('orders', JSON.stringify([...savedOrders, localOrder]))
+
+      // Send to server
+      import('@/services/api').then(({ api }) => {
+        api.post('/api/orders', newOrderInfo).catch(err => console.warn('API save failed', err))
+      })
+
+      clearCart()
+    }
+  }, [orderId, navigate, clearCart, setStep, items, isPaid, paymentMethod, totalPrice, delivery])
 
   return (
     <div className="bg-brand-base min-h-screen py-20 pb-40">
@@ -87,7 +131,7 @@ export default function CheckoutSuccessPage() {
               </div>
               <div className="space-y-1">
                 <p className="text-[10px] font-medium text-brand-hint normal-case tracking-[1.5px]">Төлбөр</p>
-                <p className="text-brand-ink font-medium normal-case text-[11px]">{paymentMethod || 'Дансаар'}</p>
+                <p className="text-brand-ink font-medium normal-case text-[11px]">{paymentMethod === 'qpay' ? 'QPay' : paymentMethod === 'socialpay' ? 'SocialPay' : 'Дансаар'}</p>
               </div>
               <div className="space-y-1 text-right">
                 <p className="text-[10px] font-medium text-brand-hint normal-case tracking-[1.5px]">Төлөв</p>
@@ -129,7 +173,7 @@ export default function CheckoutSuccessPage() {
             className="flex flex-col sm:flex-row gap-4 pt-4"
           >
             <Link 
-              to="/"
+              to="/orders"
               onClick={() => reset()}
               className="flex-1 h-12 bg-brand-ink text-brand-base flex items-center justify-center gap-2 font-normal text-[12px] normal-case tracking-[1.5px] rounded-[6px] hover:bg-brand-ink2 transition-all"
             >

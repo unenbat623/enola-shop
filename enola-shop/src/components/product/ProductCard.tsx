@@ -48,6 +48,21 @@ export default function ProductCard({ product }: Props) {
               <span className="bg-brand-muted text-brand-sale border border-brand-border text-[9px] font-bold tracking-[1.5px] normal-case px-2 py-0.5 rounded-[3px]">Хямдрал</span>
             )}
           </div>
+
+          {/* Wishlist Button */}
+          <button 
+            onClick={(e) => {
+              e.preventDefault()
+              e.stopPropagation()
+              toggleItem(product)
+            }}
+            className={cn(
+              "absolute top-[10px] right-[10px] w-8 h-8 rounded-full flex items-center justify-center transition-all bg-white border border-brand-border hover:border-brand-ink cursor-pointer z-10",
+              isWishlisted ? "text-brand-sale border-brand-sale" : "text-brand-ghost"
+            )}
+          >
+            <Heart className={cn("w-4 h-4", isWishlisted && "fill-current")} />
+          </button>
         </div>
 
         {/* Info Panel */}

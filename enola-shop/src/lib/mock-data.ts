@@ -18,11 +18,13 @@ export const products: Product[] = [
     category: 'Цүнх & Уут',
     categorySlug: 'bags',
     badge: 'Хямдрал',
-    images: ['https://picsum.photos/seed/p1/400/400'],
-    description: 'Өдөр тутмын хэрэглээнд тохирсон гоёмсог ягаан цүнх.',
+    images: ['https://picsum.photos/seed/p1/400/400', 'https://picsum.photos/seed/img1/400/400', 'https://picsum.photos/seed/img2/400/400'],
+    description: 'Өдөр тутмын хэрэглээнд тохирсон гоёмсог ягаан цүнх. Чат болон бусад жижиг зүйлс багтаахад хангалттай зайтай.',
     inStock: true,
     rating: 4.8,
     reviewCount: 124,
+    sizes: ['Small', 'Medium'],
+    colors: ['Pink', 'Black', 'Blue']
   },
   {
     id: 'p2',
@@ -37,6 +39,7 @@ export const products: Product[] = [
     inStock: true,
     rating: 4.9,
     reviewCount: 89,
+    colors: ['Black', 'Brown']
   },
   {
     id: 'p3',
@@ -52,6 +55,8 @@ export const products: Product[] = [
     inStock: true,
     rating: 4.5,
     reviewCount: 210,
+    sizes: ['S', 'M', 'L', 'XL'],
+    colors: ['White', 'Beige']
   },
   {
     id: 'p4',
@@ -66,6 +71,8 @@ export const products: Product[] = [
     inStock: true,
     rating: 4.7,
     reviewCount: 56,
+    sizes: ['38', '39', '40', '41', '42'],
+    colors: ['Black', 'White', 'Gray']
   },
   {
     id: 'p5',

@@ -1,8 +1,9 @@
 import { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { products } from '@/lib/mock-data'
+import { useProductStore } from '@/store/productStore'
 import ProductCard from '@/components/product/ProductCard'
 import { cn } from '@/lib/utils'
+import { Loader2 } from 'lucide-react'
 
 const tabs = [
   { id: 'featured', label: 'Онцлох' },
@@ -12,6 +13,7 @@ const tabs = [
 ]
 
 export default function FeaturedProducts() {
+  const { products, isLoading } = useProductStore()
   const [activeTab, setActiveTab] = useState('featured')
 
   const filteredProducts = products.filter((p) => {
@@ -48,20 +50,26 @@ export default function FeaturedProducts() {
           </div>
         </div>
 
-        <AnimatePresence mode="wait">
-          <motion.div
-            key={activeTab}
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 0.3 }}
-            className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8"
-          >
-            {filteredProducts.map((product) => (
-              <ProductCard key={product.id} product={product} />
-            ))}
-          </motion.div>
-        </AnimatePresence>
+        {isLoading ? (
+          <div className="py-20 flex justify-center items-center">
+            <Loader2 className="w-8 h-8 animate-spin text-brand-ink" />
+          </div>
+        ) : (
+          <AnimatePresence mode="wait">
+            <motion.div
+              key={activeTab}
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.3 }}
+              className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8"
+            >
+              {filteredProducts.map((product) => (
+                <ProductCard key={product.id} product={product} />
+              ))}
+            </motion.div>
+          </AnimatePresence>
+        )}
       </div>
     </section>
   )

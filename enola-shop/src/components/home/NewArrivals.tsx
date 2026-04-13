@@ -1,8 +1,10 @@
-import { products } from '@/lib/mock-data'
+import { useProductStore } from '@/store/productStore'
 import ProductCard from '@/components/product/ProductCard'
 import { Link } from 'react-router'
+import { Loader2 } from 'lucide-react'
 
 export default function NewArrivals() {
+  const { products, isLoading } = useProductStore()
   const newProducts = products.filter(p => p.badge === 'New').slice(0, 4)
 
   return (
@@ -16,11 +18,17 @@ export default function NewArrivals() {
           <Link to="/shop?filter=new" className="text-[12px] font-semibold text-brand-sub hover:text-brand-mint transition-colors pb-2 border-b-2 border-transparent hover:border-brand-mint normal-case normal-case">View all →</Link>
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
-          {newProducts.map((product) => (
-            <ProductCard key={product.id} product={product} />
-          ))}
-        </div>
+        {isLoading ? (
+          <div className="py-20 flex justify-center items-center">
+            <Loader2 className="w-8 h-8 animate-spin text-brand-ink" />
+          </div>
+        ) : (
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+            {newProducts.map((product) => (
+              <ProductCard key={product.id} product={product} />
+            ))}
+          </div>
+        )}
       </div>
     </section>
   )

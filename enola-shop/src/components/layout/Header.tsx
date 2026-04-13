@@ -33,8 +33,13 @@ export default function Header() {
 
         {/* Icons */}
         <div className="flex items-center gap-2 md:gap-4">
-          <Link to="/wishlist" className="p-2 transition-colors group">
+          <Link to="/wishlist" className="p-2 transition-colors group relative">
             <Heart className="w-5 h-5 text-brand-sub group-hover:text-brand-ink transition-colors" />
+            {wishlistTotal > 0 && (
+              <span className="absolute top-1 right-1 bg-brand-sale text-[9px] font-bold text-brand-base w-4 h-4 rounded-full flex items-center justify-center">
+                {wishlistTotal}
+              </span>
+            )}
           </Link>
 
           <Link to="/cart" className="flex items-center gap-2 p-1 transition-colors group">
@@ -46,7 +51,7 @@ export default function Header() {
                 </span>
               )}
             </div>
-            <div className="hidden lg:flex flex-col text-left leading-tight">
+            <div className="hidden lg:flex flex-col text-left leading-tight pr-2">
               <span className="text-[11px] font-medium text-brand-ink">{formatCurrency(cartPrice)}</span>
             </div>
           </Link>
