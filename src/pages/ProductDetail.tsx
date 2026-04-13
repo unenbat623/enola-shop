@@ -9,6 +9,7 @@ import { Star, ShoppingBag, Heart, ShieldCheck, Truck, ChevronRight, ChevronLeft
 import { Link } from 'react-router'
 import { useState, useMemo } from 'react'
 import { cn } from '@/lib/utils'
+import { ProductDetailSkeleton } from '@/components/product/ProductSkeleton'
 import ProductCard from '@/components/product/ProductCard'
 
 export default function ProductDetail() {
@@ -30,14 +31,10 @@ export default function ProductDetail() {
     return products
       .filter((p) => p.categorySlug === product.categorySlug && p.id !== product.id)
       .slice(0, 4)
-  }, [product])
+  }, [product, products])
 
   if (isLoading) {
-    return (
-      <div className="bg-brand-base min-h-screen flex items-center justify-center">
-        <Loader2 className="w-10 h-10 animate-spin text-brand-ink" />
-      </div>
-    )
+    return <ProductDetailSkeleton />
   }
 
   if (!product) {

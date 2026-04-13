@@ -3,6 +3,7 @@ import { Link, useNavigate } from 'react-router'
 import { Mail, Lock, ArrowRight, Loader2 } from 'lucide-react'
 import { toast } from '@/components/common/Toast'
 import { useAuthStore } from '@/store/authStore'
+import { Button } from '@/components/common/Button'
 
 export default function LoginForm() {
   const navigate = useNavigate()
@@ -88,12 +89,13 @@ export default function LoginForm() {
           <button type="button" className="text-[12px] text-brand-ink font-medium hover:underline">Мартсан?</button>
         </div>
 
-        <button 
-          disabled={loading}
-          className="w-full h-11 bg-brand-ink text-brand-base font-normal text-[12px] normal-case tracking-[1.5px] rounded-[6px] hover:bg-brand-ink2 transition-all flex items-center justify-center gap-2 disabled:opacity-50"
+        <Button 
+          type="submit"
+          isLoading={loading}
+          className="w-full h-11 bg-brand-ink text-brand-base font-normal text-[12px] normal-case tracking-[1.5px] rounded-[6px] hover:bg-brand-ink2 transition-all"
         >
-          {loading ? <Loader2 className="w-4 h-4 animate-spin" /> : <>Нэвтрэх <ArrowRight className="w-3.5 h-3.5" /></>}
-        </button>
+          Нэвтрэх <ArrowRight className="w-3.5 h-3.5" />
+        </Button>
       </form>
 
       <div className="mt-8 pt-8 border-t border-brand-border text-center">

@@ -16,10 +16,11 @@ export default function CartDrawer() {
           {/* Overlay */}
           <motion.div
             initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
+            animate={{ opacity: 0.5 }}
             exit={{ opacity: 0 }}
+            transition={{ duration: 0.3 }}
             onClick={() => toggleCart(false)}
-            className="fixed inset-0 bg-brand-ink/10 backdrop-blur-[2px] z-[200] cursor-pointer"
+            className="fixed inset-0 bg-brand-ink/50 backdrop-blur-[1px] z-[200] cursor-pointer"
           />
 
           {/* Drawer */}
@@ -27,8 +28,8 @@ export default function CartDrawer() {
               initial={{ x: '100%' }}
               animate={{ x: 0 }}
               exit={{ x: '100%' }}
-              transition={{ type: 'spring', damping: 25, stiffness: 200 }}
-              className="fixed top-0 right-0 h-full w-full max-w-[420px] bg-brand-base z-[201] flex flex-col border-l border-brand-border"
+              transition={{ duration: 0.3, ease: 'easeOut' }}
+              className="fixed top-0 right-0 h-full w-full max-w-[420px] bg-brand-base z-[201] flex flex-col border-l border-brand-border shadow-2xl"
             >
               {/* Header */}
               <div className="flex items-center justify-between p-6 border-b border-brand-border">

@@ -3,7 +3,7 @@ import { motion, AnimatePresence } from 'framer-motion'
 import { useProductStore } from '@/store/productStore'
 import ProductCard from '@/components/product/ProductCard'
 import { cn } from '@/lib/utils'
-import { Loader2 } from 'lucide-react'
+import { ProductSkeleton } from '@/components/product/ProductSkeleton'
 
 const tabs = [
   { id: 'featured', label: 'Онцлох' },
@@ -51,8 +51,10 @@ export default function FeaturedProducts() {
         </div>
 
         {isLoading ? (
-          <div className="py-20 flex justify-center items-center">
-            <Loader2 className="w-8 h-8 animate-spin text-brand-ink" />
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+            {Array.from({ length: 4 }).map((_, i) => (
+              <ProductSkeleton key={i} />
+            ))}
           </div>
         ) : (
           <AnimatePresence mode="wait">

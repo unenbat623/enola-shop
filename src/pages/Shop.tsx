@@ -3,8 +3,10 @@ import { categories } from '@/lib/constants'
 import { Category } from '@/lib/types'
 import { useProductStore } from '@/store/productStore'
 import ProductCard from '@/components/product/ProductCard'
-import { useState, useMemo } from 'react'
-import { ShoppingBag, Search, SlidersHorizontal, ChevronLeft, ChevronRight, Loader2 } from 'lucide-react'
+import { useState, useMemo, useEffect, useRef } from 'react'
+import { ShoppingBag, Search, SlidersHorizontal, ChevronLeft, ChevronRight, Loader2, ChevronDown } from 'lucide-react'
+import { motion, AnimatePresence } from 'framer-motion'
+import { ProductSkeleton } from '@/components/product/ProductSkeleton'
 
 const ITEMS_PER_PAGE = 12
 
@@ -17,6 +19,27 @@ export default function ShopPage() {
   const categoryFilter = searchParams.get('category')
   const generalFilter = searchParams.get('filter') // e.g. sale, new
   const sortBy = searchParams.get('sort') || 'newest'
+
+  const [isSortOpen, setIsSortOpen] = useState(false)
+  const sortRef = useRef<HTMLDivElement>(null)
+
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (sortRef.current && !sortRef.current.contains(event.target as Node)) {
+        setIsSortOpen(false)
+      }
+    }
+    document.addEventListener('mousedown', handleClickOutside)
+    return () => document.removeEventListener('mousedown', handleClickOutside)
+  }, [])
+
+  const sortOptions = [
+    { value: 'newest', label: 'Сүүлд нэмэгдсэн' },
+    { value: 'price-low', label: 'Үнэ: Багаас их' },
+    { value: 'price-high', label: 'Үнэ: Ихээс бага' },
+  ]
+
+  const currentSortLabel = sortOptions.find(opt => opt.value === sortBy)?.label || 'Сүүлд нэмэгдсэн'
 
   const filteredAndSortedProducts = useMemo(() => {
     let result = products.filter((p) => {
@@ -159,29 +182,52 @@ export default function ShopPage() {
             <main className="flex-1 space-y-8">
               <div className="flex justify-between items-center bg-brand-surface px-6 py-4 rounded-[8px] border border-brand-border">
                 <p className="text-[12px] text-brand-sub">Нийт <span className="text-brand-ink font-medium">{filteredAndSortedProducts.length}</span> бүтээгдэхүүн олдлоо</p>
-                <div className="flex items-center gap-3">
+                <div className="flex items-center gap-4">
                   <span className="text-[11px] font-bold text-brand-hint uppercase tracking-wider">Эрэмбэлэх:</span>
-                  <select 
-                    value={sortBy}
-                    onChange={(e) => setSearchParams({ ...Object.fromEntries(searchParams), sort: e.target.value })}
-                    className="text-[12px] bg-transparent outline-none font-medium text-brand-ink cursor-pointer"
-                  >
-                    <option value="newest">Сүүлд нэмэгдсэн</option>
-                    <option value="price-low">Үнэ: Багаас их</option>
-                    <option value="price-high">Үнэ: Ихээс бага</option>
-                  </select>
+                  <div className="relative" ref={sortRef}>
+                    <button
+                      onClick={() => setIsSortOpen(!isSortOpen)}
+                      className="min-w-[180px] rounded-xl border border-brand-border px-4 py-2 flex items-center justify-between gap-2 bg-brand-surface text-[12px] font-medium text-brand-ink transition-all hover:border-brand-ink"
+                    >
+                      <span>{currentSortLabel}</span>
+                      <ChevronDown className={`w-4 h-4 transition-transform duration-300 ${isSortOpen ? 'rotate-180' : ''}`} />
+                    </button>
+
+                    <AnimatePresence>
+                      {isSortOpen && (
+                        <motion.div
+                          initial={{ opacity: 0, y: 10 }}
+                          animate={{ opacity: 1, y: 0 }}
+                          exit={{ opacity: 0, y: 10 }}
+                          transition={{ duration: 0.2 }}
+                          className="absolute right-0 mt-2 w-full bg-white border border-brand-border rounded-xl shadow-lg z-50 overflow-hidden"
+                        >
+                          <div className="py-1">
+                            {sortOptions.map((option) => (
+                              <div
+                                key={option.value}
+                                onClick={() => {
+                                  setSearchParams({ ...Object.fromEntries(searchParams.entries()), sort: option.value })
+                                  setIsSortOpen(false)
+                                }}
+                                className={`px-4 py-2.5 cursor-pointer text-sm transition-colors hover:bg-gray-50 
+                                  ${sortBy === option.value ? 'text-brand-ink font-medium bg-gray-50' : 'text-brand-sub'}`}
+                              >
+                                {option.label}
+                              </div>
+                            ))}
+                          </div>
+                        </motion.div>
+                      )}
+                    </AnimatePresence>
+                  </div>
                 </div>
               </div>
 
               {isLoading ? (
                 <div className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-4 md:gap-x-6 md:gap-y-10">
                   {Array.from({ length: 8 }).map((_, i) => (
-                    <div key={i} className="animate-pulse space-y-3">
-                      <div className="aspect-[3/4] bg-brand-muted rounded-[8px]" />
-                      <div className="h-3 bg-brand-muted rounded w-1/3" />
-                      <div className="h-4 bg-brand-muted rounded w-3/4" />
-                      <div className="h-4 bg-brand-muted rounded w-1/2" />
-                    </div>
+                    <ProductSkeleton key={i} />
                   ))}
                 </div>
               ) : paginatedProducts.length > 0 ? (

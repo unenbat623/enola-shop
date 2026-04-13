@@ -11,7 +11,8 @@ import PaymentSelector from '@/components/checkout/PaymentSelector'
 import QPay from '@/components/checkout/QPay'
 import SocialPay from '@/components/checkout/SocialPay'
 import BankTransfer from '@/components/checkout/BankTransfer'
-import { ArrowLeft, Loader2 } from 'lucide-react'
+import { ArrowLeft } from 'lucide-react'
+import { Button } from '@/components/common/Button'
 
 export default function CheckoutPage() {
   const navigate = useNavigate()
@@ -124,14 +125,14 @@ export default function CheckoutPage() {
 
                   <PaymentSelector selected={paymentMethod} onSelect={setPaymentMethod} />
 
-                  <button
-                    disabled={!paymentMethod || isSubmitting}
+                  <Button
+                    disabled={!paymentMethod}
+                    isLoading={isSubmitting}
                     onClick={handlePlaceOrder}
-                    className="w-full h-12 bg-brand-ink text-brand-base disabled:opacity-30 disabled:cursor-not-allowed font-normal text-[12px] tracking-[1.5px] rounded-[6px] hover:bg-brand-ink2 transition-all flex items-center justify-center gap-2"
+                    className="w-full h-12 bg-brand-ink text-brand-base rounded-[6px] hover:bg-brand-ink2 transition-all font-normal text-[12px] tracking-[1.5px]"
                   >
-                    {isSubmitting && <Loader2 className="w-4 h-4 animate-spin" />}
                     Захиалах
-                  </button>
+                  </Button>
                 </div>
               ) : (
                 <div className="space-y-6">

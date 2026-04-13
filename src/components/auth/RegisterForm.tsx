@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { Button } from '@/components/common/Button'
 import { Link, useNavigate } from 'react-router'
 import { User, Mail, Lock, ArrowRight, Loader2 } from 'lucide-react'
 import { toast } from '@/components/common/Toast'
@@ -106,12 +107,13 @@ export default function RegisterForm() {
           </p>
         </div>
 
-        <button 
-          disabled={loading}
-          className="w-full h-11 bg-brand-ink text-brand-base font-normal text-[12px] normal-case tracking-[1.5px] rounded-[6px] hover:bg-brand-ink2 transition-all flex items-center justify-center gap-2 disabled:opacity-50"
+        <Button 
+          type="submit"
+          isLoading={loading}
+          className="w-full h-12 bg-brand-ink text-brand-base rounded-[6px] hover:bg-brand-ink2 transition-all font-normal text-[12px] tracking-[1.5px]"
         >
-          {loading ? <Loader2 className="w-4 h-4 animate-spin" /> : <>Бүртгүүлэх <ArrowRight className="w-3.5 h-3.5" /></>}
-        </button>
+          Бүртгүүлэх
+        </Button>
       </form>
 
       <div className="mt-8 pt-8 border-t border-brand-border text-center">

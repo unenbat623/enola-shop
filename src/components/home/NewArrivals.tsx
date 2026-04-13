@@ -1,7 +1,7 @@
 import { useProductStore } from '@/store/productStore'
 import ProductCard from '@/components/product/ProductCard'
 import { Link } from 'react-router'
-import { Loader2 } from 'lucide-react'
+import { ProductSkeleton } from '@/components/product/ProductSkeleton'
 
 export default function NewArrivals() {
   const { products, isLoading } = useProductStore()
@@ -19,8 +19,10 @@ export default function NewArrivals() {
         </div>
 
         {isLoading ? (
-          <div className="py-20 flex justify-center items-center">
-            <Loader2 className="w-8 h-8 animate-spin text-brand-ink" />
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+            {Array.from({ length: 4 }).map((_, i) => (
+              <ProductSkeleton key={i} />
+            ))}
           </div>
         ) : (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
