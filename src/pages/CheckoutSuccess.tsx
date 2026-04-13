@@ -1,5 +1,5 @@
 import { useEffect } from 'react'
-import { useParams, Link, useNavigate } from 'react-router'
+import { useSearchParams, Link, useNavigate } from 'react-router'
 import { motion } from 'framer-motion'
 import { Check, Clock, Home, ShoppingBag, MapPin, Package, Calendar } from 'lucide-react'
 import { useCheckoutStore } from '@/store/checkoutStore'
@@ -9,7 +9,8 @@ import { cn } from '@/lib/utils'
 import { Order } from '@/lib/types'
 
 export default function CheckoutSuccessPage() {
-  const { orderId } = useParams()
+  const [searchParams] = useSearchParams()
+  const orderId = searchParams.get('orderId')
   const navigate = useNavigate()
   const { delivery, status, paymentMethod, reset, setStep } = useCheckoutStore()
   const { items, totalPrice, clearCart } = useCartStore()

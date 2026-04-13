@@ -35,12 +35,12 @@ export default function CheckoutPaymentPage() {
 
   const handleSuccess = () => {
     setStatus('paid')
-    navigate(`/checkout/success/${orderId}`)
+    navigate(`/checkout/success?orderId=${orderId}`)
   }
 
   const handleBankDone = () => {
     setStatus('pending_payment')
-    navigate(`/checkout/success/${orderId}`)
+    navigate(`/checkout/success?orderId=${orderId}`)
   }
 
   return (

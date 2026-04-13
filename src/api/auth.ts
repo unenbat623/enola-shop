@@ -1,14 +1,14 @@
-import { api } from './client'
+import { get, post } from './client'
 import { User, LoginCredentials, RegisterCredentials, AuthResponse } from '../lib/types'
 
 export const authApi = {
   login: async (credentials: LoginCredentials) => {
-    return api.post('/api/auth/login', credentials) as Promise<AuthResponse>
+    return post<AuthResponse>('/api/auth/login', credentials)
   },
   register: async (credentials: RegisterCredentials) => {
-    return api.post('/api/auth/register', credentials) as Promise<AuthResponse>
+    return post<AuthResponse>('/api/auth/register', credentials)
   },
   getMe: async () => {
-    return api.get('/api/auth/me') as Promise<{ user: User }>
+    return get<{ user: User }>('/api/auth/me')
   }
 }

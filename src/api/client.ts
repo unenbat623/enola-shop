@@ -1,48 +1,24 @@
-const BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:3001'
+const BASE = import.meta.env.VITE_API_URL ?? 'http://localhost:3000'
 
-interface RequestOptions extends RequestInit {
-  data?: unknown;
-}
-
-export async function client(endpoint: string, { data, ...customConfig }: RequestOptions = {}) {
+async function request<T>(path: string, options?: RequestInit): Promise<T> {
   const token = localStorage.getItem('token')
-  const headers = new Headers(customConfig.headers)
-  
-  if (token) {
-    headers.set('Authorization', `Bearer ${token}`)
-  }
-
-  if (data) {
-    headers.set('Content-Type', 'application/json')
-  }
-
-  const config: RequestInit = {
-    ...customConfig,
-    headers,
-  }
-
-  if (data) {
-    config.body = JSON.stringify(data)
-  }
-
-  try {
-    const response = await fetch(`${BASE_URL}${endpoint}`, config)
-    const result = await response.json()
-    
-    if (!response.ok) {
-      throw new Error(result.error || 'API Error')
-    }
-
-    return result
-  } catch (error) {
-    return Promise.reject(error)
-  }
+  const res = await fetch(`${BASE}${path}`, {
+    ...options,
+    headers: {
+      'Content-Type': 'application/json',
+      ...(token ? { Authorization: `Bearer ${token}` } : {}),
+      ...options?.headers,
+    },
+  })
+  if (!res.ok) throw new Error((await res.json()).error ?? 'Алдаа гарлаа')
+  return res.json()
 }
 
-export const api = {
-  get: (endpoint: string, customConfig: RequestOptions = {}) => client(endpoint, { ...customConfig, method: 'GET' }),
-  post: (endpoint: string, data: unknown, customConfig: RequestOptions = {}) => client(endpoint, { ...customConfig, method: 'POST', data }),
-  put: (endpoint: string, data: unknown, customConfig: RequestOptions = {}) => client(endpoint, { ...customConfig, method: 'PUT', data }),
-  patch: (endpoint: string, data: unknown, customConfig: RequestOptions = {}) => client(endpoint, { ...customConfig, method: 'PATCH', data }),
-  delete: (endpoint: string, customConfig: RequestOptions = {}) => client(endpoint, { ...customConfig, method: 'DELETE' }),
-}
+export const get = <T>(path: string) => request<T>(path)
+export const post = <T>(path: string, body: unknown) =>
+  request<T>(path, { method: 'POST', body: JSON.stringify(body) })
+export const put = <T>(path: string, body: unknown) =>
+  request<T>(path, { method: 'PUT', body: JSON.stringify(body) })
+export const patch = <T>(path: string, body: unknown) =>
+  request<T>(path, { method: 'PATCH', body: JSON.stringify(body) })
+export const del = <T>(path: string) => request<T>(path, { method: 'DELETE' })
