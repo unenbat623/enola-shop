@@ -1,8 +1,8 @@
 import { Hono } from 'hono';
 import User from '../models/User';
-import { authMiddleware, adminMiddleware } from '../lib/auth';
+import { authMiddleware, adminMiddleware, HonoVariables } from '../lib/auth';
 
-const users = new Hono();
+const users = new Hono<HonoVariables>();
 
 // Get all users
 users.get('/', authMiddleware, adminMiddleware, async (c) => {

@@ -1,8 +1,8 @@
 import { Hono } from 'hono'
 import Order from '../models/Order'
-import { authMiddleware, adminMiddleware } from '../lib/auth'
+import { authMiddleware, adminMiddleware, HonoVariables } from '../lib/auth'
 
-const orders = new Hono()
+const orders = new Hono<HonoVariables>()
 
 // GET /api/orders — all orders (admin only)
 orders.get('/', authMiddleware, adminMiddleware, async (c) => {

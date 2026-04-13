@@ -2,9 +2,9 @@ import { Hono } from 'hono'
 import bcrypt from 'bcryptjs'
 import jwt from 'jsonwebtoken'
 import User from '../models/User'
-import { authMiddleware } from '../lib/auth'
+import { authMiddleware, HonoVariables } from '../lib/auth'
 
-const auth = new Hono()
+const auth = new Hono<HonoVariables>()
 
 const JWT_SECRET = process.env.JWT_SECRET || 'fallback_secret'
 

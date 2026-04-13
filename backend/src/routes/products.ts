@@ -1,8 +1,8 @@
 import { Hono } from 'hono';
 import Product from '../models/Product';
-import { authMiddleware, adminMiddleware } from '../lib/auth';
+import { authMiddleware, adminMiddleware, HonoVariables } from '../lib/auth';
 
-const products = new Hono();
+const products = new Hono<HonoVariables>();
 
 // Get all products
 products.get('/', async (c) => {

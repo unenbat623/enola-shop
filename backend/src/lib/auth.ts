@@ -2,7 +2,13 @@ import jwt from 'jsonwebtoken'
 import { Context, Next } from 'hono'
 import User from '../models/User'
 
-export const authMiddleware = async (c: Context, next: Next) => {
+export type HonoVariables = {
+  Variables: {
+    user: any // Replace with proper IUser type if available
+  }
+}
+
+export const authMiddleware = async (c: Context<HonoVariables>, next: Next) => {
   const authHeader = c.req.header('Authorization')
   if (!authHeader || !authHeader.startsWith('Bearer ')) {
     return c.json({ error: 'Unauthorized' }, 401)
@@ -22,7 +28,7 @@ export const authMiddleware = async (c: Context, next: Next) => {
   }
 }
 
-export const adminMiddleware = async (c: Context, next: Next) => {
+export const adminMiddleware = async (c: Context<HonoVariables>, next: Next) => {
   const user = c.get('user')
   if (!user || user.role !== 'admin') {
     return c.json({ error: 'Forbidden: Admin access required' }, 403)
