@@ -1,153 +1,192 @@
 import { useEffect, useState } from 'react'
 import { productsApi } from '@/api/products'
-import { Plus, Edit, Trash2, Loader2, Image as ImageIcon } from 'lucide-react'
+import { Plus, Edit, Trash2, Loader2, X, Image as ImageIcon } from 'lucide-react'
 import { formatCurrency } from '@/lib/utils'
 import { Product } from '@/lib/types'
+import { categories } from '@/lib/constants'
+
+const EMPTY_FORM = {
+  name: '', slug: '', price: '',
+  originalPrice: '', category: '', categorySlug: '',
+  stock: '', description: '', images: ''
+}
 
 export default function AdminProducts() {
   const [products, setProducts] = useState<Product[]>([])
   const [isLoading, setIsLoading] = useState(true)
+  const [isSaving, setIsSaving] = useState(false)
   const [isModalOpen, setIsModalOpen] = useState(false)
-  const [currentEditId, setCurrentEditId] = useState<string | null>(null)
-  
-  const [formData, setFormData] = useState({
-    name: '',
-    slug: '',
-    price: '',
-    category: '',
-    categorySlug: '',
-    stock: '',
-    description: '',
-    images: ''
-  })
+  const [editId, setEditId] = useState<string | null>(null)
+  const [formData, setFormData] = useState(EMPTY_FORM)
+  const [formError, setFormError] = useState('')
 
-  const loadProducts = async () => {
+  const load = async () => {
     setIsLoading(true)
     try {
       const data = await productsApi.getProducts()
       setProducts(Array.isArray(data) ? data : [])
-    } catch {
-      setProducts([])
-    } finally {
-      setIsLoading(false)
-    }
+    } catch { setProducts([]) }
+    finally { setIsLoading(false) }
   }
 
-  useEffect(() => {
-    loadProducts()
-  }, [])
+  useEffect(() => { load() }, [])
 
-  const openModal = (product?: Product) => {
-    if (product) {
-      setCurrentEditId(product.id)
-      setFormData({
-        name: product.name || '',
-        slug: product.slug || '',
-        price: product.price?.toString() || '',
-        category: product.category || '',
-        categorySlug: product.categorySlug || '',
-        stock: product.stock?.toString() || '',
-        description: product.description || '',
-        images: product.images ? product.images.join(', ') : ''
-      })
-    } else {
-      setCurrentEditId(null)
-      setFormData({
-        name: '', slug: '', price: '', category: '', categorySlug: '', stock: '', description: '', images: ''
-      })
-    }
+  const openNew = () => {
+    setEditId(null)
+    setFormData(EMPTY_FORM)
+    setFormError('')
     setIsModalOpen(true)
   }
 
-  const handleDelete = async (id: string) => {
-    if (window.confirm('Энэ барааг устгах уу?')) {
-      try {
-        await productsApi.deleteProduct(id)
-        loadProducts()
-      } catch (err) {
-        alert('Устгахад алдаа гарлаа')
-      }
-    }
+  const openEdit = (p: Product) => {
+    setEditId(p.id)
+    setFormData({
+      name: p.name,
+      slug: p.slug,
+      price: String(p.price),
+      originalPrice: p.originalPrice ? String(p.originalPrice) : '',
+      category: p.category,
+      categorySlug: p.categorySlug,
+      stock: p.stock ? String(p.stock) : '',
+      description: p.description,
+      images: p.images?.join('\n') ?? '',
+    })
+    setFormError('')
+    setIsModalOpen(true)
+  }
+
+  const closeModal = () => setIsModalOpen(false)
+
+  const handleCategoryChange = (slug: string) => {
+    const cat = categories.find((c) => c.slug === slug)
+    setFormData((f) => ({
+      ...f,
+      categorySlug: slug,
+      category: cat?.name ?? f.category,
+    }))
   }
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
+    setFormError('')
+    setIsSaving(true)
     try {
-      const payload = {
-        ...formData,
+      const payload: Partial<Product> = {
+        name: formData.name.trim(),
+        slug: formData.slug.trim() || formData.name.toLowerCase().replace(/\s+/g, '-'),
         price: Number(formData.price),
-        stock: Number(formData.stock),
-        images: formData.images.split(',').map(img => img.trim()).filter(Boolean)
+        originalPrice: formData.originalPrice ? Number(formData.originalPrice) : undefined,
+        category: formData.category,
+        categorySlug: formData.categorySlug,
+        stock: Number(formData.stock) || 0,
+        inStock: Number(formData.stock) > 0,
+        description: formData.description,
+        images: formData.images.split('\n').map((s) => s.trim()).filter(Boolean),
+        rating: 0, reviewCount: 0,
       }
-      
-      if (currentEditId) {
-        await productsApi.updateProduct(currentEditId, payload as Partial<Product>)
+      if (editId) {
+        await productsApi.updateProduct(editId, payload)
       } else {
-        await productsApi.createProduct(payload as Partial<Product>)
+        await productsApi.createProduct(payload)
       }
-      
-      setIsModalOpen(false)
-      loadProducts()
-    } catch (err) {
-      alert('Хадгалахад алдаа гарлаа')
+      closeModal()
+      load()
+    } catch (err: any) {
+      setFormError(err.message || 'Хадгалахад алдаа гарлаа')
+    } finally {
+      setIsSaving(false)
     }
+  }
+
+  const handleDelete = async (id: string, name: string) => {
+    if (!window.confirm(`"${name}" барааг устгах уу?`)) return
+    try {
+      await productsApi.deleteProduct(id)
+      load()
+    } catch { alert('Устгахад алдаа гарлаа') }
   }
 
   return (
     <>
-      <header className="flex justify-between items-center mb-10">
+      {/* Header */}
+      <header className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8">
         <div>
-          <h1 className="text-2xl font-normal text-brand-ink normal-case tracking-tight">Бүтээгдэхүүн</h1>
-          <p className="text-[14px] text-brand-sub mt-2">Нийт {products.length} бүтээгдэхүүн бүртгэлтэй байна.</p>
+          <h1 className="text-2xl font-normal text-brand-ink tracking-tight">Бүтээгдэхүүн</h1>
+          <p className="text-sm text-brand-sub mt-1">Нийт {products.length} бүтээгдэхүүн</p>
         </div>
-        <button 
-          onClick={() => openModal()}
-          className="bg-brand-ink text-brand-base px-5 py-2.5 rounded-[4px] text-[12px] font-bold normal-case tracking-[1px] hover:bg-brand-ink2 transition-colors flex items-center gap-2"
+        <button
+          onClick={openNew}
+          className="inline-flex items-center gap-2 bg-brand-ink text-brand-base px-5 py-2.5 rounded-[6px] text-[12px] font-bold tracking-[1px] hover:bg-brand-ink2 transition-colors"
         >
-          <Plus className="w-4 h-4" /> Шинэ бараа
+          <Plus className="w-4 h-4" /> Шинэ бараа нэмэх
         </button>
       </header>
 
-      {/* Main Table Layer */}
+      {/* Table */}
       <div className="bg-white border border-brand-border rounded-[10px] overflow-hidden">
         {isLoading ? (
-          <div className="flex justify-center p-20"><Loader2 className="w-6 h-6 animate-spin text-brand-hint" /></div>
+          <div className="flex justify-center p-20">
+            <Loader2 className="w-6 h-6 animate-spin text-brand-hint" />
+          </div>
         ) : (
-          <div className="overflow-x-auto object-contain">
+          <div className="overflow-x-auto">
             <table className="w-full text-left">
-              <thead className="bg-brand-surface text-brand-hint text-[10px] font-bold normal-case tracking-[1.5px]">
+              <thead className="bg-brand-surface text-brand-hint text-[10px] font-bold tracking-[1.5px]">
                 <tr>
-                  <th className="px-6 py-4">Зураг</th>
-                  <th className="px-6 py-4">Бүтээгдэхүүн</th>
-                  <th className="px-6 py-4">Ангилал</th>
-                  <th className="px-6 py-4">Үнэ</th>
-                  <th className="px-6 py-4">Үлдэгдэл</th>
-                  <th className="px-6 py-4 text-right">Үйлдэл</th>
+                  <th className="px-5 py-4 w-14">Зураг</th>
+                  <th className="px-5 py-4">Нэр</th>
+                  <th className="px-5 py-4">Ангилал</th>
+                  <th className="px-5 py-4">Үнэ</th>
+                  <th className="px-5 py-4">Тоо</th>
+                  <th className="px-5 py-4 text-right">Үйлдэл</th>
                 </tr>
               </thead>
               <tbody className="text-[13px] text-brand-ink">
-                {products.length > 0 ? products.map((product) => (
-                  <tr key={product.id} className="border-b border-brand-border hover:bg-brand-surface transition-colors">
-                    <td className="px-6 py-3">
-                      <div className="w-10 h-10 rounded-[4px] bg-brand-muted border border-brand-border overflow-hidden">
-                        {product.images && product.images[0] ? (
-                          <img src={product.images[0]} alt="" className="w-full h-full object-cover" />
+                {products.length > 0 ? products.map((p) => (
+                  <tr key={p.id} className="border-b border-brand-border hover:bg-brand-surface transition-colors">
+                    <td className="px-5 py-3">
+                      <div className="w-10 h-12 rounded-[4px] bg-brand-muted border border-brand-border overflow-hidden flex-shrink-0">
+                        {p.images?.[0] ? (
+                          <img src={p.images[0]} alt="" className="w-full h-full object-cover" />
                         ) : (
                           <ImageIcon className="w-full h-full p-2 text-brand-ghost" />
                         )}
                       </div>
                     </td>
-                    <td className="px-6 py-5 font-medium">{product.name}</td>
-                    <td className="px-6 py-5 text-brand-sub">{product.category}</td>
-                    <td className="px-6 py-5 font-medium">{formatCurrency(product.price)}</td>
-                    <td className="px-6 py-5">{product.stock || 0} ш</td>
-                    <td className="px-6 py-5 text-right space-x-2">
-                      <button onClick={() => openModal(product)} className="p-2 text-brand-hint hover:text-brand-ink hover:bg-white rounded-[4px] transition-colors"><Edit className="w-4 h-4" /></button>
-                      <button onClick={() => handleDelete(product.id)} className="p-2 text-brand-danger hover:bg-brand-danger/10 rounded-[4px] transition-colors"><Trash2 className="w-4 h-4" /></button>
+                    <td className="px-5 py-3">
+                      <p className="font-medium">{p.name}</p>
+                      <p className="text-[10px] text-brand-hint">{p.slug}</p>
+                    </td>
+                    <td className="px-5 py-3 text-brand-sub">{p.category}</td>
+                    <td className="px-5 py-3 font-medium">{formatCurrency(p.price)}</td>
+                    <td className="px-5 py-3">
+                      <span className={`px-2 py-0.5 rounded text-[10px] font-bold ${(p.stock ?? 0) > 0 ? 'bg-green-50 text-green-700' : 'bg-red-50 text-red-700'}`}>
+                        {p.stock ?? 0} ш
+                      </span>
+                    </td>
+                    <td className="px-5 py-3 text-right space-x-1">
+                      <button
+                        onClick={() => openEdit(p)}
+                        className="p-2 text-brand-hint hover:text-brand-ink hover:bg-brand-surface rounded-[4px] transition-colors"
+                        title="Засах"
+                      >
+                        <Edit className="w-4 h-4" />
+                      </button>
+                      <button
+                        onClick={() => handleDelete(p.id, p.name)}
+                        className="p-2 text-brand-danger hover:bg-red-50 rounded-[4px] transition-colors"
+                        title="Устгах"
+                      >
+                        <Trash2 className="w-4 h-4" />
+                      </button>
                     </td>
                   </tr>
                 )) : (
-                  <tr><td colSpan={6} className="px-6 py-10 text-center text-brand-sub">Одоогоор бараа байхгүй байна.</td></tr>
+                  <tr>
+                    <td colSpan={6} className="px-6 py-16 text-center text-brand-sub">
+                      Одоогоор бараа байхгүй байна.
+                    </td>
+                  </tr>
                 )}
               </tbody>
             </table>
@@ -157,52 +196,137 @@ export default function AdminProducts() {
 
       {/* Modal */}
       {isModalOpen && (
-        <div className="fixed inset-0 bg-brand-ink/40 backdrop-blur-sm flex items-center justify-center p-4 z-50">
-          <div className="bg-white rounded-[12px] border border-brand-border p-8 w-full max-w-2xl max-h-[90vh] overflow-y-auto">
-            <h2 className="text-xl font-normal text-brand-ink normal-case mb-6">{currentEditId ? 'Бараа засах' : 'Бүтээгдэхүүн нэмэх'}</h2>
-            <form onSubmit={handleSubmit} className="space-y-4">
-              <div className="grid grid-cols-2 gap-4">
-                <div className="space-y-2">
-                  <label className="text-[12px] font-bold text-brand-hint uppercase tracking-wider">Нэр</label>
-                  <input required value={formData.name} onChange={e => setFormData({...formData, name: e.target.value})} className="w-full border border-brand-border rounded-[6px] h-10 px-3 outline-none focus:border-brand-ink text-[13px]" />
+        <div className="fixed inset-0 bg-black/40 backdrop-blur-sm flex items-start justify-center p-4 z-50 overflow-y-auto">
+          <div className="bg-white rounded-[14px] border border-brand-border w-full max-w-2xl my-8 shadow-2xl">
+            {/* Modal Header */}
+            <div className="flex items-center justify-between px-8 py-6 border-b border-brand-border">
+              <h2 className="text-xl font-normal text-brand-ink">
+                {editId ? 'Бараа засах' : 'Шинэ бараа нэмэх'}
+              </h2>
+              <button
+                onClick={closeModal}
+                className="p-2 text-brand-hint hover:text-brand-ink hover:bg-brand-surface rounded-full transition-colors"
+              >
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+
+            {/* Form */}
+            <form onSubmit={handleSubmit} className="p-8 space-y-5">
+              {formError && (
+                <div className="bg-red-50 border border-red-200 text-red-700 text-[13px] rounded-[6px] px-4 py-3">
+                  {formError}
                 </div>
-                <div className="space-y-2">
-                  <label className="text-[12px] font-bold text-brand-hint uppercase tracking-wider">URL Slug</label>
-                  <input required value={formData.slug} onChange={e => setFormData({...formData, slug: e.target.value})} className="w-full border border-brand-border rounded-[6px] h-10 px-3 outline-none focus:border-brand-ink text-[13px]" placeholder="Жишээ: black-tshirt" />
-                </div>
-                <div className="space-y-2">
-                  <label className="text-[12px] font-bold text-brand-hint uppercase tracking-wider">Үнэ</label>
-                  <input type="number" required value={formData.price} onChange={e => setFormData({...formData, price: e.target.value})} className="w-full border border-brand-border rounded-[6px] h-10 px-3 outline-none focus:border-brand-ink text-[13px]" />
-                </div>
-                <div className="space-y-2">
-                  <label className="text-[12px] font-bold text-brand-hint uppercase tracking-wider">Ангилал (Нэр)</label>
-                  <input required value={formData.category} onChange={e => setFormData({...formData, category: e.target.value})} className="w-full border border-brand-border rounded-[6px] h-10 px-3 outline-none focus:border-brand-ink text-[13px]" />
-                </div>
-                <div className="space-y-2">
-                  <label className="text-[12px] font-bold text-brand-hint uppercase tracking-wider">Ангилал Slug</label>
-                  <input required value={formData.categorySlug} onChange={e => setFormData({...formData, categorySlug: e.target.value})} className="w-full border border-brand-border rounded-[6px] h-10 px-3 outline-none focus:border-brand-ink text-[13px]" placeholder="Жишээ: clothing" />
-                </div>
-                <div className="space-y-2">
-                  <label className="text-[12px] font-bold text-brand-hint uppercase tracking-wider">Үлдэгдэл</label>
-                  <input type="number" required value={formData.stock} onChange={e => setFormData({...formData, stock: e.target.value})} className="w-full border border-brand-border rounded-[6px] h-10 px-3 outline-none focus:border-brand-ink text-[13px]" />
-                </div>
+              )}
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
+                <Field label="Нэр *">
+                  <input
+                    required value={formData.name}
+                    onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                    className="input-base"
+                    placeholder="Барааны нэр"
+                  />
+                </Field>
+
+                <Field label="URL Slug">
+                  <input
+                    value={formData.slug}
+                    onChange={(e) => setFormData({ ...formData, slug: e.target.value })}
+                    className="input-base"
+                    placeholder="auto-gen эсвэл custom-slug"
+                  />
+                </Field>
+
+                <Field label="Үнэ (₮) *">
+                  <input
+                    type="number" required min="0" value={formData.price}
+                    onChange={(e) => setFormData({ ...formData, price: e.target.value })}
+                    className="input-base"
+                    placeholder="0"
+                  />
+                </Field>
+
+                <Field label="Эхний үнэ (₮)">
+                  <input
+                    type="number" min="0" value={formData.originalPrice}
+                    onChange={(e) => setFormData({ ...formData, originalPrice: e.target.value })}
+                    className="input-base"
+                    placeholder="Хямдрал өмнөх үнэ"
+                  />
+                </Field>
+
+                <Field label="Ангилал *">
+                  <select
+                    required value={formData.categorySlug}
+                    onChange={(e) => handleCategoryChange(e.target.value)}
+                    className="input-base"
+                  >
+                    <option value="">-- Сонгох --</option>
+                    {categories.map((cat) => (
+                      <option key={cat.slug} value={cat.slug}>{cat.name}</option>
+                    ))}
+                  </select>
+                </Field>
+
+                <Field label="Тоо ширхэг *">
+                  <input
+                    type="number" required min="0" value={formData.stock}
+                    onChange={(e) => setFormData({ ...formData, stock: e.target.value })}
+                    className="input-base"
+                    placeholder="0"
+                  />
+                </Field>
               </div>
-              <div className="space-y-2">
-                <label className="text-[12px] font-bold text-brand-hint uppercase tracking-wider">Зураг (Таслалаар тусгаарлах)</label>
-                <input required value={formData.images} onChange={e => setFormData({...formData, images: e.target.value})} className="w-full border border-brand-border rounded-[6px] h-10 px-3 outline-none focus:border-brand-ink text-[13px]" placeholder="https://..." />
-              </div>
-              <div className="space-y-2">
-                <label className="text-[12px] font-bold text-brand-hint uppercase tracking-wider">Дэлгэрэнгүй тодорхойлолт</label>
-                <textarea required value={formData.description} onChange={e => setFormData({...formData, description: e.target.value})} className="w-full border border-brand-border rounded-[6px] h-24 p-3 outline-none focus:border-brand-ink text-[13px]" />
-              </div>
-              <div className="flex justify-end gap-3 pt-6">
-                <button type="button" onClick={() => setIsModalOpen(false)} className="px-6 py-2.5 text-[12px] font-medium text-brand-sub hover:bg-brand-surface rounded-[4px] transition-colors">Цуцлах</button>
-                <button type="submit" className="px-6 py-2.5 bg-brand-ink text-brand-base rounded-[4px] text-[12px] font-bold tracking-[1px] normal-case hover:bg-brand-ink2 transition-colors">Хадгалах</button>
+
+              <Field label="Зургийн URL (мөр бүрт нэг URL)">
+                <textarea
+                  rows={3} value={formData.images}
+                  onChange={(e) => setFormData({ ...formData, images: e.target.value })}
+                  className="input-base resize-none"
+                  placeholder="https://example.com/image1.jpg&#10;https://example.com/image2.jpg"
+                />
+              </Field>
+
+              <Field label="Тодорхойлолт *">
+                <textarea
+                  required rows={4} value={formData.description}
+                  onChange={(e) => setFormData({ ...formData, description: e.target.value })}
+                  className="input-base resize-none"
+                  placeholder="Барааны дэлгэрэнгүй тодорхойлолт..."
+                />
+              </Field>
+
+              <div className="flex justify-end gap-3 pt-2">
+                <button
+                  type="button" onClick={closeModal}
+                  className="px-6 py-2.5 text-[12px] font-medium text-brand-sub border border-brand-border rounded-[6px] hover:bg-brand-surface transition-colors"
+                >
+                  Цуцлах
+                </button>
+                <button
+                  type="submit" disabled={isSaving}
+                  className="px-8 py-2.5 bg-brand-ink text-brand-base rounded-[6px] text-[12px] font-bold tracking-[1px] hover:bg-brand-ink2 transition-colors disabled:opacity-50 flex items-center gap-2"
+                >
+                  {isSaving && <Loader2 className="w-3.5 h-3.5 animate-spin" />}
+                  {editId ? 'Хадгалах' : 'Нэмэх'}
+                </button>
               </div>
             </form>
           </div>
         </div>
       )}
+
+      <style>{`.input-base { width: 100%; border: 1px solid var(--color-brand-border, #e5e5e5); border-radius: 6px; height: 42px; padding: 0 12px; outline: none; font-size: 13px; } .input-base:focus { border-color: var(--color-brand-ink, #1a1a1a); } textarea.input-base { height: auto; padding: 10px 12px; }`}</style>
     </>
+  )
+}
+
+function Field({ label, children }: { label: string; children: React.ReactNode }) {
+  return (
+    <div className="space-y-1.5">
+      <label className="text-[11px] font-bold text-brand-hint uppercase tracking-wider">{label}</label>
+      {children}
+    </div>
   )
 }
