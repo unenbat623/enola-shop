@@ -5,6 +5,8 @@ export interface IUser extends Document {
   email: string;
   password?: string;
   role: 'user' | 'admin';
+  googleId?: string;
+  avatar?: string;
   createdAt: Date;
 }
 
@@ -13,6 +15,8 @@ const UserSchema: Schema = new Schema({
   email: { type: String, required: true, unique: true },
   password: { type: String, select: false }, // don't return password by default
   role: { type: String, enum: ['user', 'admin'], default: 'user' },
+  googleId: { type: String, sparse: true },
+  avatar: { type: String },
   createdAt: { type: Date, default: Date.now },
 }, {
   toJSON: {

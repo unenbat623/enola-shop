@@ -14,6 +14,7 @@
   },
   "dependencies": {
     "@fontsource/geist": "latest",
+    "@react-oauth/google": "^0.13.5",
     "clsx": "^2.1.1",
     "framer-motion": "^11.11.17",
     "lucide-react": "latest",

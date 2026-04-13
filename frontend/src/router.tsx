@@ -12,6 +12,7 @@ import CheckoutPage from '@/pages/Checkout'
 import CheckoutSuccessPage from '@/pages/CheckoutSuccess'
 import LoginPage from '@/pages/Login'
 import RegisterPage from '@/pages/Register'
+import AuthCallbackPage from '@/pages/auth/callback'
 import OrdersPage from '@/pages/Orders'
 
 // Admin Pages
@@ -40,6 +41,7 @@ export default function AppRouter() {
         <Route path="/orders" element={<ProtectedRoute><OrdersPage /></ProtectedRoute>} />
         <Route path="/login" element={<LoginPage />} />
         <Route path="/register" element={<RegisterPage />} />
+        <Route path="/auth/callback" element={<AuthCallbackPage />} />
       </Route>
       
       <Route path="/admin" element={<AdminRoute />}>

@@ -3,6 +3,7 @@ import bcrypt from 'bcryptjs'
 import jwt from 'jsonwebtoken'
 import User from '../models/User'
 import { authMiddleware, HonoVariables } from '../lib/auth'
+import { googleAuth } from '@hono/oauth-providers/google'
 
 const auth = new Hono<HonoVariables>()
 
@@ -73,6 +74,58 @@ auth.post('/login', async (c) => {
 auth.get('/me', authMiddleware, async (c) => {
   const user = c.get('user')
   return c.json({ user })
+})
+
+// Google OAuth flow
+auth.get('/google', googleAuth({
+  client_id: process.env.GOOGLE_CLIENT_ID!,
+  client_secret: process.env.GOOGLE_CLIENT_SECRET!,
+  scope: ['profile', 'email'],
+}), async (c) => {
+  const googleUser = c.get('user-google')
+  
+  if (!googleUser) {
+    return c.redirect(`${process.env.FRONTEND_URL}/login?error=oauth_failed`)
+  }
+
+  try {
+    // 1. Check if user exists with googleId
+    let user = await User.findOne({ googleId: googleUser.id })
+
+    if (!user) {
+      // 2. Check if user exists with email (link existing account)
+      user = await User.findOne({ email: googleUser.email })
+      if (user) {
+        user.googleId = googleUser.id
+        if (!user.avatar && googleUser.picture) {
+          user.avatar = googleUser.picture
+        }
+        await user.save()
+      } else {
+        // 3. Create new user
+        user = await User.create({
+          googleId: googleUser.id,
+          name: googleUser.name || googleUser.email.split('@')[0],
+          email: googleUser.email,
+          avatar: googleUser.picture,
+          role: 'user'
+        })
+      }
+    }
+
+    // 4. Generate JWT
+    const token = jwt.sign(
+      { id: user._id, role: user.role },
+      JWT_SECRET,
+      { expiresIn: '30d' }
+    )
+
+    // 5. Redirect to frontend callback
+    return c.redirect(`${process.env.FRONTEND_URL}/auth/callback?token=${token}`)
+  } catch (error) {
+    console.error('Google Auth Error:', error)
+    return c.redirect(`${process.env.FRONTEND_URL}/login?error=server_error`)
+  }
 })
 
 export default auth
