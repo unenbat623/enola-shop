@@ -6,8 +6,8 @@ export default function BrandCarousel() {
   return (
     <section className="py-24 border-y border-brand-border bg-brand-base overflow-hidden">
       <div className="max-w-7xl mx-auto px-4 mb-16 text-center">
-        <span className="text-brand-hint font-medium uppercase tracking-[2px] text-[10px]">
-          VERIFIED PARTNERS
+        <span className="text-brand-hint font-medium normal-case tracking-[2px] text-[10px]">
+          Verified partners
         </span>
       </div>
 
@@ -41,7 +41,7 @@ export default function BrandCarousel() {
                   fontSize: '1.5rem',
                   fontWeight: 400,
                   letterSpacing: '4px',
-                  textTransform: 'uppercase',
+                  textTransform: 'none',
                   userSelect: 'none',
                   color: 'var(--brand-ghost)',
                   transition: 'color 0.3s',

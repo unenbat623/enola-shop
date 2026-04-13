@@ -57,9 +57,9 @@ export default function PaymentSelector({ selected, onSelect }: Props) {
           {/* Info */}
           <div className="flex-1 space-y-0.5">
             <div className="flex items-center gap-3">
-              <h3 className="font-medium text-brand-ink uppercase tracking-tight text-[14px]">{method.title}</h3>
+              <h3 className="font-medium text-brand-ink normal-case tracking-tight text-[14px]">{method.title}</h3>
               {method.badge && (
-                <span className="bg-brand-ink text-brand-base text-[9px] font-bold px-2 py-0.5 rounded-[3px] uppercase tracking-wider">
+                <span className="bg-brand-ink text-brand-base text-[9px] font-bold px-2 py-0.5 rounded-[3px] normal-case tracking-wider">
                   {method.badge}
                 </span>
               )}

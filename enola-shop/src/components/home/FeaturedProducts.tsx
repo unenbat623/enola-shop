@@ -15,9 +15,9 @@ export default function FeaturedProducts() {
   const [activeTab, setActiveTab] = useState('featured')
 
   const filteredProducts = products.filter((p) => {
-    if (activeTab === 'sale') return p.badge === 'SALE'
-    if (activeTab === 'new') return p.badge === 'NEW'
-    if (activeTab === 'hot') return p.badge === 'HOT'
+    if (activeTab === 'sale') return p.badge === 'Хямдрал'
+    if (activeTab === 'new') return p.badge === 'New'
+    if (activeTab === 'hot') return p.badge === 'Hot'
     return true // featured case or default
   }).slice(0, 8)
 
@@ -25,8 +25,8 @@ export default function FeaturedProducts() {
     <section className="py-24 bg-brand-base border-y border-brand-border">
       <div className="max-w-7xl mx-auto px-4">
         <div className="text-center mb-16 space-y-4">
-          <span className="text-brand-hint font-medium uppercase tracking-[2px] text-[10px]">SHOP COLLECTIONS</span>
-          <h2 className="text-3xl md:text-4xl font-normal text-brand-ink tracking-tight uppercase">SELECTIVE EDITORIAL</h2>
+          <span className="text-brand-hint font-medium normal-case tracking-[2px] text-[10px]">Shop collections</span>
+          <h2 className="text-3xl md:text-4xl font-normal text-brand-ink tracking-tight normal-case">Selective editorial</h2>
           
           <div className="flex flex-wrap justify-center gap-10 pt-8 h-12">
             {tabs.map((tab) => (
@@ -34,15 +34,15 @@ export default function FeaturedProducts() {
                 key={tab.id}
                 onClick={() => setActiveTab(tab.id)}
                 className={cn(
-                  "px-1 h-full text-[11px] font-medium tracking-[2px] transition-all cursor-pointer uppercase border-b",
+                  "px-1 h-full text-[11px] font-medium tracking-[2px] transition-all cursor-pointer normal-case border-b",
                   activeTab === tab.id 
                     ? "border-brand-ink text-brand-ink" 
                     : "border-transparent text-brand-hint hover:text-brand-ink"
                 )}
               >
-                {tab.id === 'featured' ? 'FEATURED' : 
-                 tab.id === 'sale' ? 'SALE' : 
-                 tab.id === 'new' ? 'NEW IN' : 'TRENDING'}
+                {tab.id === 'featured' ? 'Онцлох' : 
+                 tab.id === 'sale' ? 'Хямдрал' : 
+                 tab.id === 'new' ? 'New in' : 'Trending'}
               </button>
             ))}
           </div>

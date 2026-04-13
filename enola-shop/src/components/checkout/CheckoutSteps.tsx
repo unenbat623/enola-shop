@@ -31,7 +31,7 @@ export default function CheckoutSteps({ currentStep }: Props) {
               {currentStep > step.id ? <Check className="w-4 h-4" /> : step.id}
             </div>
             <span className={cn(
-              "absolute -bottom-8 whitespace-nowrap text-[10px] font-medium uppercase tracking-[1.5px]",
+              "absolute -bottom-8 whitespace-nowrap text-[10px] font-medium normal-case tracking-[1.5px]",
               currentStep === step.id ? "text-brand-ink" : "text-brand-hint"
             )}>
               {step.label}

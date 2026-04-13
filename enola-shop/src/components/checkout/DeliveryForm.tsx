@@ -43,14 +43,14 @@ export default function DeliveryForm({ onNext }: { onNext: () => void }) {
   return (
     <form onSubmit={handleSubmit} className="space-y-6 bg-white p-9 rounded-[10px] border border-brand-border h-fit">
       <div className="space-y-2">
-        <h2 className="text-xl font-normal text-brand-ink uppercase tracking-tight">Хүргэлтийн мэдээлэл</h2>
+        <h2 className="text-xl font-normal text-brand-ink normal-case tracking-tight">Хүргэлтийн мэдээлэл</h2>
         <p className="text-brand-sub text-[13px]">Бараа хүргэгдэх бодит мэдээллээ оруулна уу.</p>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         {/* Name */}
         <div className="space-y-1.5">
-          <label className="text-brand-sub text-[11px] font-medium uppercase tracking-[1px] ml-1">Нэр *</label>
+          <label className="text-brand-sub text-[11px] font-medium normal-case tracking-[1px] ml-1">Нэр *</label>
           <input
             type="text"
             value={formData.name}
@@ -66,7 +66,7 @@ export default function DeliveryForm({ onNext }: { onNext: () => void }) {
 
         {/* Phone */}
         <div className="space-y-1.5">
-          <label className="text-brand-sub text-[11px] font-medium uppercase tracking-[1px] ml-1">Утасны дугаар *</label>
+          <label className="text-brand-sub text-[11px] font-medium normal-case tracking-[1px] ml-1">Утасны дугаар *</label>
           <input
             type="tel"
             value={formData.phone}
@@ -84,7 +84,7 @@ export default function DeliveryForm({ onNext }: { onNext: () => void }) {
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         {/* City */}
         <div className="space-y-1.5">
-          <label className="text-brand-sub text-[11px] font-medium uppercase tracking-[1px] ml-1">Хот *</label>
+          <label className="text-brand-sub text-[11px] font-medium normal-case tracking-[1px] ml-1">Хот *</label>
           <select
             value={formData.city}
             disabled
@@ -96,7 +96,7 @@ export default function DeliveryForm({ onNext }: { onNext: () => void }) {
 
         {/* District */}
         <div className="space-y-1.5">
-          <label className="text-brand-sub text-[11px] font-medium uppercase tracking-[1px] ml-1">Дүүрэг *</label>
+          <label className="text-brand-sub text-[11px] font-medium normal-case tracking-[1px] ml-1">Дүүрэг *</label>
           <select
             value={formData.district}
             onChange={(e) => setFormData({ ...formData, district: e.target.value })}
@@ -114,7 +114,7 @@ export default function DeliveryForm({ onNext }: { onNext: () => void }) {
 
       {/* Address */}
       <div className="space-y-1.5">
-        <label className="text-brand-sub text-[11px] font-medium uppercase tracking-[1px] ml-1">Хороо / Байр дугаар *</label>
+        <label className="text-brand-sub text-[11px] font-medium normal-case tracking-[1px] ml-1">Хороо / Байр дугаар *</label>
         <input
           type="text"
           value={formData.address}
@@ -130,7 +130,7 @@ export default function DeliveryForm({ onNext }: { onNext: () => void }) {
 
       {/* Detailed Address */}
       <div className="space-y-1.5">
-        <label className="text-brand-sub text-[11px] font-medium uppercase tracking-[1px] ml-1">Дэлгэрэнгүй хаяг *</label>
+        <label className="text-brand-sub text-[11px] font-medium normal-case tracking-[1px] ml-1">Дэлгэрэнгүй хаяг *</label>
         <textarea
           rows={3}
           value={formData.note}
@@ -146,10 +146,8 @@ export default function DeliveryForm({ onNext }: { onNext: () => void }) {
 
       <button
         type="submit"
-        className="w-full h-12 bg-brand-ink text-brand-base font-normal text-[12px] uppercase tracking-[1.5px] rounded-[6px] hover:bg-brand-ink2 transition-all shadow-none"
-      >
-        ТӨЛБӨР РҮҮ ШИЛЖИХ
-      </button>
+        className="w-full h-12 bg-brand-ink text-brand-base font-normal text-[12px] normal-case tracking-[1.5px] rounded-[6px] hover:bg-brand-ink2 transition-all shadow-none"
+      >Төлбөр рүү шилжих</button>
     </form>
   )
 }

@@ -12,8 +12,8 @@ export default function ShopPage() {
   const filteredProducts = products.filter((p) => {
     let matches = true
     if (categoryFilter) matches = matches && p.categorySlug === categoryFilter
-    if (generalFilter === 'sale') matches = matches && p.badge === 'SALE'
-    if (generalFilter === 'new') matches = matches && p.badge === 'NEW'
+    if (generalFilter === 'sale') matches = matches && p.badge === 'Хямдрал'
+    if (generalFilter === 'new') matches = matches && p.badge === 'New'
     return matches
   })
 
@@ -23,14 +23,14 @@ export default function ShopPage() {
         {/* Sidebar Filters */}
         <aside className="w-full md:w-64 flex-shrink-0 space-y-8">
           <div className="bg-brand-surface p-6 rounded-[12px] border border-brand-border shadow-none">
-            <h3 className="font-semibold text-sm mb-6 text-brand-white tracking-widest uppercase">CATEGORIES</h3>
+            <h3 className="font-semibold text-sm mb-6 text-brand-white normal-case normal-case">Ангилал</h3>
             <ul className="space-y-3">
               <li>
                 <button 
                   onClick={() => setSearchParams({})}
                   className={`text-sm font-medium transition-colors ${!categoryFilter && !generalFilter ? 'text-brand-mint font-bold' : 'text-brand-sub hover:text-brand-white'}`}
                 >
-                  ALL PRODUCTS
+                  All products
                 </button>
               </li>
               {categories.map((cat) => (
@@ -51,13 +51,12 @@ export default function ShopPage() {
         {/* Product Grid */}
         <main className="flex-1">
           <div className="mb-6 flex justify-between items-center bg-brand-surface p-4 rounded-[12px] border border-brand-border shadow-none">
-            <p className="text-sm font-medium text-brand-sub">
-              Total <span className="text-brand-white font-bold">{filteredProducts.length}</span> items found
+            <p className="text-sm font-medium text-brand-sub">Нийт<span className="text-brand-white font-bold">{filteredProducts.length}</span> items found
             </p>
             <select className="text-xs border border-brand-border rounded-[8px] outline-none bg-brand-muted px-4 py-2 font-bold text-brand-white focus:border-brand-mint transition-all">
-              <option>SORT: NEWEST FIRST</option>
-              <option>PRICE: LOW TO HIGH</option>
-              <option>PRICE: HIGH TO LOW</option>
+              <option>Sort: newest first</option>
+              <option>Price: low to high</option>
+              <option>Price: high to low</option>
             </select>
           </div>
 
@@ -74,7 +73,7 @@ export default function ShopPage() {
                  <h3 className="text-xl font-medium text-brand-white">No results found</h3>
                  <p className="text-brand-sub text-sm">Try adjusting your filters to find what you're looking for.</p>
                </div>
-               <button onClick={() => setSearchParams({})} className="bg-brand-mint px-8 py-2 rounded-[8px] font-bold text-xs uppercase tracking-widest mt-4" style={{ color: 'var(--accent-dark)' }}>VIEW ALL PRODUCTS</button>
+               <button onClick={() => setSearchParams({})} className="bg-brand-mint px-8 py-2 rounded-[8px] font-bold text-xs normal-case normal-case mt-4"style={{ color: 'var(--accent-dark)' }}>View all products</button>
             </div>
           )}
         </main>

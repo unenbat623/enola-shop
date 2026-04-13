@@ -34,6 +34,6 @@ export const useWishlistStore = create<WishlistStore>()(
       
       totalItems: () => get().items.length,
     }),
-    { name: 'enola-wishlist' }
+    { name: 'Enola Shop-wishlist' }
   )
 )

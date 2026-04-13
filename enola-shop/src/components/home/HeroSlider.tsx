@@ -41,8 +41,8 @@ export default function HeroSlider() {
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: 0.2 }}
                 >
-                  <span className="text-brand-hint text-[11px] font-bold tracking-[2px] uppercase mb-4 block">
-                    {current === 0 ? "NEW SEASON" : "STAY CLASSIC"}
+                  <span className="text-brand-hint text-[11px] font-bold tracking-[2px] normal-case mb-4 block">
+                    {current === 0 ? "New season" : "Stay classic"}
                   </span>
                   <h1 className="text-[40px] md:text-[64px] font-normal text-brand-ink leading-[1.1] tracking-[1px] font-serif">
                     {current === 0 ? (
@@ -70,16 +70,14 @@ export default function HeroSlider() {
                 >
                   <Link
                     to={heroSlides[current].buttonHref}
-                    className="inline-flex items-center justify-center h-12 px-10 bg-brand-ink text-brand-base font-medium text-[12px] tracking-[1.5px] rounded-[6px] hover:bg-brand-ink2 transition-all uppercase"
+                    className="inline-flex items-center justify-center h-12 px-10 bg-brand-ink text-brand-base font-medium text-[12px] tracking-[1.5px] rounded-[6px] hover:bg-brand-ink2 transition-all normal-case"
                   >
-                    SHOP NOW
+                    Дэлгүүр орох
                   </Link>
                   <Link
                     to="/shop"
-                    className="inline-flex items-center justify-center h-12 px-10 border border-brand-border text-brand-sub font-medium text-[12px] tracking-[1.5px] rounded-[6px] hover:border-brand-sub hover:text-brand-ink transition-all uppercase"
-                  >
-                    VIEW ALL
-                  </Link>
+                    className="inline-flex items-center justify-center h-12 px-10 border border-brand-border text-brand-sub font-medium text-[12px] tracking-[1.5px] rounded-[6px] hover:border-brand-sub hover:text-brand-ink transition-all normal-case"
+                  >Бүгдийг харах</Link>
                 </motion.div>
               </div>
               
@@ -90,7 +88,7 @@ export default function HeroSlider() {
                   transition={{ delay: 0.3 }}
                   className="relative w-72 h-72 lg:w-[400px] lg:h-[400px] bg-brand-card/20 rounded-full border border-brand-border/30 flex items-center justify-center italic font-serif text-brand-ink/5 text-[150px] select-none"
                 >
-                  {current === 0 ? "AG" : "EST"}
+                  {current === 0 ? "Ag" : "Est"}
                 </motion.div>
               </div>
             </div>
@@ -117,9 +115,7 @@ export default function HeroSlider() {
 
       {/* Marquee Bar */}
       <div className="bg-brand-muted py-3 overflow-hidden whitespace-nowrap border-b border-brand-border relative z-10">
-        <div className="inline-block animate-marquee font-normal text-brand-sub text-[10px] tracking-[2.5px] uppercase">
-          FREE SHIPPING ON ALL ORDERS ✦ NEW COLLECTION 2025 ✦ FLASH SALE ✦ LIMITED EDITION ✦ FREE SHIPPING ON ALL ORDERS ✦ NEW COLLECTION 2025 ✦ FLASH SALE ✦ LIMITED EDITION ✦
-        </div>
+        <div className="inline-block animate-marquee font-normal text-brand-sub text-[10px] tracking-[2.5px] normal-case">Free shipping on all orders ✦ new collection 2025 ✦ flash sale ✦ limited edition ✦ free shipping on all orders ✦ new collection 2025 ✦ flash sale ✦ limited edition ✦</div>
       </div>
 
       <style>{`

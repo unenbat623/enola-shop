@@ -6,13 +6,13 @@ export default function RegisterForm() {
   return (
     <div className="bg-brand-base border border-brand-border rounded-[10px] p-9 w-full max-w-[400px] shadow-none mx-auto">
       <div className="space-y-2 mb-8 text-center">
-        <h2 className="text-2xl font-normal text-brand-ink uppercase tracking-[2px]">Бүртгүүлэх</h2>
+        <h2 className="text-2xl font-normal text-brand-ink normal-case tracking-[2px]">Бүртгүүлэх</h2>
         <p className="text-brand-sub text-[13px]">Манай хамт олонд нэгдээрэй.</p>
       </div>
 
       <form className="space-y-5" onSubmit={(e) => e.preventDefault()}>
         <div className="space-y-1.5">
-          <label className="text-brand-sub text-[11px] font-medium uppercase tracking-[1px] ml-1">Овог нэр</label>
+          <label className="text-brand-sub text-[11px] font-medium normal-case tracking-[1px] ml-1">Овог нэр</label>
           <div className="relative">
             <span className="absolute left-4 top-1/2 -translate-y-1/2 text-brand-hint">
               <User className="w-3.5 h-3.5" />
@@ -26,7 +26,7 @@ export default function RegisterForm() {
         </div>
 
         <div className="space-y-1.5">
-          <label className="text-brand-sub text-[11px] font-medium uppercase tracking-[1px] ml-1">И-мэйл хаяг</label>
+          <label className="text-brand-sub text-[11px] font-medium normal-case tracking-[1px] ml-1">И-мэйл хаяг</label>
           <div className="relative">
             <span className="absolute left-4 top-1/2 -translate-y-1/2 text-brand-hint">
               <Mail className="w-3.5 h-3.5" />
@@ -40,7 +40,7 @@ export default function RegisterForm() {
         </div>
 
         <div className="space-y-1.5">
-          <label className="text-brand-sub text-[11px] font-medium uppercase tracking-[1px] ml-1">Нууц үг</label>
+          <label className="text-brand-sub text-[11px] font-medium normal-case tracking-[1px] ml-1">Нууц үг</label>
           <div className="relative">
             <span className="absolute left-4 top-1/2 -translate-y-1/2 text-brand-hint">
               <Lock className="w-3.5 h-3.5" />
@@ -60,9 +60,8 @@ export default function RegisterForm() {
         </div>
 
         <button 
-          className="w-full h-11 bg-brand-ink text-brand-base font-normal text-[12px] uppercase tracking-[1.5px] rounded-[6px] hover:bg-brand-ink2 transition-all flex items-center justify-center gap-2"
-        >
-          БҮРТГҮҮЛЭХ <ArrowRight className="w-3.5 h-3.5" />
+          className="w-full h-11 bg-brand-ink text-brand-base font-normal text-[12px] normal-case tracking-[1.5px] rounded-[6px] hover:bg-brand-ink2 transition-all flex items-center justify-center gap-2"
+        >Бүртгүүлэх<ArrowRight className="w-3.5 h-3.5" />
         </button>
       </form>
 

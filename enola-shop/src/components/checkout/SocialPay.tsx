@@ -28,12 +28,12 @@ export default function SocialPay({ amount, onSuccess }: Props) {
   return (
     <div className="bg-white p-9 rounded-[10px] border border-brand-border space-y-8 animate-in fade-in zoom-in duration-300">
       <div className="text-center space-y-2">
-        <h2 className="text-xl font-normal text-brand-ink uppercase tracking-tight">SocialPay-р төлөх</h2>
+        <h2 className="text-xl font-normal text-brand-ink normal-case tracking-tight">SocialPay-р төлөх</h2>
         <div className="flex p-1 bg-brand-surface rounded-[6px] border border-brand-border mt-5">
           <button
             onClick={() => setActiveTab('qr')}
             className={cn(
-              "flex-1 py-2 text-[11px] font-medium uppercase tracking-wider rounded-[4px] transition-all flex items-center justify-center gap-2",
+              "flex-1 py-2 text-[11px] font-medium normal-case tracking-wider rounded-[4px] transition-all flex items-center justify-center gap-2",
               activeTab === 'qr' ? "bg-brand-ink text-brand-base" : "text-brand-hint hover:text-brand-ink"
             )}
           >
@@ -42,7 +42,7 @@ export default function SocialPay({ amount, onSuccess }: Props) {
           <button
             onClick={() => setActiveTab('phone')}
             className={cn(
-              "flex-1 py-2 text-[11px] font-medium uppercase tracking-wider rounded-[4px] transition-all flex items-center justify-center gap-2",
+              "flex-1 py-2 text-[11px] font-medium normal-case tracking-wider rounded-[4px] transition-all flex items-center justify-center gap-2",
               activeTab === 'phone' ? "bg-brand-ink text-brand-base" : "text-brand-hint hover:text-brand-ink"
             )}
           >
@@ -64,7 +64,7 @@ export default function SocialPay({ amount, onSuccess }: Props) {
         ) : (
           <div className="w-full space-y-4">
             <div className="space-y-1.5">
-              <label className="text-[10px] font-medium text-brand-sub uppercase tracking-wider ml-1">Утасны дугаар</label>
+              <label className="text-[10px] font-medium text-brand-sub normal-case tracking-wider ml-1">Утасны дугаар</label>
               <input
                 type="tel"
                 value={phoneNumber}
@@ -73,8 +73,8 @@ export default function SocialPay({ amount, onSuccess }: Props) {
                 className="w-full h-11 bg-brand-surface border border-brand-border rounded-[6px] px-4 text-brand-ink outline-none focus:border-brand-ink focus:bg-white transition-all text-sm"
               />
             </div>
-            <button className="w-full h-11 bg-brand-ink text-brand-base font-normal text-[11px] uppercase tracking-wider rounded-[6px]">
-              НЭМЭЛТ ИЛГЭЭХ
+            <button className="w-full h-11 bg-brand-ink text-brand-base font-normal text-[11px] normal-case tracking-wider rounded-[6px]">
+              Нэмэлт илгээх
             </button>
             <p className="text-[11px] text-brand-hint text-center">Таны SocialPay апп руу төлбөрийн нэхэмжлэх очих болно.</p>
           </div>
@@ -83,11 +83,11 @@ export default function SocialPay({ amount, onSuccess }: Props) {
         <div className="w-full space-y-4">
           <div className="bg-brand-surface p-5 rounded-[10px] border border-brand-border flex justify-between items-center">
             <div className="space-y-1">
-              <p className="text-[10px] font-medium text-brand-sub uppercase tracking-wider">Төлөх дүн</p>
+              <p className="text-[10px] font-medium text-brand-sub normal-case tracking-wider">Төлөх дүн</p>
               <p className="text-xl font-semibold text-brand-ink">{formatCurrency(amount)}</p>
             </div>
             <div className="text-right space-y-1">
-              <p className="text-[10px] font-medium text-brand-sub uppercase tracking-wider">Хүчинтэй хугацаа</p>
+              <p className="text-[10px] font-medium text-brand-sub normal-case tracking-wider">Хүчинтэй хугацаа</p>
               <p className={cn(
                 "text-xl font-medium font-mono",
                 timeLeft < 120 ? "text-brand-danger" : "text-brand-ink"
@@ -106,10 +106,8 @@ export default function SocialPay({ amount, onSuccess }: Props) {
 
       <button
         onClick={onSuccess}
-        className="w-full h-12 bg-brand-ink text-brand-base font-normal text-[12px] uppercase tracking-wide rounded-[6px] hover:bg-brand-ink2 transition-all"
-      >
-        ТӨЛБӨР БАТАЛГААЖСАН
-      </button>
+        className="w-full h-12 bg-brand-ink text-brand-base font-normal text-[12px] normal-case tracking-wide rounded-[6px] hover:bg-brand-ink2 transition-all"
+      >Төлбөр баталгаажсан</button>
     </div>
   )
 }

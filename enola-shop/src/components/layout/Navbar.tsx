@@ -9,11 +9,11 @@ export default function Navbar() {
   const location = useLocation()
 
   const navLinks = [
-    { name: 'HOME', path: '/' },
-    { name: 'SHOP', path: '/shop' },
-    { name: 'NEW COLLECTION', path: '/shop?filter=new' },
-    { name: 'FLASH SALE', path: '/shop?filter=sale' },
-    { name: 'CONTACT', path: '/contact' },
+    { name: 'Нүүр', path: '/' },
+    { name: 'Дэлгүүр', path: '/shop' },
+    { name: 'Шинэ цуглуулга', path: '/shop?filter=new' },
+    { name: 'Хямдрал', path: '/shop?filter=sale' },
+    { name: 'Холбоо барих', path: '/contact' },
   ]
 
   return (
@@ -27,7 +27,7 @@ export default function Navbar() {
             className="h-full flex items-center gap-3 px-6 bg-brand-muted text-brand-ink font-medium text-[12px] tracking-wider hover:bg-brand-card transition-all cursor-pointer border-r border-brand-border"
           >
             <Menu className="w-4 h-4" />
-            <span>CATEGORIES</span>
+            <span>Ангилал</span>
           </button>
 
           {isCatOpen && (
@@ -59,7 +59,7 @@ export default function Navbar() {
                 key={link.name}
                 to={link.path} 
                 className={cn(
-                  "text-[12px] tracking-[1px] transition-all uppercase h-full flex items-center border-b-px",
+                  "text-[12px] tracking-[1px] transition-all normal-case h-full flex items-center border-b-px",
                   isActive 
                     ? "text-brand-ink border-brand-ink" 
                     : "text-brand-hint hover:text-brand-ink border-transparent"
@@ -72,9 +72,7 @@ export default function Navbar() {
         </div>
 
         {/* Right Label */}
-        <div className="ml-auto hidden xl:flex items-center gap-2 text-brand-sale font-medium text-[11px] tracking-[2px]">
-           FLASH SALE −30%
-        </div>
+        <div className="ml-auto hidden xl:flex items-center gap-2 text-brand-sale font-medium text-[11px] tracking-[2px]">Flash sale −30%</div>
       </div>
     </nav>
   )

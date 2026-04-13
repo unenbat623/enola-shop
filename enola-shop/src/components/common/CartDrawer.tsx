@@ -33,7 +33,7 @@ export default function CartDrawer() {
               {/* Header */}
               <div className="flex items-center justify-between p-6 border-b border-brand-border">
                 <div className="flex items-center gap-3">
-                  <h2 className="text-[15px] font-normal text-brand-ink uppercase tracking-[2px]">Shopping Bag</h2>
+                  <h2 className="text-[15px] font-normal text-brand-ink normal-case tracking-[2px]">Миний сагс</h2>
                   <span className="bg-brand-muted text-[10px] font-bold px-2 py-0.5 rounded-full text-brand-sub">
                     {items.length}
                   </span>
@@ -53,13 +53,13 @@ export default function CartDrawer() {
                     <div className="w-16 h-16 bg-brand-surface border border-brand-border rounded-full flex items-center justify-center text-brand-ghost">
                       <ShoppingBag className="w-6 h-6" />
                     </div>
-                    <p className="text-brand-sub text-[13px]">Your bag is empty</p>
+                    <p className="text-brand-sub text-[13px]">Сагс хоосон байна</p>
                     <Link 
                       to="/shop" 
                       onClick={() => toggleCart(false)}
-                      className="text-brand-ink text-[12px] font-medium tracking-wider uppercase border-b border-brand-ink"
+                      className="text-brand-ink text-[12px] font-medium tracking-wider normal-case border-b border-brand-ink"
                     >
-                      CONTINUE SHOPPING
+                      Дэлгүүр рүү буцах
                     </Link>
                   </div>
                 ) : (
@@ -106,23 +106,23 @@ export default function CartDrawer() {
               {items.length > 0 && (
                 <div className="p-8 border-t border-brand-border bg-brand-base space-y-6">
                   <div className="flex justify-between items-center">
-                    <span className="text-brand-sub font-normal text-[11px] uppercase tracking-wider">Subtotal:</span>
+                    <span className="text-brand-sub font-normal text-[11px] normal-case tracking-wider">Дүн:</span>
                     <span className="text-[16px] font-medium text-brand-ink">{formatCurrency(totalPrice())}</span>
                   </div>
                   <div className="flex flex-col gap-3">
                     <Link 
                       to="/checkout"
                       onClick={() => toggleCart(false)}
-                      className="w-full h-12 bg-brand-ink text-brand-base flex items-center justify-center rounded-[6px] font-medium text-[12px] tracking-[1.5px] hover:bg-brand-ink2 transition-all uppercase"
+                      className="w-full h-12 bg-brand-ink text-brand-base flex items-center justify-center rounded-[6px] font-medium text-[12px] tracking-[1.5px] hover:bg-brand-ink2 transition-all normal-case"
                     >
-                      Checkout Now
+                      Захиалга өгөх
                     </Link>
                     <Link 
                       to="/cart" 
                       onClick={() => toggleCart(false)}
-                      className="flex items-center justify-center bg-transparent border border-brand-border h-12 rounded-[6px] font-medium text-[11px] tracking-wider text-brand-sub uppercase hover:bg-brand-surface transition-all"
+                      className="flex items-center justify-center bg-transparent border border-brand-border h-12 rounded-[6px] font-medium text-[11px] tracking-wider text-brand-sub normal-case hover:bg-brand-surface transition-all"
                     >
-                      View Shopping Bag
+                      Сагс харах
                     </Link>
                   </div>
                 </div>

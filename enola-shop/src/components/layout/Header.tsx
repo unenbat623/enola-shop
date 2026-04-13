@@ -13,8 +13,8 @@ export default function Header() {
     <header className="sticky top-0 bg-brand-base border-b border-brand-border z-50">
       <div className="max-w-7xl mx-auto px-4 h-16 flex items-center justify-between gap-4">
         {/* Logo */}
-        <Link to="/" className="text-[18px] font-normal text-brand-ink flex-shrink-0 tracking-[4px] uppercase italic-none">
-          ANTIGRAVITY
+        <Link to="/" className="text-[18px] font-normal text-brand-ink flex-shrink-0 tracking-[4px] normal-case italic-none">
+          Enola Shop
         </Link>
 
         {/* Search */}
@@ -25,7 +25,7 @@ export default function Header() {
             </span>
             <input
               type="text"
-              placeholder="Search products..."
+              placeholder="Бүтээгдэхүүн хайх..."
               className="w-full h-10 bg-brand-surface border border-brand-border rounded-[6px] pl-10 pr-4 outline-none focus:border-brand-ink transition-all text-sm text-brand-ink placeholder:text-brand-hint"
             />
           </div>
@@ -61,7 +61,7 @@ export default function Header() {
           </span>
           <input
             type="text"
-            placeholder="Search..."
+            placeholder="Хайх..."
             className="w-full h-10 border border-brand-border bg-brand-surface pl-10 pr-4 outline-none text-sm text-brand-ink rounded-[6px] focus:border-brand-ink"
           />
         </div>

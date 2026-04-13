@@ -34,7 +34,7 @@ export default function QPay({ amount, onSuccess }: Props) {
   return (
     <div className="bg-white p-9 rounded-[10px] border border-brand-border space-y-8 animate-in fade-in zoom-in duration-300">
       <div className="text-center space-y-2">
-        <h2 className="text-xl font-normal text-brand-ink uppercase tracking-tight">QPay-р төлөх</h2>
+        <h2 className="text-xl font-normal text-brand-ink normal-case tracking-tight">QPay-р төлөх</h2>
         <p className="text-brand-sub text-[13px]">Доорх QR кодыг сканнердаж төлбөрөө баталгаажуулна уу.</p>
       </div>
 
@@ -55,7 +55,7 @@ export default function QPay({ amount, onSuccess }: Props) {
             
             {timeLeft <= 0 && (
               <div className="absolute inset-0 bg-brand-base/95 flex flex-col items-center justify-center p-6 text-center">
-                <p className="text-brand-sale text-sm font-medium mb-4 uppercase tracking-wider">Хугацаа дууссан</p>
+                <p className="text-brand-sale text-sm font-medium mb-4 normal-case tracking-wider">Хугацаа дууссан</p>
                 <button 
                   onClick={() => setTimeLeft(600)}
                   className="p-3 bg-brand-ink text-brand-base rounded-full hover:rotate-180 transition-transform duration-500"
@@ -74,11 +74,11 @@ export default function QPay({ amount, onSuccess }: Props) {
         <div className="w-full space-y-4">
           <div className="bg-brand-surface p-5 rounded-[10px] border border-brand-border flex justify-between items-center">
             <div className="space-y-1">
-              <p className="text-[10px] font-medium text-brand-sub uppercase tracking-wider">Төлөх дүн</p>
+              <p className="text-[10px] font-medium text-brand-sub normal-case tracking-wider">Төлөх дүн</p>
               <p className="text-xl font-semibold text-brand-ink">{formatCurrency(amount)}</p>
             </div>
             <div className="text-right space-y-1">
-              <p className="text-[10px] font-medium text-brand-sub uppercase tracking-wider">Хүчинтэй хугацаа</p>
+              <p className="text-[10px] font-medium text-brand-sub normal-case tracking-wider">Хүчинтэй хугацаа</p>
               <p className={cn(
                 "text-xl font-medium font-mono",
                 timeLeft < 120 ? "text-brand-danger" : "text-brand-ink"
@@ -106,14 +106,14 @@ export default function QPay({ amount, onSuccess }: Props) {
             <span className="w-6 h-6 rounded-full bg-brand-muted flex items-center justify-center text-[10px] font-bold text-brand-ink">
               {item.step}
             </span>
-            <span className="text-[9px] text-brand-hint uppercase tracking-[1px] font-medium">{item.text}</span>
+            <span className="text-[9px] text-brand-hint normal-case tracking-[1px] font-medium">{item.text}</span>
           </div>
         ))}
       </div>
 
       <button
         onClick={onSuccess}
-        className="w-full h-10 border border-brand-border text-brand-hint hover:text-brand-ink font-medium text-[10px] uppercase tracking-[2px] rounded-[6px] transition-all"
+        className="w-full h-10 border border-brand-border text-brand-hint hover:text-brand-ink font-medium text-[10px] normal-case tracking-[2px] rounded-[6px] transition-all"
       >
         Симуляц: Амжилттай болгох
       </button>

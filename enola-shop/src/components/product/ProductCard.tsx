@@ -41,15 +41,11 @@ export default function ProductCard({ product }: Props) {
           
           {/* Badges */}
           <div className="absolute top-[10px] left-[10px] flex flex-col gap-2 z-10">
-            {product.badge === 'NEW' && (
-              <span className="bg-brand-ink text-brand-base text-[9px] font-bold tracking-[1.5px] uppercase px-2 py-0.5 rounded-[3px]">
-                NEW
-              </span>
+            {product.badge === 'New' && (
+              <span className="bg-brand-ink text-brand-base text-[9px] font-bold tracking-[1.5px] normal-case px-2 py-0.5 rounded-[3px]">New</span>
             )}
-            {product.badge === 'SALE' && (
-              <span className="bg-brand-muted text-brand-sale border border-brand-border text-[9px] font-bold tracking-[1.5px] uppercase px-2 py-0.5 rounded-[3px]">
-                SALE
-              </span>
+            {product.badge === 'Хямдрал' && (
+              <span className="bg-brand-muted text-brand-sale border border-brand-border text-[9px] font-bold tracking-[1.5px] normal-case px-2 py-0.5 rounded-[3px]">Хямдрал</span>
             )}
           </div>
         </div>
@@ -57,7 +53,7 @@ export default function ProductCard({ product }: Props) {
         {/* Info Panel */}
         <div className="p-[14px] flex-1 flex flex-col gap-2">
           <div className="space-y-1">
-            <span className="text-brand-hint text-[9px] font-bold uppercase tracking-[1.5px]">
+            <span className="text-brand-hint text-[9px] font-bold normal-case tracking-[1.5px]">
               {product.category}
             </span>
             <h3 className="text-brand-ink text-[13px] font-normal leading-[1.4] line-clamp-2">
@@ -79,11 +75,9 @@ export default function ProductCard({ product }: Props) {
       <div className="px-[14px] pb-[14px]">
         <button 
           onClick={handleAdd}
-          className="w-full h-9 bg-brand-ink text-brand-base flex items-center justify-center gap-2 font-medium text-[11px] uppercase tracking-wider rounded-[6px] hover:bg-brand-ink2 transition-colors cursor-pointer"
+          className="w-full h-9 bg-brand-ink text-brand-base flex items-center justify-center gap-2 font-medium text-[11px] normal-case tracking-wider rounded-[6px] hover:bg-brand-ink2 transition-colors cursor-pointer"
         >
-          <ShoppingBag className="w-3.5 h-3.5" />
-          ADD TO CART
-        </button>
+          <ShoppingBag className="w-3.5 h-3.5" />Сагсанд нэмэх</button>
       </div>
     </div>
   )

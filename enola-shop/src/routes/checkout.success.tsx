@@ -49,7 +49,7 @@ export default function CheckoutSuccessPage() {
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.4 }}
-              className="text-3xl font-normal text-brand-ink tracking-tight uppercase"
+              className="text-3xl font-normal text-brand-ink tracking-tight normal-case"
             >
               {isPaid ? 'Захиалга амжилттай' : 'Төлбөр хүлээгдэж байна'}
             </motion.h1>
@@ -74,25 +74,25 @@ export default function CheckoutSuccessPage() {
           >
             <div className="grid grid-cols-2 gap-8 border-b border-brand-border pb-7">
               <div className="space-y-1">
-                <p className="text-[10px] font-medium text-brand-hint uppercase tracking-[1.5px] flex items-center gap-2">
+                <p className="text-[10px] font-medium text-brand-hint normal-case tracking-[1.5px] flex items-center gap-2">
                   <Package className="w-3 h-3" /> Дугаар
                 </p>
                 <p className="text-brand-ink font-medium">#{orderId}</p>
               </div>
               <div className="space-y-1">
-                <p className="text-[10px] font-medium text-brand-hint uppercase tracking-[1.5px] flex items-center gap-2">
+                <p className="text-[10px] font-medium text-brand-hint normal-case tracking-[1.5px] flex items-center gap-2">
                   <Calendar className="w-3 h-3" /> Огноо
                 </p>
                 <p className="text-brand-ink font-medium">{new Date().toLocaleDateString('mn-MN')}</p>
               </div>
               <div className="space-y-1">
-                <p className="text-[10px] font-medium text-brand-hint uppercase tracking-[1.5px]">Төлбөр</p>
-                <p className="text-brand-ink font-medium uppercase text-[11px]">{paymentMethod || 'Дансаар'}</p>
+                <p className="text-[10px] font-medium text-brand-hint normal-case tracking-[1.5px]">Төлбөр</p>
+                <p className="text-brand-ink font-medium normal-case text-[11px]">{paymentMethod || 'Дансаар'}</p>
               </div>
               <div className="space-y-1 text-right">
-                <p className="text-[10px] font-medium text-brand-hint uppercase tracking-[1.5px]">Төлөв</p>
+                <p className="text-[10px] font-medium text-brand-hint normal-case tracking-[1.5px]">Төлөв</p>
                 <span className={cn(
-                  "text-[9px] font-bold px-2 py-0.5 rounded-[3px] uppercase tracking-wider border",
+                  "text-[9px] font-bold px-2 py-0.5 rounded-[3px] normal-case tracking-wider border",
                   isPaid ? "border-brand-success/30 text-brand-success bg-brand-success/5" : "border-brand-sale/30 text-brand-sale bg-brand-sale/5"
                 )}>
                   {isPaid ? 'Баталгаажсан' : 'Хүлээгдэж буй'}
@@ -101,7 +101,7 @@ export default function CheckoutSuccessPage() {
             </div>
 
             <div className="space-y-3">
-              <p className="text-[10px] font-medium text-brand-hint uppercase tracking-[1.5px] flex items-center gap-2">
+              <p className="text-[10px] font-medium text-brand-hint normal-case tracking-[1.5px] flex items-center gap-2">
                 <MapPin className="w-3 h-3" /> Хүргэлтийн хаяг
               </p>
               <div className="text-brand-ink text-sm leading-relaxed font-normal bg-brand-surface p-5 rounded-[8px] border border-brand-border/50">
@@ -113,10 +113,10 @@ export default function CheckoutSuccessPage() {
 
             {!isPaid && (
               <div className="bg-brand-surface border border-brand-border p-5 rounded-[8px] space-y-3">
-                <p className="text-[11px] text-brand-ink font-medium uppercase tracking-wider">Шилжүүлэг:</p>
+                <p className="text-[11px] text-brand-ink font-medium normal-case tracking-wider">Шилжүүлэг:</p>
                 <div className="space-y-1">
                   <p className="text-[13px] font-medium text-brand-ink">Голомт банк: 1234567890</p>
-                  <p className="text-[11px] text-brand-sub uppercase tracking-wider">Гүйлгээний утга: {orderId}</p>
+                  <p className="text-[11px] text-brand-sub normal-case tracking-wider">Гүйлгээний утга: {orderId}</p>
                 </div>
               </div>
             )}
@@ -131,14 +131,14 @@ export default function CheckoutSuccessPage() {
             <Link 
               to="/"
               onClick={() => reset()}
-              className="flex-1 h-12 bg-brand-ink text-brand-base flex items-center justify-center gap-2 font-normal text-[12px] uppercase tracking-[1.5px] rounded-[6px] hover:bg-brand-ink2 transition-all"
+              className="flex-1 h-12 bg-brand-ink text-brand-base flex items-center justify-center gap-2 font-normal text-[12px] normal-case tracking-[1.5px] rounded-[6px] hover:bg-brand-ink2 transition-all"
             >
               <ShoppingBag className="w-4 h-4" /> Захиалга харах
             </Link>
             <Link 
               to="/shop"
               onClick={() => reset()}
-              className="flex-1 h-12 bg-transparent border border-brand-border text-brand-sub flex items-center justify-center gap-2 font-normal text-[11px] uppercase tracking-wider rounded-[6px] hover:bg-brand-surface transition-all"
+              className="flex-1 h-12 bg-transparent border border-brand-border text-brand-sub flex items-center justify-center gap-2 font-normal text-[11px] normal-case tracking-wider rounded-[6px] hover:bg-brand-surface transition-all"
             >
               <Home className="w-4 h-4" /> Дэлгүүр рүү
             </Link>

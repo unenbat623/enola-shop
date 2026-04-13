@@ -56,12 +56,12 @@ export default function CheckoutPaymentPage() {
               <div className="bg-white p-9 rounded-[10px] border border-brand-border space-y-8">
                 <div className="flex justify-between items-center">
                   <div className="space-y-1">
-                    <h2 className="text-xl font-normal text-brand-ink uppercase tracking-tight">Төлбөрийн хэрэгсэл</h2>
+                    <h2 className="text-xl font-normal text-brand-ink normal-case tracking-tight">Төлбөрийн хэрэгсэл</h2>
                     <p className="text-brand-sub text-[13px]">Та төлбөрөө хийх аргаа сонгоно уу.</p>
                   </div>
                   <button 
                     onClick={() => navigate('/checkout')}
-                    className="flex items-center gap-2 text-[10px] font-medium text-brand-hint hover:text-brand-ink transition-colors uppercase tracking-[2px]"
+                    className="flex items-center gap-2 text-[10px] font-medium text-brand-hint hover:text-brand-ink transition-colors normal-case tracking-[2px]"
                   >
                     <ArrowLeft className="w-3.5 h-3.5" /> Буцах
                   </button>
@@ -75,16 +75,14 @@ export default function CheckoutPaymentPage() {
                 <button
                   disabled={!paymentMethod}
                   onClick={() => setShowPaymentUI(true)}
-                  className="w-full h-12 bg-brand-ink text-brand-base disabled:opacity-20 disabled:cursor-not-allowed font-normal text-[12px] uppercase tracking-[1.5px] rounded-[6px] hover:bg-brand-ink2 transition-all mt-4"
-                >
-                  ҮРГЭЛЖЛҮҮЛЭХ
-                </button>
+                  className="w-full h-12 bg-brand-ink text-brand-base disabled:opacity-20 disabled:cursor-not-allowed font-normal text-[12px] normal-case tracking-[1.5px] rounded-[6px] hover:bg-brand-ink2 transition-all mt-4"
+                >ҮРгэлжлүүлэх</button>
               </div>
             ) : (
               <div className="space-y-6">
                  <button 
                     onClick={() => setShowPaymentUI(false)}
-                    className="flex items-center gap-2 text-[11px] font-medium text-brand-ink hover:underline transition-all uppercase tracking-[2px] mb-4"
+                    className="flex items-center gap-2 text-[11px] font-medium text-brand-ink hover:underline transition-all normal-case tracking-[2px] mb-4"
                   >
                     <ArrowLeft className="w-4 h-4" /> Өөр арга сонгох
                   </button>
