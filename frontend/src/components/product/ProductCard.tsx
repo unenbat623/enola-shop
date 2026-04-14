@@ -1,10 +1,11 @@
 import { motion } from 'framer-motion'
 import { Heart, ShoppingBag } from 'lucide-react'
-import { Link } from 'react-router'
+import { Link, useNavigate } from 'react-router'
 import { type Product } from '@/lib/types'
 import { formatCurrency, cn } from '@/lib/utils'
 import { useCartStore } from '@/store/cartStore'
 import { useWishlistStore } from '@/store/wishlistStore'
+import { useAuthStore } from '@/store/authStore'
 import { toast } from '@/components/common/Toast'
 import { useUIStore } from '@/store/uiStore'
 
@@ -16,8 +17,21 @@ export default function ProductCard({ product }: Props) {
   const addItem = useCartStore((state) => state.addItem)
   const { toggleItem, isInWishlist } = useWishlistStore()
   const { toggleCart } = useUIStore()
+  const { user } = useAuthStore()
+  const navigate = useNavigate()
   
   const isWishlisted = isInWishlist(product.id)
+
+  const handleWishlist = (e: React.MouseEvent) => {
+    e.preventDefault()
+    e.stopPropagation()
+    if (!user) {
+      toast.error('Хадгалахын тулд нэвтэрнэ үү')
+      navigate('/login')
+      return
+    }
+    toggleItem(product)
+  }
 
   const handleAdd = (e: React.MouseEvent) => {
     e.preventDefault()
@@ -51,11 +65,7 @@ export default function ProductCard({ product }: Props) {
 
           {/* Wishlist Button */}
           <button 
-            onClick={(e) => {
-              e.preventDefault()
-              e.stopPropagation()
-              toggleItem(product)
-            }}
+            onClick={handleWishlist}
             className={cn(
               "absolute top-[10px] right-[10px] w-8 h-8 rounded-full flex items-center justify-center transition-all bg-white border border-brand-border hover:border-brand-ink cursor-pointer z-10",
               isWishlisted ? "text-brand-sale border-brand-sale" : "text-brand-ghost"

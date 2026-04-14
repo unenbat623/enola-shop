@@ -9,7 +9,7 @@ export interface Product {
   badge?: 'Шинэ' | 'Хямдрал' | 'Hot'
   images: string[]
   description: string
-  stock?: number
+  stock: number
   inStock: boolean
   rating: number
   reviewCount: number

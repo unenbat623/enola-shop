@@ -2,11 +2,12 @@ import { useParams } from 'react-router'
 import { formatCurrency, calculateDiscountPercentage } from '@/lib/utils'
 import { useCartStore } from '@/store/cartStore'
 import { useWishlistStore } from '@/store/wishlistStore'
+import { useAuthStore } from '@/store/authStore'
 import { useProductStore } from '@/store/productStore'
 import { useUIStore } from '@/store/uiStore'
 import { toast } from '@/components/common/Toast'
 import { Star, ShoppingBag, Heart, ShieldCheck, Truck, ChevronRight, ChevronLeft, Loader2 } from 'lucide-react'
-import { Link } from 'react-router'
+import { Link, useNavigate } from 'react-router'
 import { useState, useMemo } from 'react'
 import { cn } from '@/lib/utils'
 import { ProductDetailSkeleton } from '@/components/common/SkeletonCard'
@@ -25,6 +26,8 @@ export default function ProductDetail() {
   const addItem = useCartStore((s) => s.addItem)
   const { toggleItem, isInWishlist } = useWishlistStore()
   const { toggleCart } = useUIStore()
+  const { user } = useAuthStore()
+  const navigate = useNavigate()
 
   const relatedProducts = useMemo(() => {
     if (!product) return []
@@ -65,6 +68,15 @@ export default function ProductDetail() {
     }
     toast.success(`"${product.name}" сагсанд нэмэгдлээ.`)
     toggleCart(true)
+  }
+  
+  const handleWishlist = () => {
+    if (!user) {
+      toast.error('Хадгалахын тулд нэвтэрнэ үү')
+      navigate('/login')
+      return
+    }
+    toggleItem(product)
   }
 
   return (
@@ -229,7 +241,7 @@ export default function ProductDetail() {
               >
                 <ShoppingBag className="w-4 h-4" />Сагсанд нэмэх</button>
               <button 
-                onClick={() => toggleItem(product)}
+                onClick={handleWishlist}
                 className={cn(
                   "w-12 h-12 rounded-[4px] border flex items-center justify-center transition-all",
                   isWishlisted ? "border-brand-sale text-brand-sale bg-brand-surface" : "border-brand-border text-brand-sub hover:border-brand-ink hover:text-brand-ink bg-white"

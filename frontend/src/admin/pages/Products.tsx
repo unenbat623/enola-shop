@@ -8,7 +8,8 @@ import { categories } from '@/lib/constants'
 const EMPTY_FORM = {
   name: '', slug: '', price: '',
   originalPrice: '', category: '', categorySlug: '',
-  stock: '', description: '', images: ''
+  stock: '', description: '', images: '',
+  sizes: [] as string[], colors: [] as string[]
 }
 
 export default function AdminProducts() {
@@ -19,6 +20,8 @@ export default function AdminProducts() {
   const [editId, setEditId] = useState<string | null>(null)
   const [formData, setFormData] = useState(EMPTY_FORM)
   const [formError, setFormError] = useState('')
+  const [sizeInput, setSizeInput] = useState('')
+  const [colorInput, setColorInput] = useState('')
 
   const load = async () => {
     setIsLoading(true)
@@ -50,6 +53,8 @@ export default function AdminProducts() {
       stock: p.stock ? String(p.stock) : '',
       description: p.description,
       images: p.images?.join('\n') ?? '',
+      sizes: p.sizes ?? [],
+      colors: p.colors ?? [],
     })
     setFormError('')
     setIsModalOpen(true)
@@ -64,6 +69,19 @@ export default function AdminProducts() {
       categorySlug: slug,
       category: cat?.name ?? f.category,
     }))
+  }
+
+  const addTag = (field: 'sizes' | 'colors', value: string) => {
+    const val = value.trim()
+    if (!val) return
+    if (formData[field].includes(val)) return
+    setFormData(f => ({ ...f, [field]: [...f[field], val] }))
+    if (field === 'sizes') setSizeInput('')
+    else setColorInput('')
+  }
+
+  const removeTag = (field: 'sizes' | 'colors', val: string) => {
+    setFormData(f => ({ ...f, [field]: f[field].filter(v => v !== val) }))
   }
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -82,6 +100,8 @@ export default function AdminProducts() {
         inStock: Number(formData.stock) > 0,
         description: formData.description,
         images: formData.images.split('\n').map((s) => s.trim()).filter(Boolean),
+        sizes: formData.sizes,
+        colors: formData.colors,
         rating: 0, reviewCount: 0,
       }
       if (editId) {
@@ -276,6 +296,64 @@ export default function AdminProducts() {
                     className="input-base"
                     placeholder="0"
                   />
+                </Field>
+
+                <Field label="Хэмжээ (Sizes)">
+                  <div className="space-y-2">
+                    <div className="flex gap-2">
+                      <input
+                        value={sizeInput}
+                        onChange={(e) => setSizeInput(e.target.value)}
+                        onKeyDown={(e) => e.key === 'Enter' && (e.preventDefault(), addTag('sizes', sizeInput))}
+                        className="input-base"
+                        placeholder="S, M, L..."
+                      />
+                      <button 
+                        type="button"
+                        onClick={() => addTag('sizes', sizeInput)}
+                        className="px-3 bg-brand-surface border border-brand-border rounded-[6px] text-[11px] font-bold"
+                      >Нэмэх</button>
+                    </div>
+                    <div className="flex flex-wrap gap-1.5">
+                      {formData.sizes.map(s => (
+                        <span key={s} className="inline-flex items-center gap-1 px-2 py-1 bg-brand-surface border border-brand-border rounded-[4px] text-[11px]">
+                          {s}
+                          <button type="button" onClick={() => removeTag('sizes', s)} className="hover:text-brand-danger">
+                            <X className="w-3 h-3" />
+                          </button>
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+                </Field>
+
+                <Field label="Өнгө (Colors)">
+                  <div className="space-y-2">
+                    <div className="flex gap-2">
+                      <input
+                        value={colorInput}
+                        onChange={(e) => setColorInput(e.target.value)}
+                        onKeyDown={(e) => e.key === 'Enter' && (e.preventDefault(), addTag('colors', colorInput))}
+                        className="input-base"
+                        placeholder="Хар, Цагаан..."
+                      />
+                      <button 
+                        type="button"
+                        onClick={() => addTag('colors', colorInput)}
+                        className="px-3 bg-brand-surface border border-brand-border rounded-[6px] text-[11px] font-bold"
+                      >Нэмэх</button>
+                    </div>
+                    <div className="flex flex-wrap gap-1.5">
+                      {formData.colors.map(c => (
+                        <span key={c} className="inline-flex items-center gap-1 px-2 py-1 bg-brand-surface border border-brand-border rounded-[4px] text-[11px]">
+                          {c}
+                          <button type="button" onClick={() => removeTag('colors', c)} className="hover:text-brand-danger">
+                            <X className="w-3 h-3" />
+                          </button>
+                        </span>
+                      ))}
+                    </div>
+                  </div>
                 </Field>
               </div>
 
