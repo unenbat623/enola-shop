@@ -39,7 +39,7 @@ seed.post('/', async (c) => {
         stock: 10,
         sizes: ["S", "M", "L", "XL"],
         colors: ["Хар", "Цагаан"],
-        badge: i % 3 === 0 ? 'Шинэ' : i % 5 === 0 ? 'Хямдрал' : '',
+        badge: i % 4 === 0 ? 'NEW' : i % 5 === 0 ? 'SALE' : i % 7 === 0 ? 'HOT' : '',
         inStock: true,
         rating: 4.5 + Math.random() * 0.5,
         reviewCount: Math.floor(Math.random() * 100)

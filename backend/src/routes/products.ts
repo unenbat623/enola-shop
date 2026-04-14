@@ -31,7 +31,7 @@ products.put('/:id', authMiddleware, adminMiddleware, async (c) => {
   try {
     const id = c.req.param('id');
     const body = await c.req.json();
-    const updatedProduct = await Product.findByIdAndUpdate(id, body, { new: true });
+    const updatedProduct = await Product.findByIdAndUpdate(id, body, { returnDocument: 'after' });
     if (!updatedProduct) return c.json({ error: 'Product not found' }, 404);
     return c.json(updatedProduct);
   } catch (error: any) {

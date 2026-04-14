@@ -6,7 +6,7 @@ export interface Product {
   originalPrice?: number
   category: string
   categorySlug: string
-  badge?: 'Шинэ' | 'Хямдрал' | 'Hot'
+  badge?: 'Шинэ' | 'Хямдрал' | 'Hot' | 'NEW' | 'SALE' | 'HOT' | 'Эрэлттэй'
   images: string[]
   description: string
   stock: number

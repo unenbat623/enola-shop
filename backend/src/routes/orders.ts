@@ -48,7 +48,7 @@ orders.patch('/:id/status', authMiddleware, adminMiddleware, async (c) => {
   try {
     const id = c.req.param('id')
     const { status } = await c.req.json()
-    const updated = await Order.findByIdAndUpdate(id, { status }, { new: true })
+    const updated = await Order.findByIdAndUpdate(id, { status }, { returnDocument: 'after' })
     if (!updated) return c.json({ error: 'Order not found' }, 404)
     return c.json(updated)
   } catch (error: any) {

@@ -8,7 +8,8 @@ export interface IProduct extends Document {
   originalPrice?: number;
   category: string;
   categorySlug: string;
-  badge?: 'Шинэ' | 'Хямдрал' | 'Hot';
+  badge?: 'Шинэ' | 'Хямдрал' | 'Hot' | 'NEW' | 'SALE' | 'HOT' | 'Эрэлттэй';
+  stock: number;
   images: string[];
   description: string;
   inStock: boolean;
@@ -28,6 +29,7 @@ const ProductSchema: Schema = new Schema({
   category: { type: String, required: true },
   categorySlug: { type: String, required: true },
   badge: { type: String },
+  stock: { type: Number, default: 0 },
   images: { type: [String], default: [] },
   description: { type: String, required: true },
   inStock: { type: Boolean, default: true },

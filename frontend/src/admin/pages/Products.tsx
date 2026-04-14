@@ -96,7 +96,7 @@ export default function AdminProducts() {
         originalPrice: formData.originalPrice ? Number(formData.originalPrice) : undefined,
         category: formData.category,
         categorySlug: formData.categorySlug,
-        stock: Number(formData.stock) || 0,
+        stock: formData.stock === '' ? 0 : Number(formData.stock),
         inStock: Number(formData.stock) > 0,
         description: formData.description,
         images: formData.images.split('\n').map((s) => s.trim()).filter(Boolean),
@@ -289,9 +289,9 @@ export default function AdminProducts() {
                   </select>
                 </Field>
 
-                <Field label="Тоо ширхэг *">
+                <Field label="Тоо ширхэг">
                   <input
-                    type="number" required min="0" value={formData.stock}
+                    type="number" min="0" value={formData.stock}
                     onChange={(e) => setFormData({ ...formData, stock: e.target.value })}
                     className="input-base"
                     placeholder="0"
