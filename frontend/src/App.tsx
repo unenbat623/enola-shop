@@ -11,18 +11,27 @@ export default function App() {
 
   useEffect(() => {
     initAuth()
+    
+    // Force hide splash after 3 seconds regardless of status (Safety fallback)
+    const forceHideTimer = setTimeout(() => {
+      setShowSplash(false)
+    }, 3000)
+
     // Ensure splash stays for at least 800ms or until auth is ready
     const timer = setTimeout(() => {
       if (!isLoading) setShowSplash(false)
     }, 800)
     
-    return () => clearTimeout(timer)
+    return () => {
+      clearTimeout(forceHideTimer)
+      clearTimeout(timer)
+    }
   }, [initAuth, isLoading])
 
   // Sync splash state with auth loading
   useEffect(() => {
     if (!isLoading) {
-      const timer = setTimeout(() => setShowSplash(false), 800)
+      const timer = setTimeout(() => setShowSplash(false), 400)
       return () => clearTimeout(timer)
     }
   }, [isLoading])
