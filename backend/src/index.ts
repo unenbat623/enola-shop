@@ -8,6 +8,7 @@ import orderRoutes from './routes/orders'
 import userRoutes from './routes/users'
 import authRoutes from './routes/auth'
 import seedRoutes from './routes/seed'
+import uploadRoutes from './routes/upload'
 import { connectDB } from './lib/db'
 
 // Connect to MongoDB
@@ -24,6 +25,7 @@ app.route('/api/products', productRoutes)
 app.route('/api/orders', orderRoutes)
 app.route('/api/users', userRoutes)
 app.route('/api/seed', seedRoutes)
+app.route('/api/upload', uploadRoutes)
 
 app.get('/', (c) => c.text('Enola Shop API is running'))
 
