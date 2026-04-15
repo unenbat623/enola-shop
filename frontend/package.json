@@ -40,7 +40,8 @@
   },
   "optionalDependencies": {
     "@rollup/rollup-linux-x64-gnu": "4.40.1",
-    "lightningcss-linux-x64-gnu": "1.29.2"
+    "lightningcss-linux-x64-gnu": "1.29.2",
+    "@tailwindcss/oxide-linux-x64-gnu": "^4.0.0-alpha.33"
   },
   "engines": {
     "node": "20.x"
