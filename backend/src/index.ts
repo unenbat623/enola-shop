@@ -16,7 +16,18 @@ connectDB()
 
 const app = new Hono()
 
-app.use('/api/*', cors())
+app.use(
+  '/api/*',
+  cors({
+    origin: [
+      'http://localhost:5173',
+      'https://enola-shop.vercel.app',
+    ],
+    allowMethods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
+    allowHeaders: ['Content-Type', 'Authorization'],
+    credentials: true,
+  })
+)
 
 // Register routes
 app.route('/api/auth', authRoutes)
