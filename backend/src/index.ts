@@ -1,5 +1,6 @@
 import 'dotenv/config'
 import { Hono } from 'hono'
+import { handle } from 'hono/vercel'
 import { cors } from 'hono/cors'
 import { serve } from '@hono/node-server'
 import paymentRoutes from './routes/payment'
@@ -43,9 +44,11 @@ app.get('/', (c) => c.text('Enola Shop API is running'))
 const port = Number(process.env.PORT) || 3000
 console.log(`Server is running on port ${port}`)
 
-serve({
-  fetch: app.fetch,
-  port
-})
+if (process.env.NODE_ENV !== 'production') {
+  serve({
+    fetch: app.fetch,
+    port
+  })
+}
 
-export default app
+export default handle(app)
