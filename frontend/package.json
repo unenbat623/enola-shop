@@ -39,7 +39,8 @@
     "wrangler": "^4.81.1"
   },
   "optionalDependencies": {
-    "@rollup/rollup-linux-x64-gnu": "4.40.1"
+    "@rollup/rollup-linux-x64-gnu": "4.40.1",
+    "lightningcss-linux-x64-gnu": "1.29.2"
   },
   "engines": {
     "node": "20.x"
