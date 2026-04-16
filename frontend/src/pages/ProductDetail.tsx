@@ -1,5 +1,5 @@
 import { useParams } from 'react-router'
-import { formatCurrency, calculateDiscountPercentage } from '@/lib/utils'
+import { formatCurrency, calculateDiscountPercentage, getColorCSS } from '@/lib/utils'
 import { useCartStore } from '@/store/cartStore'
 import { useWishlistStore } from '@/store/wishlistStore'
 import { useAuthStore } from '@/store/authStore'
@@ -220,7 +220,7 @@ export default function ProductDetail() {
                           selectedColor === color ? "border-brand-ink scale-110" : "border-transparent hover:scale-110"
                         )}
                       >
-                        <div className="w-full h-full rounded-full" style={{ backgroundColor: color.toLowerCase() }} />
+                        <div className="w-full h-full rounded-full" style={{ backgroundColor: getColorCSS(color) }} />
                       </button>
                     ))}
                   </div>

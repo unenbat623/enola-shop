@@ -12,22 +12,20 @@ if (!MONGODB_URI) {
 let isConnected = false;
 
 export const connectDB = async () => {
-  if (isConnected) {
-    return;
-  }
+  if (isConnected) return;
 
   try {
-    const opts = {
+    const db = await mongoose.connect(MONGODB_URI, {
       bufferCommands: false,
-    };
-
-    const db = await mongoose.connect(MONGODB_URI, opts);
+      serverSelectionTimeoutMS: 5000,  // ← 5 секундэд timeout
+      socketTimeoutMS: 8000,           // ← 8 секундэд socket timeout
+      connectTimeoutMS: 8000,          // ← 8 секундэд connection timeout
+    });
     isConnected = db.connections[0].readyState === 1;
     console.log('Successfully connected to MongoDB.');
   } catch (error) {
+    isConnected = false;              // ← failed бол reset хий
     console.error('Error connecting to MongoDB:', error);
-    // In serverless, we don't want to exit the process, 
-    // we want to throw so the request fails but the process can be reused.
     throw error;
   }
 };

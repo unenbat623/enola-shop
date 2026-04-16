@@ -8,6 +8,7 @@ interface WishlistStore {
   removeItem: (id: string) => void
   isInWishlist: (id: string) => boolean
   totalItems: () => number
+  syncWithProducts: (validIds: string[]) => void
 }
 
 export const useWishlistStore = create<WishlistStore>()(
@@ -33,6 +34,10 @@ export const useWishlistStore = create<WishlistStore>()(
       isInWishlist: (id) => get().items.some((i) => i.id === id),
       
       totalItems: () => get().items.length,
+      
+      syncWithProducts: (validIds) => {
+        set({ items: get().items.filter(item => validIds.includes(item.id)) })
+      },
     }),
     { name: 'Enola Shop-wishlist' }
   )

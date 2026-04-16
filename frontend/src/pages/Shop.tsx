@@ -41,6 +41,15 @@ export default function ShopPage() {
 
   const currentSortLabel = sortOptions.find(opt => opt.value === sortBy)?.label || 'Сүүлд нэмэгдсэн'
 
+  // Calculate dynamic counts
+  const categoryCounts = useMemo(() => {
+    const counts: Record<string, number> = {}
+    products.forEach(p => {
+      counts[p.categorySlug] = (counts[p.categorySlug] || 0) + 1
+    })
+    return counts
+  }, [products])
+
   const filteredAndSortedProducts = useMemo(() => {
     let result = products.filter((p) => {
       let matches = true
@@ -125,9 +134,10 @@ export default function ShopPage() {
                             setSearchParams({})
                             setCurrentPage(1)
                           }}
-                          className={`text-[13px] transition-colors ${!categoryFilter && !generalFilter ? 'text-brand-ink font-medium underline underline-offset-4' : 'text-brand-sub hover:text-brand-ink'}`}
+                          className={`text-[13px] transition-colors flex items-center justify-between w-full ${!categoryFilter && !generalFilter ? 'text-brand-ink font-medium underline underline-offset-4' : 'text-brand-sub hover:text-brand-ink'}`}
                         >
-                          Бүгд
+                          <span>Бүгд</span>
+                          <span className="text-[10px] text-brand-hint">({products.length})</span>
                         </button>
                       </li>
                       {categories.map((cat: Category) => (
@@ -140,7 +150,7 @@ export default function ShopPage() {
                             className={`text-[13px] transition-colors flex items-center justify-between w-full ${categoryFilter === cat.slug ? 'text-brand-ink font-medium underline underline-offset-4' : 'text-brand-sub hover:text-brand-ink'}`}
                           >
                             <span>{cat.name}</span>
-                            <span className="text-[10px] text-brand-hint">({cat.productCount})</span>
+                            <span className="text-[10px] text-brand-hint">({categoryCounts[cat.slug] || 0})</span>
                           </button>
                         </li>
                       ))}

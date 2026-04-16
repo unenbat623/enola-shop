@@ -1,11 +1,11 @@
 import { Category } from './types'
 
 export const categories: Category[] = [
-  { id: '1', name: 'Цүнх & Уут', slug: 'bags', icon: '👜', productCount: 42 },
-  { id: '2', name: 'Хувцас', slug: 'clothing', icon: '👗', productCount: 128 },
-  { id: '3', name: 'Гутал', slug: 'shoes', icon: '👟', productCount: 64 },
-  { id: '4', name: 'Гоо сайхан', slug: 'beauty', icon: '💄', productCount: 89 },
-  { id: '5', name: 'Аксессуар', slug: 'accessories', icon: '⌚', productCount: 156 },
+  { id: '1', name: 'Цүнх & Уут', slug: 'bags', icon: '👜' },
+  { id: '2', name: 'Хувцас', slug: 'clothing', icon: '👗' },
+  { id: '3', name: 'Гутал', slug: 'shoes', icon: '👟' },
+  { id: '4', name: 'Гоо сайхан', slug: 'beauty', icon: '💄' },
+  { id: '5', name: 'Аксессуар', slug: 'accessories', icon: '⌚' },
 ]
 
 export const brands = [

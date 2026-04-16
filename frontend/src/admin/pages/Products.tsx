@@ -4,11 +4,14 @@ import { Plus, Edit, Trash2, Loader2, X, Image as ImageIcon } from 'lucide-react
 import { formatCurrency } from '@/lib/utils'
 import { Product } from '@/lib/types'
 import { categories } from '@/lib/constants'
+import { getColorCSS } from '@/lib/utils'
+import { useCartStore } from '@/store/cartStore'
+import { useWishlistStore } from '@/store/wishlistStore'
 
 const EMPTY_FORM = {
   name: '', slug: '', price: '',
   originalPrice: '', category: '', categorySlug: '',
-  stock: '', description: '', images: '',
+  stock: '', description: '', images: [] as string[],
   sizes: [] as string[], colors: [] as string[]
 }
 
@@ -22,6 +25,7 @@ export default function AdminProducts() {
   const [formError, setFormError] = useState('')
   const [sizeInput, setSizeInput] = useState('')
   const [colorInput, setColorInput] = useState('')
+  const [isUploading, setIsUploading] = useState(false)
 
   const load = async () => {
     setIsLoading(true)
@@ -52,7 +56,7 @@ export default function AdminProducts() {
       categorySlug: p.categorySlug,
       stock: p.stock ? String(p.stock) : '',
       description: p.description,
-      images: p.images?.join('\n') ?? '',
+      images: p.images ?? [],
       sizes: p.sizes ?? [],
       colors: p.colors ?? [],
     })
@@ -99,7 +103,7 @@ export default function AdminProducts() {
         stock: formData.stock === '' ? 0 : Number(formData.stock),
         inStock: Number(formData.stock) > 0,
         description: formData.description,
-        images: formData.images.split('\n').map((s) => s.trim()).filter(Boolean),
+        images: formData.images,
         sizes: formData.sizes,
         colors: formData.colors,
         rating: 0, reviewCount: 0,
@@ -122,8 +126,57 @@ export default function AdminProducts() {
     if (!window.confirm(`"${name}" барааг устгах уу?`)) return
     try {
       await productsApi.deleteProduct(id)
+      
+      // Immediately remove from persistent stores
+      useCartStore.getState().removeItem(id)
+      useWishlistStore.getState().removeItem(id)
+      
       load()
     } catch { alert('Устгахад алдаа гарлаа') }
+  }
+
+  const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const files = e.target.files
+    if (!files || files.length === 0) return
+
+    setIsUploading(true)
+    const token = localStorage.getItem('token') // For authMiddleware
+
+    try {
+      const uploadPromises = Array.from(files).map(async (file) => {
+        const payload = new FormData()
+        payload.append('image', file)
+
+        const res = await fetch(`${import.meta.env.VITE_API_URL}/api/upload/image`, {
+          method: 'POST',
+          headers: {
+            'Authorization': `Bearer ${token}`
+          },
+          body: payload
+        })
+
+        if (!res.ok) throw new Error('Upload failed')
+        const data = await res.json()
+        return data.secure_url
+      })
+
+      const newUrls = await Promise.all(uploadPromises)
+      setFormData(prev => ({
+        ...prev,
+        images: [...prev.images, ...newUrls]
+      }))
+    } catch (err: any) {
+      alert('Зураг хуулахад алдаа гарлаа: ' + err.message)
+    } finally {
+      setIsUploading(false)
+    }
+  }
+
+  const removeImage = (index: number) => {
+    setFormData(prev => ({
+      ...prev,
+      images: prev.images.filter((_, i) => i !== index)
+    }))
   }
 
   return (
@@ -345,9 +398,10 @@ export default function AdminProducts() {
                     </div>
                     <div className="flex flex-wrap gap-1.5">
                       {formData.colors.map(c => (
-                        <span key={c} className="inline-flex items-center gap-1 px-2 py-1 bg-brand-surface border border-brand-border rounded-[4px] text-[11px]">
+                        <span key={c} className="inline-flex items-center gap-1.5 px-2 py-1 bg-brand-surface border border-brand-border rounded-[4px] text-[11px]">
+                          <span className="w-2.5 h-2.5 rounded-full border border-brand-border/50" style={{ backgroundColor: getColorCSS(c) }} />
                           {c}
-                          <button type="button" onClick={() => removeTag('colors', c)} className="hover:text-brand-danger">
+                          <button type="button" onClick={() => removeTag('colors', c)} className="hover:text-brand-danger ml-0.5">
                             <X className="w-3 h-3" />
                           </button>
                         </span>
@@ -357,13 +411,43 @@ export default function AdminProducts() {
                 </Field>
               </div>
 
-              <Field label="Зургийн URL (мөр бүрт нэг URL)">
-                <textarea
-                  rows={3} value={formData.images}
-                  onChange={(e) => setFormData({ ...formData, images: e.target.value })}
-                  className="input-base resize-none"
-                  placeholder="https://example.com/image1.jpg&#10;https://example.com/image2.jpg"
-                />
+              <Field label="Зургууд *">
+                <div className="space-y-4">
+                  <div className="grid grid-cols-4 sm:grid-cols-5 gap-3">
+                    {formData.images.map((url, index) => (
+                      <div key={index} className="relative aspect-[3/4] rounded-[8px] bg-brand-surface border border-brand-border overflow-hidden group">
+                        <img src={url} alt="" className="w-full h-full object-cover" />
+                        <button
+                          type="button"
+                          onClick={() => removeImage(index)}
+                          className="absolute top-1 right-1 p-1 bg-white/80 backdrop-blur-sm text-brand-danger rounded-full opacity-0 group-hover:opacity-100 transition-opacity"
+                        >
+                          <X className="w-3.5 h-3.5" />
+                        </button>
+                      </div>
+                    ))}
+                    {isUploading ? (
+                      <div className="aspect-[3/4] flex items-center justify-center rounded-[8px] border border-dashed border-brand-border bg-brand-surface">
+                        <Loader2 className="w-5 h-5 animate-spin text-brand-hint" />
+                      </div>
+                    ) : (
+                      <label className="aspect-[3/4] flex flex-col items-center justify-center rounded-[8px] border border-dashed border-brand-border bg-brand-surface hover:bg-brand-surface2 hover:border-brand-hint transition-all cursor-pointer">
+                        <Plus className="w-5 h-5 text-brand-hint" />
+                        <span className="text-[10px] text-brand-hint font-bold mt-1 uppercase tracking-wider">Нэмэх</span>
+                        <input
+                          type="file"
+                          multiple
+                          accept="image/*"
+                          className="hidden"
+                          onChange={handleImageUpload}
+                        />
+                      </label>
+                    )}
+                  </div>
+                  <p className="text-[10px] text-brand-hint italic">
+                    PNG, JPG форматтай, нэг бүр нь 5MB-аас бага хэмжээтэй байхыг зөвлөж байна.
+                  </p>
+                </div>
               </Field>
 
               <Field label="Тодорхойлолт *">

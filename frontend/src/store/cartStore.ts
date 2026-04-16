@@ -10,6 +10,7 @@ interface CartStore {
   clearCart: () => void
   totalItems: () => number
   totalPrice: () => number
+  syncWithProducts: (validIds: string[]) => void
 }
 
 export const useCartStore = create<CartStore>()(
@@ -46,6 +47,10 @@ export const useCartStore = create<CartStore>()(
       totalItems: () => get().items.reduce((acc, item) => acc + item.quantity, 0),
       
       totalPrice: () => get().items.reduce((acc, item) => acc + item.price * item.quantity, 0),
+      
+      syncWithProducts: (validIds) => {
+        set({ items: get().items.filter(item => validIds.includes(item.id)) })
+      },
     }),
     { name: 'Enola Shop-cart' }
   )

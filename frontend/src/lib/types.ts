@@ -23,7 +23,7 @@ export interface Category {
   name: string
   slug: string
   icon: string
-  productCount: number
+  productCount?: number
 }
 
 export interface CartItem extends Product {
