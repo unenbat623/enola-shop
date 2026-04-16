@@ -61,10 +61,8 @@ export default function ProductDetail() {
       return
     }
 
-    // Since our cart store doesn't support selection yet, we pass the basic product
-    // Usually we would pass { ...product, selectedSize, selectedColor }
     for(let i=0; i<qty; i++) {
-       addItem(product)
+       addItem(product, selectedSize || undefined, selectedColor || undefined)
     }
     toast.success(`"${product.name}" сагсанд нэмэгдлээ.`)
     toggleCart(true)

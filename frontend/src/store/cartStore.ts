@@ -4,9 +4,9 @@ import { type Product, type CartItem } from '@/lib/types'
 
 interface CartStore {
   items: CartItem[]
-  addItem: (product: Product) => void
-  removeItem: (id: string) => void
-  updateQuantity: (id: string, qty: number) => void
+  addItem: (product: Product, selectedSize?: string, selectedColor?: string) => void
+  removeItem: (id: string, selectedSize?: string, selectedColor?: string) => void
+  updateQuantity: (id: string, qty: number, selectedSize?: string, selectedColor?: string) => void
   clearCart: () => void
   totalItems: () => number
   totalPrice: () => number
@@ -18,27 +18,39 @@ export const useCartStore = create<CartStore>()(
     (set, get) => ({
       items: [],
       
-      addItem: (product) => {
+      addItem: (product, selectedSize, selectedColor) => {
         const items = get().items
-        const index = items.findIndex((i) => i.id === product.id)
+        const index = items.findIndex((i) => 
+          i.id === product.id && 
+          i.selectedSize === selectedSize && 
+          i.selectedColor === selectedColor
+        )
         
         if (index > -1) {
           const newItems = [...items]
           newItems[index].quantity += 1
           set({ items: newItems })
         } else {
-          set({ items: [...items, { ...product, quantity: 1 }] })
+          set({ items: [...items, { ...product, quantity: 1, selectedSize, selectedColor }] })
         }
       },
       
-      removeItem: (id) => {
-        set({ items: get().items.filter((i) => i.id !== id) })
+      removeItem: (id, selectedSize, selectedColor) => {
+        set({ 
+          items: get().items.filter((i) => 
+            !(i.id === id && i.selectedSize === selectedSize && i.selectedColor === selectedColor)
+          ) 
+        })
       },
       
-      updateQuantity: (id, qty) => {
+      updateQuantity: (id, qty, selectedSize, selectedColor) => {
         if (qty < 1) return
         set({
-          items: get().items.map((i) => (i.id === id ? { ...i, quantity: qty } : i)),
+          items: get().items.map((i) => 
+            (i.id === id && i.selectedSize === selectedSize && i.selectedColor === selectedColor) 
+              ? { ...i, quantity: qty } 
+              : i
+          ),
         })
       },
       

@@ -11,6 +11,8 @@ interface OrderItem {
   price: number
   quantity: number
   image: string
+  selectedSize?: string
+  selectedColor?: string
 }
 
 interface LocalOrder {
@@ -46,7 +48,10 @@ export default function OrdersPage() {
           const mapped = data.map((o: any) => ({
             id:            o.id ?? o._id ?? '',
             date:          o.createdAt ?? new Date().toISOString(),
-            items:         Array.isArray(o.items) ? o.items : [],
+            items:         (o.items || []).map((i: any) => ({
+              ...i,
+              image: i.image ?? i.images?.[0] ?? ''
+            })),
             total:         o.totalAmount ?? 0,
             status:        o.status ?? 'Хүлээгдэж буй',
             paymentMethod: o.paymentMethod ?? '',

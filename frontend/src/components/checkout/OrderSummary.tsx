@@ -14,12 +14,19 @@ export default function OrderSummary() {
       {/* Items list */}
       <div className="space-y-4 max-h-[400px] overflow-y-auto pr-2 custom-scrollbar">
         {items.map((item) => (
-          <div key={item.id} className="flex gap-4 group">
+          <div key={`${item.id}-${item.selectedSize}-${item.selectedColor}`} className="flex gap-4 group">
             <div className="w-16 h-20 bg-brand-surface border border-brand-border rounded-[4px] overflow-hidden flex-shrink-0">
               <img src={item.images[0]} alt={item.name} className="w-full h-full object-cover opacity-90 group-hover:opacity-100 transition-opacity" />
             </div>
-            <div className="flex-1 flex flex-col justify-center gap-1">
+            <div className="flex-1 flex flex-col justify-center gap-0.5">
               <h4 className="text-[13px] font-normal text-brand-ink line-clamp-1">{item.name}</h4>
+              {(item.selectedSize || item.selectedColor) && (
+                <p className="text-[9px] text-brand-sub font-medium uppercase tracking-[1px]">
+                  {item.selectedSize && `Size: ${item.selectedSize}`}
+                  {item.selectedSize && item.selectedColor && ' / '}
+                  {item.selectedColor && `Color: ${item.selectedColor}`}
+                </p>
+              )}
               <div className="flex justify-between items-center mt-1">
                 <span className="text-[10px] text-brand-hint font-medium tracking-wide normal-case">{item.quantity} x {formatCurrency(item.price)}</span>
                 <span className="text-[13px] font-medium text-brand-ink">{formatCurrency(item.price * item.quantity)}</span>

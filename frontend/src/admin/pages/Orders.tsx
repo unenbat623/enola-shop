@@ -179,7 +179,14 @@ export default function AdminOrders() {
                       )}
                       <div className="flex-1 min-w-0">
                         <p className="text-[13px] font-medium text-brand-ink truncate">{item.name}</p>
-                        <p className="text-[11px] text-brand-sub">{item.quantity}ш × {formatCurrency(item.price)}</p>
+                        <div className="flex items-center gap-2">
+                          <p className="text-[11px] text-brand-sub">{item.quantity}ш × {formatCurrency(item.price)}</p>
+                          {(item.selectedSize || item.selectedColor) && (
+                            <span className="text-[10px] text-brand-hint">
+                              ({[item.selectedSize, item.selectedColor].filter(Boolean).join(' / ')})
+                            </span>
+                          )}
+                        </div>
                       </div>
                       <p className="text-[13px] font-medium text-brand-ink">
                         {formatCurrency(item.price * item.quantity)}

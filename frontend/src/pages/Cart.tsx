@@ -36,7 +36,7 @@ export default function CartPage() {
           {/* Items */}
           <div className="flex-1 space-y-4">
             {items.map((item) => (
-              <div key={item.id} className="bg-white p-6 rounded-[10px] border border-brand-border flex flex-col sm:flex-row gap-6">
+              <div key={`${item.id}-${item.selectedSize}-${item.selectedColor}`} className="bg-white p-6 rounded-[10px] border border-brand-border flex flex-col sm:flex-row gap-6">
                 <Link to={`/product/${item.slug}`} className="w-24 h-32 bg-brand-surface rounded-[6px] overflow-hidden flex-shrink-0 border border-brand-border">
                   <img src={item.images[0]} alt={item.name} className="w-full h-full object-cover hover:opacity-90 transition-opacity" />
                 </Link>
@@ -48,9 +48,16 @@ export default function CartPage() {
                       <Link to={`/product/${item.slug}`} className="font-normal text-base text-brand-ink hover:text-brand-ink2 transition-colors">
                         {item.name}
                       </Link>
+                      {(item.selectedSize || item.selectedColor) && (
+                        <p className="text-[10px] text-brand-sub font-medium uppercase tracking-[1px] mt-1.5 flex gap-2">
+                          {item.selectedSize && <span>Size: {item.selectedSize}</span>}
+                          {item.selectedSize && item.selectedColor && <span className="text-brand-border">|</span>}
+                          {item.selectedColor && <span>Color: {item.selectedColor}</span>}
+                        </p>
+                      )}
                     </div>
-                    <button
-                      onClick={() => removeItem(item.id)}
+                     <button
+                      onClick={() => removeItem(item.id, item.selectedSize, item.selectedColor)}
                       className="p-2 text-brand-hint hover:text-brand-danger transition-colors"
                       aria-label="Устгах"
                     >
@@ -62,7 +69,7 @@ export default function CartPage() {
                     {/* Qty control */}
                     <div className="flex items-center border border-brand-border rounded-[4px] h-9 bg-white overflow-hidden">
                       <button
-                        onClick={() => updateQuantity(item.id, item.quantity - 1)}
+                        onClick={() => updateQuantity(item.id, item.quantity - 1, item.selectedSize, item.selectedColor)}
                         className="w-9 h-full flex items-center justify-center text-brand-sub hover:text-brand-ink transition-colors"
                       >
                         <Minus className="w-3.5 h-3.5" />
@@ -71,7 +78,7 @@ export default function CartPage() {
                         {item.quantity}
                       </span>
                       <button
-                        onClick={() => updateQuantity(item.id, item.quantity + 1)}
+                        onClick={() => updateQuantity(item.id, item.quantity + 1, item.selectedSize, item.selectedColor)}
                         className="w-9 h-full flex items-center justify-center text-brand-sub hover:text-brand-ink transition-colors"
                       >
                         <Plus className="w-3.5 h-3.5" />

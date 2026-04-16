@@ -65,33 +65,40 @@ export default function CartDrawer() {
                   </div>
                 ) : (
                   items.map((item) => (
-                    <div key={item.id} className="flex gap-4 py-4 border-b border-brand-border last:border-0 group">
+                    <div key={`${item.id}-${item.selectedSize}-${item.selectedColor}`} className="flex gap-4 py-4 border-b border-brand-border last:border-0 group">
                       <div className="w-20 h-24 bg-brand-surface rounded-[6px] overflow-hidden flex-shrink-0 border border-brand-border">
                         <img src={item.images[0]} alt={item.name} className="w-full h-full object-cover opacity-90 group-hover:opacity-100 transition-all duration-300" loading="lazy" />
                       </div>
                       <div className="flex-1 flex flex-col justify-between">
                         <div className="space-y-1">
                           <h3 className="text-[13px] font-normal text-brand-ink line-clamp-1">{item.name}</h3>
+                          {(item.selectedSize || item.selectedColor) && (
+                            <p className="text-[10px] text-brand-sub font-medium uppercase tracking-wider">
+                              {item.selectedSize && `Хэмжээ: ${item.selectedSize}`}
+                              {item.selectedSize && item.selectedColor && ' | '}
+                              {item.selectedColor && `Өнгө: ${item.selectedColor}`}
+                            </p>
+                          )}
                           <p className="text-brand-ink font-medium text-[13px]">{formatCurrency(item.price)}</p>
                         </div>
                         <div className="flex items-center justify-between mt-auto">
                           <div className="flex items-center border border-brand-border rounded-[4px] bg-brand-surface">
                             <button 
-                              onClick={() => updateQuantity(item.id, item.quantity - 1)}
+                              onClick={() => updateQuantity(item.id, item.quantity - 1, item.selectedSize, item.selectedColor)}
                               className="p-1 px-2 hover:text-brand-ink transition-colors cursor-pointer text-brand-hint"
                             >
                               <Minus className="w-3 h-3" />
                             </button>
                             <span className="w-6 text-center text-[12px] font-medium text-brand-ink">{item.quantity}</span>
                             <button 
-                              onClick={() => updateQuantity(item.id, item.quantity + 1)}
+                              onClick={() => updateQuantity(item.id, item.quantity + 1, item.selectedSize, item.selectedColor)}
                               className="p-1 px-2 hover:text-brand-ink transition-colors cursor-pointer text-brand-hint"
                             >
                               <Plus className="w-3 h-3" />
                             </button>
                           </div>
                           <button 
-                            onClick={() => removeItem(item.id)}
+                            onClick={() => removeItem(item.id, item.selectedSize, item.selectedColor)}
                             className="text-brand-hint hover:text-brand-ink transition-colors p-1"
                           >
                             <Trash2 className="w-4 h-4" />

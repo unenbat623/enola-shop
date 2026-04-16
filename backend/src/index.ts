@@ -14,23 +14,7 @@ import { connectDB } from './lib/db'
 
 const app = new Hono()
 
-// 1. Health check (Bypasses DB middleware to debug 504s)
-app.get('/api/health', (c) => c.json({ status: 'ok', message: 'API is alive' }))
-
-// 2. Middleware to ensure DB connection
-app.use('/api/*', async (c, next) => {
-  // Skip DB for health check if needed, but here it only applies to /api/*
-  if (c.req.path === '/api/health') return await next()
-  
-  try {
-    await connectDB()
-    await next()
-  } catch (error) {
-    console.error('Database middleware error:', error)
-    return c.json({ error: 'Database connection failed' }, 500)
-  }
-})
-
+// 1. CORS хамгийн эхэнд байх ёстой
 app.use(
   '/api/*',
   cors({
@@ -44,7 +28,23 @@ app.use(
   })
 )
 
-// Register routes
+// 2. Health check - DB холболтгүйгээр
+app.get('/api/health', (c) => c.json({ status: 'ok', message: 'API is alive' }))
+
+// 3. DB middleware - cached connection
+app.use('/api/*', async (c, next) => {
+  if (c.req.path === '/api/health') return await next()
+
+  try {
+    await connectDB() // доорх db.ts-д cache хийгдсэн байх ёстой
+    await next()
+  } catch (error) {
+    console.error('Database middleware error:', error)
+    return c.json({ error: 'Database connection failed' }, 500)
+  }
+})
+
+// Routes
 app.route('/api/auth', authRoutes)
 app.route('/api/payment', paymentRoutes)
 app.route('/api/products', productRoutes)
@@ -56,13 +56,11 @@ app.route('/api/upload', uploadRoutes)
 app.get('/', (c) => c.text('Enola Shop API is running'))
 
 const port = Number(process.env.PORT) || 3000
-console.log(`Server is running on port ${port}`)
 
+// Production-д serve() болон console.log дуудахгүй
 if (process.env.NODE_ENV !== 'production') {
-  serve({
-    fetch: app.fetch,
-    port
-  })
+  console.log(`Server is running on port ${port}`)
+  serve({ fetch: app.fetch, port })
 }
 
 export { app }
