@@ -12,10 +12,17 @@ import seedRoutes from './routes/seed'
 import uploadRoutes from './routes/upload'
 import { connectDB } from './lib/db'
 
-// Connect to MongoDB
-connectDB()
-
 const app = new Hono()
+
+// Middleware to ensure DB connection
+app.use('*', async (c, next) => {
+  try {
+    await connectDB()
+    await next()
+  } catch (error) {
+    return c.json({ error: 'Database connection failed' }, 500)
+  }
+})
 
 app.use(
   '/api/*',
