@@ -14,12 +14,19 @@ import { connectDB } from './lib/db'
 
 const app = new Hono()
 
-// Middleware to ensure DB connection
-app.use('*', async (c, next) => {
+// 1. Health check (Bypasses DB middleware to debug 504s)
+app.get('/api/health', (c) => c.json({ status: 'ok', message: 'API is alive' }))
+
+// 2. Middleware to ensure DB connection
+app.use('/api/*', async (c, next) => {
+  // Skip DB for health check if needed, but here it only applies to /api/*
+  if (c.req.path === '/api/health') return await next()
+  
   try {
     await connectDB()
     await next()
   } catch (error) {
+    console.error('Database middleware error:', error)
     return c.json({ error: 'Database connection failed' }, 500)
   }
 })
