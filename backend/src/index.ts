@@ -1,5 +1,5 @@
+import 'dotenv/config'
 import { Hono } from 'hono'
-import { handle } from 'hono/vercel'
 import { cors } from 'hono/cors'
 import { serve } from '@hono/node-server'
 import paymentRoutes from './routes/payment'
@@ -19,7 +19,7 @@ app.use(
   cors({
     origin: [
       'http://localhost:5173',
-      'https://enola-shop.vercel.app',
+      'https://enola-shop.pages.dev',
     ],
     allowMethods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
     allowHeaders: ['Content-Type', 'Authorization'],
@@ -29,19 +29,6 @@ app.use(
 
 // 2. Health check - DB холболтгүйгээр
 app.get('/api/health', (c) => c.json({ status: 'ok', message: 'API is alive' }))
-
-// 3. DB middleware - cached connection
-app.use('/api/*', async (c, next) => {
-  if (c.req.path === '/api/health') return await next()
-
-  try {
-    await connectDB() // доорх db.ts-д cache хийгдсэн байх ёстой
-    await next()
-  } catch (error) {
-    console.error('Database middleware error:', error)
-    return c.json({ error: 'Database connection failed' }, 500)
-  }
-})
 
 // Routes
 app.route('/api/auth', authRoutes)
@@ -54,13 +41,19 @@ app.route('/api/upload', uploadRoutes)
 
 app.get('/', (c) => c.text('Enola Shop API is running'))
 
-const port = Number(process.env.PORT) || 3000
+const PORT = Number(process.env.PORT) || 3000
 
-// Production-д serve() болон console.log дуудахгүй
-if (process.env.NODE_ENV !== 'production') {
-  console.log(`Server is running on port ${port}`)
-  serve({ fetch: app.fetch, port })
-}
+connectDB()
+  .then(() => {
+    console.log('MongoDB холбогдлоо')
+    serve({ fetch: app.fetch, port: PORT }, () => {
+      console.log(`Server ${PORT} порт дээр ажиллаж байна`)
+    })
+  })
+  .catch((err) => {
+    console.error('MongoDB холбогдож чадсангүй:', err)
+    process.exit(1)
+  })
+
 
 export { app }
-export default handle(app)
