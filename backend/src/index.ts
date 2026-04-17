@@ -20,6 +20,7 @@ app.use(
     origin: [
       'http://localhost:5173',
       'https://enola-shop.pages.dev',
+      'https://enola-shop-1.onrender.com',
     ],
     allowMethods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
     allowHeaders: ['Content-Type', 'Authorization'],
