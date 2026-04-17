@@ -9,6 +9,12 @@ const auth = new Hono<HonoVariables>()
 
 const JWT_SECRET = process.env.JWT_SECRET || 'fallback_secret'
 
+// FRONTEND хаягийг авахдаа төгсгөлийн / тэмдэгтийг устгаж цэвэрлэнэ
+const getFrontendUrl = () => {
+  let url = process.env.FRONTEND_URL || 'https://enola-shop.pages.dev'
+  return url.replace(/\/$/, '')
+}
+
 auth.post('/register', async (c) => {
   try {
     const { name, email, password } = await c.req.json()
@@ -80,8 +86,7 @@ auth.get('/me', authMiddleware, async (c) => {
 auth.get('/google', (c, next) => {
   if (!process.env.GOOGLE_CLIENT_SECRET) {
     console.error('Missing GOOGLE_CLIENT_SECRET')
-    const frontendUrl = process.env.FRONTEND_URL || 'https://enola-shop.pages.dev'
-    return c.redirect(`${frontendUrl}/login?error=missing_config`)
+    return c.redirect(`${getFrontendUrl()}/login?error=missing_config`)
   }
   return googleAuth({
     client_id: process.env.GOOGLE_CLIENT_ID!,
@@ -90,7 +95,7 @@ auth.get('/google', (c, next) => {
   })(c, next)
 }, async (c) => {
   const googleUser = c.get('user-google')
-  const frontendUrl = process.env.FRONTEND_URL || 'https://enola-shop.pages.dev'
+  const frontendUrl = getFrontendUrl()
   
   if (!googleUser || !googleUser.email) {
     return c.redirect(`${frontendUrl}/login?error=oauth_failed`)
@@ -124,6 +129,7 @@ auth.get('/google', (c, next) => {
       { expiresIn: '30d' }
     )
 
+    // ✅ Одоо заавал FRONTEND_URL/auth/callback руу шилжинэ
     return c.redirect(`${frontendUrl}/auth/callback?token=${token}`)
   } catch (error) {
     console.error('Google Auth Error:', error)
