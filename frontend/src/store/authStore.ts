@@ -12,7 +12,7 @@ interface AuthState {
   register: (credentials: RegisterCredentials) => Promise<void>
   logout: () => void
   initAuth: () => Promise<void>
-  setToken: (token: string) => void
+  setToken: (token: string) => Promise<void>
 }
 
 export const useAuthStore = create<AuthState>((set) => ({
@@ -61,14 +61,35 @@ export const useAuthStore = create<AuthState>((set) => ({
     try {
       set({ isLoading: true, error: null })
       const { user } = await authApi.getMe()
-      set({ user, isAuthenticated: true, isLoading: false })
+      set({ user, token, isAuthenticated: true, isLoading: false })
     } catch (error) {
       localStorage.removeItem('token')
       set({ user: null, token: null, isAuthenticated: false, isLoading: false })
     }
   },
-  setToken: (token: string) => {
-    localStorage.setItem('token', token)
-    set({ token, isAuthenticated: true })
+  setToken: async (token: string) => {
+    try {
+      set({ isLoading: true, error: null })
+      localStorage.setItem('token', token)
+      
+      const { user } = await authApi.getMe()
+      
+      set({ 
+        token, 
+        user, 
+        isAuthenticated: true, 
+        isLoading: false 
+      })
+    } catch (error) {
+      localStorage.removeItem('token')
+      set({ 
+        user: null, 
+        token: null, 
+        isAuthenticated: false, 
+        isLoading: false,
+        error: 'Failed to fetch user data'
+      })
+      throw error
+    }
   }
 }))

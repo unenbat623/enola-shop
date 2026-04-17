@@ -1,15 +1,16 @@
-// /auth/callback?token=xxx руу redirect ирсэн үед
-// token авч localStorage-д хадгалаад / руу navigate
-import { useEffect } from 'react'
+import { useEffect, useRef } from 'react'
 import { useNavigate, useSearchParams } from 'react-router'
 import { useAuthStore } from '@/store/authStore'
 
 export default function AuthCallback() {
   const [params] = useSearchParams()
   const navigate = useNavigate()
-  const { setToken, initAuth } = useAuthStore()
+  const { setToken } = useAuthStore()
+  const processing = useRef(false)
 
   useEffect(() => {
+    if (processing.current) return
+    
     const token = params.get('token')
     const error = params.get('error')
     
@@ -17,18 +18,30 @@ export default function AuthCallback() {
       navigate('/login?error=Нэвтрэхэд алдаа гарлаа')
       return
     }
+
     if (token) {
-      setToken(token)
-      initAuth() // Fetch user data after setting token
-      navigate('/')
+      processing.current = true
+      
+      const handleAuth = async () => {
+        try {
+          // Wait for user data to be fetched before navigating
+          await setToken(token)
+          navigate('/')
+        } catch (err) {
+          console.error('Callback Auth Error:', err)
+          navigate('/login?error=Нэвтрэхэд алдаа гарлаа')
+        }
+      }
+
+      handleAuth()
     }
-  }, [params, navigate, setToken, initAuth])
+  }, [params, navigate, setToken])
 
   return (
     <div className="flex items-center justify-center min-h-screen bg-brand-base">
       <div className="text-center">
         <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-brand-mint mx-auto" />
-        <p className="mt-4 text-brand-sub text-sm font-medium">Нэвтэрч байна...</p>
+        <p className="mt-4 text-brand-sub text-sm font-medium">Нэвтрэлтийг баталгаажуулж байна...</p>
       </div>
     </div>
   )
