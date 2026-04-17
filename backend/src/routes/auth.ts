@@ -77,23 +77,29 @@ auth.get('/me', authMiddleware, async (c) => {
 })
 
 // Google OAuth flow
-auth.get('/google', googleAuth({
-  client_id: process.env.GOOGLE_CLIENT_ID!,
-  client_secret: process.env.GOOGLE_CLIENT_SECRET!,
-  scope: ['profile', 'email'],
-}), async (c) => {
+auth.get('/google', (c, next) => {
+  if (!process.env.GOOGLE_CLIENT_SECRET) {
+    console.error('Missing GOOGLE_CLIENT_SECRET')
+    const frontendUrl = process.env.FRONTEND_URL || 'https://enola-shop.pages.dev'
+    return c.redirect(`${frontendUrl}/login?error=missing_config`)
+  }
+  return googleAuth({
+    client_id: process.env.GOOGLE_CLIENT_ID!,
+    client_secret: process.env.GOOGLE_CLIENT_SECRET,
+    scope: ['profile', 'email'],
+  })(c, next)
+}, async (c) => {
   const googleUser = c.get('user-google')
+  const frontendUrl = process.env.FRONTEND_URL || 'https://enola-shop.pages.dev'
   
   if (!googleUser || !googleUser.email) {
-    return c.redirect(`${process.env.FRONTEND_URL}/login?error=oauth_failed`)
+    return c.redirect(`${frontendUrl}/login?error=oauth_failed`)
   }
 
   try {
-    // 1. Check if user exists with googleId
     let user = await User.findOne({ googleId: googleUser.id })
 
     if (!user) {
-      // 2. Check if user exists with email (link existing account)
       user = await User.findOne({ email: googleUser.email })
       if (user) {
         user.googleId = googleUser.id
@@ -102,7 +108,6 @@ auth.get('/google', googleAuth({
         }
         await user.save()
       } else {
-        // 3. Create new user
         user = await User.create({
           googleId: googleUser.id,
           name: googleUser.name || googleUser.email.split('@')[0],
@@ -113,18 +118,16 @@ auth.get('/google', googleAuth({
       }
     }
 
-    // 4. Generate JWT
     const token = jwt.sign(
       { id: user._id, role: user.role },
       JWT_SECRET,
       { expiresIn: '30d' }
     )
 
-    // 5. Redirect to frontend callback
-    return c.redirect(`${process.env.FRONTEND_URL}/auth/callback?token=${token}`)
+    return c.redirect(`${frontendUrl}/auth/callback?token=${token}`)
   } catch (error) {
     console.error('Google Auth Error:', error)
-    return c.redirect(`${process.env.FRONTEND_URL}/login?error=server_error`)
+    return c.redirect(`${frontendUrl}/login?error=server_error`)
   }
 })
 
