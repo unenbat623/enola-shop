@@ -96,6 +96,7 @@ auth.get('/google', (c, next) => {
 }, async (c) => {
   const googleUser = c.get('user-google')
   const frontendUrl = getFrontendUrl()
+  console.log('FRONTEND_URL for redirect:', frontendUrl)
   
   if (!googleUser || !googleUser.email) {
     return c.redirect(`${frontendUrl}/login?error=oauth_failed`)
