@@ -1,60 +1,51 @@
-import { brands } from '@/lib/constants'
+import { motion } from 'framer-motion'
+
+const brands = [
+  'Goyol', 'Michel & Amazonka', 'Lhamour', 'Anar', 
+  'Tsetseg', 'Belen', 'Goyo', 'Erel'
+]
 
 export default function BrandCarousel() {
-  const items = [...brands, ...brands]
+  const items = [...brands, ...brands] // Duplicate for seamless loop
 
   return (
     <section className="py-24 border-y border-brand-border bg-brand-base overflow-hidden">
-      <div className="max-w-7xl mx-auto px-4 mb-16 text-center">
-        <span className="text-brand-hint font-medium normal-case tracking-[2px] text-[10px]">
+      <div className="max-w-7xl mx-auto px-4 mb-16 text-center space-y-4">
+        <span className="text-brand-hint font-black uppercase tracking-[4px] text-[11px]">
           Баталгаат хамтрагчид
         </span>
+        <hr className="w-12 h-px bg-brand-border mx-auto border-none" />
       </div>
-      <div style={{ display: 'flex', overflow: 'hidden', width: '100%' }}>
+
+      <div className="relative flex overflow-hidden w-full group">
         <div
+          className="flex whitespace-nowrap gap-16 md:gap-24 items-center"
           style={{
-            display: 'flex',
-            gap: '3rem',
-            animation: 'marquee 40s linear infinite',
-            willChange: 'transform',
+            animation: 'marquee 30s linear infinite',
+            animationPlayState: 'running',
           }}
+          onMouseEnter={(e) => (e.currentTarget.style.animationPlayState = 'paused')}
+          onMouseLeave={(e) => (e.currentTarget.style.animationPlayState = 'running')}
         >
           {items.map((brand, i) => (
             <div
-              key={`${brand.id}-${i}`}
-              style={{
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                minWidth: '250px',
-                height: '96px',
-                padding: '0 3rem',
-                background: 'white',
-                border: '1px solid var(--brand-border)',
-                transition: 'background 0.3s',
-                flexShrink: 0,
-              }}
+              key={i}
+              className="flex items-center gap-16 md:gap-24 group/item"
             >
               <span
-                style={{
-                  fontSize: '1.5rem',
-                  fontWeight: 400,
-                  letterSpacing: '4px',
-                  textTransform: 'none',
-                  userSelect: 'none',
-                  color: 'var(--brand-ghost)',
-                  transition: 'color 0.3s',
-                }}
+                className="text-lg md:text-xl font-serif italic tracking-[4px] text-brand-sub hover:text-brand-ink transition-colors duration-500 cursor-default select-none"
               >
-                {brand.name}
+                {brand}
               </span>
+              <span className="text-brand-ghost/30 font-light scale-150 select-none">·</span>
             </div>
           ))}
         </div>
       </div>
+
       <style>{`
         @keyframes marquee {
-          0%   { transform: translateX(0); }
+          0% { transform: translateX(0); }
           100% { transform: translateX(-50%); }
         }
       `}</style>
