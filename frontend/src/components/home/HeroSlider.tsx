@@ -7,7 +7,7 @@ const slides = [
   {
     id: 1,
     image: 'https://images.unsplash.com/photo-1552374196-1ab2a1c593e8?auto=format&fit=crop&q=80&w=2000',
-    title: 'STREETWEAR\nCOLLECTION',
+    title: 'ГУДАМЖНЫ\nЦУГЛУУЛГА',
     subtitle: 'ШИНЭ ЦУГЛУУЛГА 2025',
     description: 'Өөрийн хэв маягийг тодорхойлох цаг боллоо. Хамгийн сүүлийн үеийн тренд загваруудыг эндээс.',
     buttonText: 'ОДОО ҮЗЭХ',
@@ -16,8 +16,8 @@ const slides = [
   {
     id: 2,
     image: 'https://images.unsplash.com/photo-1509631179647-0177331693ae?auto=format&fit=crop&q=80&w=2000',
-    title: 'THE ART OF\nSTYLE',
-    subtitle: 'PREMIUM QUALITY',
+    title: 'ЗАГВАРЫН\nУРЛАГ',
+    subtitle: 'ДЭЭД ЗЭРГИЙН ЧАНАР',
     description: 'Материал болон хийцлэлийн дээд зэргийн чанарыг мэдэр. Биднийг сонгосон танд баярлалаа.',
     buttonText: 'ДЭЛГҮҮР ХЭСЭХ',
     link: '/shop'
@@ -48,14 +48,12 @@ export default function HeroSlider() {
           transition={{ duration: 1.2, ease: "easeInOut" }}
           className="absolute inset-0"
         >
-          {/* Overlay */}
           <div className="absolute inset-0 bg-brand-ink/40 z-10" />
           <img 
             src={slides[current].image} 
             alt={slides[current].title}
             className="w-full h-full object-cover"
           />
-          
           <div className="absolute inset-0 z-20 flex items-center">
             <div className="max-w-7xl mx-auto px-4 md:px-8 w-full">
               <div className="max-w-2xl space-y-6 md:space-y-10">
@@ -72,7 +70,6 @@ export default function HeroSlider() {
                     {slides[current].title}
                   </h1>
                 </motion.div>
-
                 <motion.p
                   initial={{ opacity: 0, y: 30 }}
                   animate={{ opacity: 1, y: 0 }}
@@ -81,7 +78,6 @@ export default function HeroSlider() {
                 >
                   {slides[current].description}
                 </motion.p>
-
                 <motion.div
                   initial={{ opacity: 0, y: 30 }}
                   animate={{ opacity: 1, y: 0 }}
@@ -100,7 +96,6 @@ export default function HeroSlider() {
         </motion.div>
       </AnimatePresence>
 
-      {/* Controls */}
       <div className="absolute bottom-10 right-10 z-30 flex items-center gap-4">
         <button onClick={prevSlide} className="w-12 h-12 rounded-full border border-white/30 flex items-center justify-center text-white hover:bg-white hover:text-brand-ink transition-all">
           <ChevronLeft className="w-6 h-6" />
@@ -110,7 +105,6 @@ export default function HeroSlider() {
         </button>
       </div>
 
-      {/* Slide Indicators */}
       <div className="absolute bottom-10 left-10 z-30 flex gap-3">
         {slides.map((_, i) => (
           <button 

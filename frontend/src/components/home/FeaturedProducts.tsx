@@ -17,10 +17,10 @@ export default function FeaturedProducts() {
   const [activeTab, setActiveTab] = useState('featured')
 
   const filteredProducts = products.filter((p) => {
-    if (activeTab === 'sale') return p.badge === 'Хямдрал'
-    if (activeTab === 'new') return p.badge === 'Шинэ'
+    if (activeTab === 'sale') return p.badge === 'Хямдрал' || p.badge === 'SALE'
+    if (activeTab === 'new') return p.badge === 'Шинэ' || p.badge === 'NEW'
     if (activeTab === 'hot') return p.badge === 'Hot'
-    return true // featured case or default
+    return true
   }).slice(0, 8)
 
   return (
@@ -28,28 +28,24 @@ export default function FeaturedProducts() {
       <div className="max-w-7xl mx-auto px-4">
         <div className="text-center mb-16 space-y-4">
           <span className="text-brand-hint font-medium normal-case tracking-[2px] text-[10px]">Цуглуулга</span>
-          <h2 className="text-3xl md:text-4xl font-normal text-brand-ink tracking-tight normal-case">Онцлох загварууд</h2>
-          
+          <h2 className="text-3xl md:text-4xl font-normal text-brand-ink tracking-tight">Онцлох загварууд</h2>
           <div className="flex flex-wrap justify-center gap-10 pt-8 h-12">
             {tabs.map((tab) => (
               <button
                 key={tab.id}
                 onClick={() => setActiveTab(tab.id)}
                 className={cn(
-                  "px-1 h-full text-[11px] font-medium tracking-[2px] transition-all cursor-pointer normal-case border-b",
+                  "px-1 h-full text-[11px] font-medium tracking-[2px] transition-all cursor-pointer border-b",
                   activeTab === tab.id 
                     ? "border-brand-ink text-brand-ink" 
                     : "border-transparent text-brand-hint hover:text-brand-ink"
                 )}
               >
-                {tab.id === 'featured' ? 'Онцлох' : 
-                 tab.id === 'sale' ? 'Хямдралтай' : 
-                 tab.id === 'new' ? 'Шинэ ирэлт' : 'Тренд'}
+                {tab.label}
               </button>
             ))}
           </div>
         </div>
-
         {isLoading ? (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
             {Array.from({ length: 4 }).map((_, i) => (

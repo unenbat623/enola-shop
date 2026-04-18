@@ -16,10 +16,8 @@ export default function Newsletter() {
 
   return (
     <section className="py-24 md:py-40 bg-brand-ink overflow-hidden relative">
-      {/* Abstract background blobs */}
       <div className="absolute top-0 left-0 w-96 h-96 bg-brand-surface opacity-5 blur-[100px] rounded-full translate-x-[-50%] translate-y-[-50%]" />
       <div className="absolute bottom-0 right-0 w-96 h-96 bg-brand-surface opacity-5 blur-[100px] rounded-full translate-x-[50%] translate-y-[50%]" />
-
       <div className="max-w-7xl mx-auto px-4 relative z-10">
         <div className="flex flex-col items-center text-center gap-10 max-w-3xl mx-auto">
           <motion.div 
@@ -29,7 +27,6 @@ export default function Newsletter() {
           >
             <Mail className="w-8 h-8" />
           </motion.div>
-          
           <div className="space-y-4">
             <motion.h2 
               initial={{ opacity: 0, y: 20 }}
@@ -47,7 +44,6 @@ export default function Newsletter() {
               Шинэ цуглуулга, хямдрал болон онцгой урамшууллын мэдээллийг цаг алдалгүй и-мэйлээрээ аваарай.
             </motion.p>
           </div>
-
           <motion.form 
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
@@ -73,7 +69,6 @@ export default function Newsletter() {
               БҮРТГҮҮЛЭХ <Send className="w-4 h-4" />
             </button>
           </motion.form>
-
           <p className="text-[10px] text-brand-ghost font-bold uppercase tracking-[2px] opacity-40">
             Бид таны хувийн нууцыг хүндэтгэнэ · Хэзээ ч цуцлах боломжтой
           </p>

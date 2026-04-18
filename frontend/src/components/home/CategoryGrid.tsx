@@ -12,7 +12,7 @@ export default function CategoryGrid() {
             whileInView={{ opacity: 1 }}
             className="text-[12px] font-black text-brand-hint tracking-[6px] uppercase"
           >
-            Categories
+            Ангилал
           </motion.span>
           <motion.h2 
             initial={{ opacity: 0, y: 20 }}

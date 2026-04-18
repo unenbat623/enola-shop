@@ -7,10 +7,9 @@ export default function BrandCarousel() {
     <section className="py-24 border-y border-brand-border bg-brand-base overflow-hidden">
       <div className="max-w-7xl mx-auto px-4 mb-16 text-center">
         <span className="text-brand-hint font-medium normal-case tracking-[2px] text-[10px]">
-          Verified partners
+          Баталгаат хамтрагчид
         </span>
       </div>
-
       <div style={{ display: 'flex', overflow: 'hidden', width: '100%' }}>
         <div
           style={{
@@ -53,7 +52,6 @@ export default function BrandCarousel() {
           ))}
         </div>
       </div>
-
       <style>{`
         @keyframes marquee {
           0%   { transform: translateX(0); }
