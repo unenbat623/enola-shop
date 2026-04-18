@@ -22,7 +22,7 @@ export function Button({ children, isLoading, className, disabled, ...props }: B
           <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
         </div>
       )}
-      <span className={cn(isLoading && "opacity-0")}>
+      <span className={cn("flex items-center gap-2", isLoading && "opacity-0")}>
         {children}
       </span>
     </button>
