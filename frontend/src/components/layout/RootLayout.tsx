@@ -5,6 +5,7 @@ import Footer from './Footer'
 import CartDrawer from '../common/CartDrawer'
 import { Outlet, useLocation } from 'react-router'
 import { Toaster } from '../common/Toast'
+import ScrollToTop from '../common/ScrollToTop'
 import { useProductStore } from '@/store/productStore'
 import { useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
@@ -19,6 +20,7 @@ export default function RootLayout() {
 
   return (
     <div className="flex flex-col min-h-screen">
+      <ScrollToTop />
       <TopBar />
       <Header />
       <Navbar />
