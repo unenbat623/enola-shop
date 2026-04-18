@@ -10,5 +10,11 @@ export const authApi = {
   },
   getMe: async () => {
     return get<{ user: User }>('/api/auth/me')
+  },
+  forgotPassword: async (email: string) => {
+    return post<{ message: string }>('/api/auth/forgot-password', { email })
+  },
+  resetPassword: async (token: string, newPassword: string) => {
+    return post<AuthResponse>('/api/auth/reset-password', { token, newPassword })
   }
 }

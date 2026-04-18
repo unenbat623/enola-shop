@@ -15,6 +15,8 @@ import RegisterPage from '@/pages/Register'
 import AuthCallback from '@/pages/AuthCallback'
 import OrdersPage from '@/pages/Orders'
 import OrderDetailPage from '@/pages/OrderDetail'
+import ForgotPasswordPage from '@/pages/ForgotPassword'
+import ResetPasswordPage from '@/pages/ResetPassword'
 
 // Admin Pages
 import AdminDashboard from '@/admin/pages/Dashboard'
@@ -44,6 +46,8 @@ export default function AppRouter() {
         <Route path="/register" element={<RegisterPage />} />
         <Route path="/auth/callback" element={<AuthCallback />} />
         <Route path="/orders/:id" element={<ProtectedRoute><OrderDetailPage /></ProtectedRoute>} />
+        <Route path="/forgot-password" element={<ForgotPasswordPage />} />
+        <Route path="/reset-password" element={<ResetPasswordPage />} />
       </Route>
       
       <Route path="/admin" element={<AdminRoute />}>

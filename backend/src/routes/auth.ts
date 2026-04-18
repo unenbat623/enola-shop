@@ -4,6 +4,8 @@ import jwt from 'jsonwebtoken'
 import User from '../models/User'
 import { authMiddleware, HonoVariables } from '../lib/auth'
 import { googleAuth } from '@hono/oauth-providers/google'
+import crypto from 'crypto'
+import { sendResetPasswordEmail } from '../lib/email'
 
 const auth = new Hono<HonoVariables>()
 
@@ -136,6 +138,72 @@ auth.get('/google', (c, next) => {
   } catch (error) {
     console.error('Google Auth Error:', error)
     return c.redirect(`${frontendUrl}/login?error=server_error`)
+  }
+})
+
+auth.post('/forgot-password', async (c) => {
+  try {
+    const { email } = await c.req.json()
+    const user = await User.findOne({ email })
+    
+    if (!user) {
+      return c.json({ error: 'Хэрэглэгч олдсонгүй' }, 404)
+    }
+
+    const rawToken = crypto.randomBytes(32).toString('hex')
+    const hashedToken = crypto.createHash('sha256').update(rawToken).digest('hex')
+
+    user.resetPasswordToken = hashedToken
+    user.resetPasswordExpire = new Date(Date.now() + 10 * 60 * 1000)
+    await user.save()
+
+    const resetUrl = `${getFrontendUrl()}/reset-password?token=${rawToken}`
+    
+    try {
+      await sendResetPasswordEmail(user.email, resetUrl)
+      return c.json({ message: 'Имэйл илгээлээ, шалгана уу' })
+    } catch (err: any) {
+      user.resetPasswordToken = undefined
+      user.resetPasswordExpire = undefined
+      await user.save()
+      console.error('Email error:', err)
+      return c.json({ error: 'Имэйл илгээхэд алдаа гарлаа' }, 500)
+    }
+  } catch (error: any) {
+    return c.json({ error: error.message }, 500)
+  }
+})
+
+auth.post('/reset-password', async (c) => {
+  try {
+    const { token, newPassword } = await c.req.json()
+    
+    const hashedToken = crypto.createHash('sha256').update(token).digest('hex')
+    
+    const user = await User.findOne({
+      resetPasswordToken: hashedToken,
+      resetPasswordExpire: { $gt: Date.now() }
+    }).select('+resetPasswordToken +resetPasswordExpire')
+
+    if (!user) {
+      return c.json({ error: 'Хүчингүй эсвэл хугацаа нь дууссан token' }, 400)
+    }
+
+    const salt = await bcrypt.genSalt(10)
+    user.password = await bcrypt.hash(newPassword, salt)
+    user.resetPasswordToken = undefined
+    user.resetPasswordExpire = undefined
+    await user.save()
+
+    const newToken = jwt.sign(
+      { id: user._id, role: user.role },
+      JWT_SECRET,
+      { expiresIn: '30d' }
+    )
+
+    return c.json({ token: newToken, user })
+  } catch (error: any) {
+    return c.json({ error: error.message }, 500)
   }
 })
 

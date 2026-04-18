@@ -86,7 +86,7 @@ export default function LoginForm() {
             <input type="checkbox" className="w-4 h-4 border-brand-border rounded accent-brand-ink" id="remember" />
             <label htmlFor="remember" className="text-[12px] text-brand-sub font-normal cursor-pointer">Сануулах</label>
           </div>
-          <button type="button" className="text-[12px] text-brand-ink font-medium hover:underline">Мартсан?</button>
+          <Link to="/forgot-password" type="button" className="text-[12px] text-brand-ink font-medium hover:underline">Мартсан?</Link>
         </div>
 
         <Button 
