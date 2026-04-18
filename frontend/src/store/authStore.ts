@@ -1,6 +1,8 @@
 import { create } from 'zustand'
 import { User, LoginCredentials, RegisterCredentials } from '../lib/types'
 import { authApi } from '../api/auth'
+import { useCartStore } from './cartStore'
+import { useWishlistStore } from './wishlistStore'
 
 interface AuthState {
   user: User | null
@@ -50,12 +52,16 @@ export const useAuthStore = create<AuthState>((set) => ({
 
   logout: () => {
     localStorage.removeItem('token')
+    useCartStore.getState().clearCart()
+    useWishlistStore.getState().clearCart ? useWishlistStore.getState().clearCart() : useWishlistStore.setState({ items: [] })
     set({ user: null, token: null, isAuthenticated: false })
   },
 
   initAuth: async () => {
     const token = localStorage.getItem('token')
     if (!token) {
+      useCartStore.getState().clearCart()
+      useWishlistStore.getState().clearCart()
       set({ isLoading: false, isAuthenticated: false })
       return
     }

@@ -64,6 +64,11 @@ export default function ProductDetail() {
   const isWishlisted = isInWishlist(product.id)
 
   const handleAddToCart = () => {
+    if (!user) {
+      toast.error('Сагсанд нэмэхийн тулд нэвтэрнэ үү')
+      navigate('/login')
+      return
+    }
     if (product.sizes?.length && !selectedSize) {
       toast.error('Хэмжээ сонгоно уу')
       return

@@ -36,6 +36,11 @@ export default function ProductCard({ product }: Props) {
   const handleAdd = (e: React.MouseEvent) => {
     e.preventDefault()
     e.stopPropagation()
+    if (!user) {
+      toast.error('Сагсанд нэмэхийн тулд нэвтэрнэ үү')
+      navigate('/login')
+      return
+    }
     addItem(product)
     toast.success(`"${product.name}" сагсанд нэмэгдлээ.`)
     toggleCart(true)
