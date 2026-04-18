@@ -109,7 +109,7 @@ export default function LoginPage() {
           <div className="space-y-2">
             <div className="flex justify-between items-center ml-1">
               <label className="text-[10px] font-black text-brand-hint uppercase tracking-[2px]">Нууц үг</label>
-              <Link to="/forgot-password" name="forgot-password" className="text-[10px] font-bold text-brand-ink hover:underline tracking-tight uppercase">Нууц үг мартсан?</Link>
+              <Link to="/forgot-password" className="text-[10px] font-bold text-brand-ink hover:underline tracking-tight uppercase">Нууц үг мартсан?</Link>
             </div>
             <div className="relative group">
               <Lock className="absolute left-4 top-1/2 -translate-y-1/2 w-4.5 h-4.5 text-brand-hint group-focus-within:text-brand-ink transition-colors" />
