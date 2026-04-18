@@ -1,55 +1,55 @@
-import { useMemo } from 'react'
 import { motion } from 'framer-motion'
 import { Link } from 'react-router'
 import { categories } from '@/lib/constants'
-import { Category } from '@/lib/types'
-import { useProductStore } from '@/store/productStore'
 
 export default function CategoryGrid() {
-  const { products } = useProductStore()
-
-  const categoryCounts = useMemo(() => {
-    const counts: Record<string, number> = {}
-    products.forEach(p => {
-      counts[p.categorySlug] = (counts[p.categorySlug] || 0) + 1
-    })
-    return counts
-  }, [products])
-
   return (
-    <section className="py-24 bg-brand-base">
-      <div className="max-w-7xl mx-auto px-4">
-        <div className="flex justify-between items-end mb-16 px-2">
-          <div className="space-y-4">
-            <span className="text-brand-hint font-medium normal-case tracking-[2px] text-[10px]">Загвараар сонгох</span>
-            <h2 className="text-3xl md:text-4xl font-normal text-brand-ink tracking-tight normal-case">Ангилал</h2>
-          </div>
-          <Link to="/shop" className="text-[11px] font-medium text-brand-sub hover:text-brand-ink transition-colors pb-2 border-b border-transparent hover:border-brand-ink normal-case">Бүгдийг харах →</Link>
+    <section className="py-24 md:py-32 bg-brand-base">
+      <div className="max-w-[1440px] mx-auto px-4 md:px-10">
+        <div className="flex flex-col items-center text-center gap-4 mb-20">
+          <motion.span 
+            initial={{ opacity: 0 }}
+            whileInView={{ opacity: 1 }}
+            className="text-[12px] font-black text-brand-hint tracking-[6px] uppercase"
+          >
+            Categories
+          </motion.span>
+          <motion.h2 
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            className="text-4xl md:text-5xl font-normal text-brand-ink uppercase tracking-[4px]"
+          >
+            Ангиллаар үзэх
+          </motion.h2>
+          <motion.div 
+            initial={{ width: 0 }}
+            whileInView={{ width: 80 }}
+            className="h-1 bg-brand-ink mt-2"
+          />
         </div>
 
-        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-0 border-l border-t border-brand-border">
-          {categories.map((cat: Category, i: number) => (
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-6 md:gap-10">
+          {categories.map((cat, i) => (
             <motion.div
               key={cat.id}
-              initial={{ opacity: 0 }}
-              whileInView={{ opacity: 1 }}
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ delay: i * 0.1 }}
               viewport={{ once: true }}
-              transition={{ delay: i * 0.05 }}
             >
-              <Link
+              <Link 
                 to={`/shop?category=${cat.slug}`}
-                className="group flex flex-col items-center gap-6 p-10 border-r border-b border-brand-border bg-white hover:bg-brand-surface transition-all duration-300 relative overflow-hidden"
+                className="flex flex-col items-center gap-6 group"
               >
-                <div className="text-4xl transition-transform duration-500 group-hover:scale-110 z-10 grayscale-[0.5] group-hover:grayscale-0">
+                <div className="w-24 h-24 md:w-32 md:h-32 rounded-full bg-brand-surface border border-brand-border flex items-center justify-center text-4xl md:text-5xl transition-all duration-500 group-hover:bg-brand-ink group-hover:text-white group-hover:scale-110 shadow-lg group-hover:shadow-brand-ink/20">
                   {cat.icon}
                 </div>
-                <div className="text-center space-y-1.5 z-10">
-                  <h3 className="font-normal text-[13px] text-brand-ink group-hover:text-brand-ink transition-colors normal-case">{cat.name}</h3>
-                  <p className="text-[9px] text-brand-hint font-medium normal-case tracking-[1.5px] opacity-70 group-hover:opacity-100">
-                    {categoryCounts[cat.slug] || 0} БАРАА
-                  </p>
+                <div className="space-y-1 text-center">
+                  <h3 className="text-[13px] md:text-[15px] font-black text-brand-ink uppercase tracking-widest transition-colors group-hover:text-brand-ink2">
+                    {cat.name}
+                  </h3>
+                  <p className="text-[10px] md:text-[11px] font-bold text-brand-hint uppercase tracking-[1.5px] opacity-0 group-hover:opacity-100 transition-opacity">Үзэх</p>
                 </div>
-                <div className="absolute inset-0 bg-brand-ink/0 group-hover:bg-brand-ink/[0.01] transition-colors" />
               </Link>
             </motion.div>
           ))}

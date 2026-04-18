@@ -1,5 +1,5 @@
 import { motion, AnimatePresence } from 'framer-motion'
-import { X, ShoppingBag, Trash2, Plus, Minus } from 'lucide-react'
+import { X, ShoppingBag, Trash2, Plus, Minus, ArrowRight } from 'lucide-react'
 import { useCartStore } from '@/store/cartStore'
 import { useUIStore } from '@/store/uiStore'
 import { formatCurrency } from '@/lib/utils'
@@ -16,121 +16,139 @@ export default function CartDrawer() {
           {/* Overlay */}
           <motion.div
             initial={{ opacity: 0 }}
-            animate={{ opacity: 0.5 }}
+            animate={{ opacity: 0.6 }}
             exit={{ opacity: 0 }}
-            transition={{ duration: 0.3 }}
+            transition={{ duration: 0.4 }}
             onClick={() => toggleCart(false)}
-            className="fixed inset-0 bg-brand-ink/50 backdrop-blur-[1px] z-[200] cursor-pointer"
+            className="fixed inset-0 bg-brand-ink/40 backdrop-blur-[4px] z-[200] cursor-pointer"
           />
 
           {/* Drawer */}
             <motion.div
-              initial={{ x: '100%' }}
-              animate={{ x: 0 }}
-              exit={{ x: '100%' }}
-              transition={{ duration: 0.3, ease: 'easeOut' }}
-              className="fixed top-0 right-0 h-full w-full max-w-[420px] bg-brand-base z-[201] flex flex-col border-l border-brand-border shadow-2xl"
+              initial={{ x: '100%', opacity: 0.5 }}
+              animate={{ x: 0, opacity: 1 }}
+              exit={{ x: '100%', opacity: 0.5 }}
+              transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
+              className="fixed top-0 right-0 h-full w-full max-w-[480px] bg-brand-base z-[201] flex flex-col border-l border-brand-border shadow-[-20px_0_60px_-15px_rgba(0,0,0,0.1)] overflow-hidden"
             >
               {/* Header */}
-              <div className="flex items-center justify-between p-6 border-b border-brand-border">
-                <div className="flex items-center gap-3">
-                  <h2 className="text-[15px] font-normal text-brand-ink normal-case tracking-[2px]">Миний сагс</h2>
-                  <span className="bg-brand-muted text-[10px] font-bold px-2 py-0.5 rounded-full text-brand-sub">
+              <div className="flex items-center justify-between p-8 border-b border-brand-border bg-white">
+                <div className="flex items-center gap-4">
+                  <h2 className="text-[16px] font-black text-brand-ink uppercase tracking-[3px]">Миний сагс</h2>
+                  <span className="bg-brand-ink text-[10px] font-black px-2.5 py-0.5 rounded-full text-white shadow-lg">
                     {items.length}
                   </span>
                 </div>
                 <button 
                   onClick={() => toggleCart(false)}
-                  className="p-2 hover:bg-brand-surface rounded-full transition-colors cursor-pointer text-brand-sub"
+                  className="w-10 h-10 border border-brand-border rounded-full flex items-center justify-center hover:bg-brand-surface transition-all active:scale-90"
                 >
                   <X className="w-5 h-5" />
                 </button>
               </div>
 
               {/* List */}
-              <div className="flex-1 overflow-y-auto p-6 space-y-4 custom-scrollbar">
+              <div className="flex-1 overflow-y-auto p-8 space-y-6 custom-scrollbar">
                 {items.length === 0 ? (
-                  <div className="h-full flex flex-col items-center justify-center text-center space-y-4">
-                    <div className="w-16 h-16 bg-brand-surface border border-brand-border rounded-full flex items-center justify-center text-brand-ghost">
-                      <ShoppingBag className="w-6 h-6" />
+                  <div className="h-full flex flex-col items-center justify-center text-center gap-6">
+                    <div className="w-24 h-24 bg-brand-surface border border-brand-border rounded-full flex items-center justify-center text-brand-ghost shadow-inner">
+                      <ShoppingBag className="w-8 h-8" />
                     </div>
-                    <p className="text-brand-sub text-[13px]">Сагс хоосон байна</p>
+                    <div className="space-y-2">
+                       <p className="text-brand-ink font-black text-[15px] uppercase tracking-widest">Таны сагс хоосон байна</p>
+                       <p className="text-brand-sub text-[13px] font-medium">Шинэ цуглуулгаас сонголт хийгээрэй.</p>
+                    </div>
                     <Link 
                       to="/shop" 
                       onClick={() => toggleCart(false)}
-                      className="text-brand-ink text-[12px] font-medium tracking-wider normal-case border-b border-brand-ink"
+                      className="text-brand-ink text-[12px] font-black tracking-[2px] uppercase border-b border-brand-ink pb-1 hover:opacity-70 transition-opacity"
                     >
-                      Дэлгүүр рүү буцах
+                      Дэлгүүр хэсэх
                     </Link>
                   </div>
                 ) : (
-                  items.map((item) => (
-                    <div key={`${item.id}-${item.selectedSize}-${item.selectedColor}`} className="flex gap-4 py-4 border-b border-brand-border last:border-0 group">
-                      <div className="w-20 h-24 bg-brand-surface rounded-[6px] overflow-hidden flex-shrink-0 border border-brand-border">
-                        <img src={item.images[0]} alt={item.name} className="w-full h-full object-cover opacity-90 group-hover:opacity-100 transition-all duration-300" loading="lazy" />
-                      </div>
-                      <div className="flex-1 flex flex-col justify-between">
-                        <div className="space-y-1">
-                          <h3 className="text-[13px] font-normal text-brand-ink line-clamp-1">{item.name}</h3>
-                          {(item.selectedSize || item.selectedColor) && (
-                            <p className="text-[10px] text-brand-sub font-medium uppercase tracking-wider">
-                              {item.selectedSize && `Хэмжээ: ${item.selectedSize}`}
-                              {item.selectedSize && item.selectedColor && ' | '}
-                              {item.selectedColor && `Өнгө: ${item.selectedColor}`}
-                            </p>
-                          )}
-                          <p className="text-brand-ink font-medium text-[13px]">{formatCurrency(item.price)}</p>
+                  <AnimatePresence mode="popLayout">
+                    {items.map((item) => (
+                      <motion.div 
+                        layout
+                        key={`${item.id}-${item.selectedSize}-${item.selectedColor}`} 
+                        initial={{ opacity: 0, x: 20 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        exit={{ opacity: 0, x: 20 }}
+                        className="flex gap-6 py-6 border-b border-brand-border last:border-0 group"
+                      >
+                        <div className="w-24 h-32 bg-brand-surface rounded-[12px] overflow-hidden flex-shrink-0 border border-brand-border shadow-sm">
+                          <img src={item.images[0]} alt={item.name} className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" loading="lazy" />
                         </div>
-                        <div className="flex items-center justify-between mt-auto">
-                          <div className="flex items-center border border-brand-border rounded-[4px] bg-brand-surface">
-                            <button 
-                              onClick={() => updateQuantity(item.id, item.quantity - 1, item.selectedSize, item.selectedColor)}
-                              className="p-1 px-2 hover:text-brand-ink transition-colors cursor-pointer text-brand-hint"
-                            >
-                              <Minus className="w-3 h-3" />
-                            </button>
-                            <span className="w-6 text-center text-[12px] font-medium text-brand-ink">{item.quantity}</span>
-                            <button 
-                              onClick={() => updateQuantity(item.id, item.quantity + 1, item.selectedSize, item.selectedColor)}
-                              className="p-1 px-2 hover:text-brand-ink transition-colors cursor-pointer text-brand-hint"
-                            >
-                              <Plus className="w-3 h-3" />
-                            </button>
+                        <div className="flex-1 flex flex-col justify-between py-1">
+                          <div className="space-y-1.5">
+                            <div className="flex justify-between items-start gap-4">
+                               <h3 className="text-[14px] font-bold text-brand-ink leading-tight line-clamp-2">{item.name}</h3>
+                               <button 
+                                onClick={() => removeItem(item.id, item.selectedSize, item.selectedColor)}
+                                className="text-brand-hint hover:text-brand-danger transition-colors p-1"
+                               >
+                                <Trash2 className="w-4 h-4" />
+                               </button>
+                            </div>
+                            {(item.selectedSize || item.selectedColor) && (
+                              <div className="flex flex-wrap gap-2 pt-1">
+                                {item.selectedSize && <span className="text-[10px] font-black text-brand-sub uppercase bg-brand-surface px-2 py-0.5 rounded border border-brand-border">{item.selectedSize}</span>}
+                                {item.selectedColor && <span className="text-[10px] font-black text-brand-sub uppercase bg-brand-surface px-2 py-0.5 rounded border border-brand-border">{item.selectedColor}</span>}
+                              </div>
+                            )}
+                            <p className="text-brand-ink font-black text-[15px] pt-1">{formatCurrency(item.price)}</p>
                           </div>
-                          <button 
-                            onClick={() => removeItem(item.id, item.selectedSize, item.selectedColor)}
-                            className="text-brand-hint hover:text-brand-ink transition-colors p-1"
-                          >
-                            <Trash2 className="w-4 h-4" />
-                          </button>
+                          
+                          <div className="flex items-center justify-between">
+                            <div className="flex items-center border border-brand-border rounded-[8px] bg-brand-surface h-9 shadow-sm overflow-hidden">
+                              <button 
+                                onClick={() => updateQuantity(item.id, item.quantity - 1, item.selectedSize, item.selectedColor)}
+                                className="w-8 h-full flex items-center justify-center hover:bg-white text-brand-hint hover:text-brand-ink transition-all active:scale-90"
+                              >
+                                <Minus className="w-3.5 h-3.5" />
+                              </button>
+                              <span className="w-8 text-center text-[12px] font-black text-brand-ink">{item.quantity}</span>
+                              <button 
+                                onClick={() => updateQuantity(item.id, item.quantity + 1, item.selectedSize, item.selectedColor)}
+                                className="w-8 h-full flex items-center justify-center hover:bg-white text-brand-hint hover:text-brand-ink transition-all active:scale-90"
+                              >
+                                <Plus className="w-3.5 h-3.5" />
+                              </button>
+                            </div>
+                            <span className="text-[12px] font-black text-brand-sub">{formatCurrency(item.price * item.quantity)}</span>
+                          </div>
                         </div>
-                      </div>
-                    </div>
-                  ))
+                      </motion.div>
+                    ))}
+                  </AnimatePresence>
                 )}
               </div>
 
               {/* Footer */}
               {items.length > 0 && (
-                <div className="p-8 border-t border-brand-border bg-brand-base space-y-6">
-                  <div className="flex justify-between items-center">
-                    <span className="text-brand-sub font-normal text-[11px] normal-case tracking-wider">Дүн:</span>
-                    <span className="text-[16px] font-medium text-brand-ink">{formatCurrency(totalPrice())}</span>
+                <div className="p-8 md:p-10 border-t border-brand-border bg-white space-y-8 shadow-[0_-10px_40px_-15px_rgba(0,0,0,0.05)]">
+                  <div className="flex justify-between items-end">
+                    <div className="space-y-1">
+                       <span className="text-brand-hint font-black text-[10px] uppercase tracking-[2px]">Нийт төлөх дүн:</span>
+                       <p className="text-brand-ink font-medium text-[14px]">Татвар болон хүргэлт тооцогдсон</p>
+                    </div>
+                    <span className="text-[28px] font-black text-brand-ink tracking-tight">{formatCurrency(totalPrice())}</span>
                   </div>
-                  <div className="flex flex-col gap-3">
+                  <div className="flex flex-col gap-4">
                     <Link 
                       to="/checkout"
                       onClick={() => toggleCart(false)}
-                      className="w-full h-12 bg-brand-ink text-brand-base flex items-center justify-center rounded-[6px] font-medium text-[12px] tracking-[1.5px] hover:bg-brand-ink2 transition-all normal-case"
+                      className="group w-full h-14 bg-brand-ink text-brand-base flex items-center justify-center rounded-[12px] font-black text-[13px] tracking-[2.5px] hover:bg-brand-ink2 transition-all uppercase shadow-2xl shadow-brand-ink/20"
                     >
-                      Захиалга өгөх
+                      Захиалга өгөх <ArrowRight className="w-5 h-5 ml-2 group-hover:translate-x-1 transition-transform" />
                     </Link>
                     <Link 
                       to="/cart" 
                       onClick={() => toggleCart(false)}
-                      className="flex items-center justify-center bg-transparent border border-brand-border h-12 rounded-[6px] font-medium text-[11px] tracking-wider text-brand-sub normal-case hover:bg-brand-surface transition-all"
+                      className="flex items-center justify-center bg-transparent border-2 border-brand-border h-14 rounded-[12px] font-black text-[12px] tracking-[2px] text-brand-sub uppercase hover:border-brand-ink hover:text-brand-ink transition-all"
                     >
-                      Сагс харах
+                      Сагс дэлгэрэнгүй
                     </Link>
                   </div>
                 </div>
