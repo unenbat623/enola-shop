@@ -1,4 +1,4 @@
-import { MapPin, Phone, Mail, Instagram, Facebook, Twitter } from 'lucide-react'
+import { MapPin, Phone, Mail } from 'lucide-react'
 import { Link } from 'react-router'
 
 export default function Footer() {
@@ -15,7 +15,7 @@ export default function Footer() {
               Төгс Streetwear туршлага. Бид загварын ирээдүйг зоригтой шийдэл, хамгийн сайн чанартайгаар тодорхойлж байна.
             </p>
             <div className="flex items-center gap-5">
-              {[Instagram, Facebook, Twitter].map((Icon, i) => (
+              {[Mail, Phone, MapPin].map((Icon, i) => (
                 <a key={i} href="#" className="w-10 h-10 rounded-full border border-[#2a2420] flex items-center justify-center text-[#a8a29e] hover:text-brand-surface hover:border-brand-surface transition-all">
                   <Icon className="w-4 h-4" />
                 </a>

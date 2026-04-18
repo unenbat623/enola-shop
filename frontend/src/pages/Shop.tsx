@@ -7,6 +7,7 @@ import { useState, useMemo, useEffect, useRef } from 'react'
 import { ShoppingBag, Search, SlidersHorizontal, ChevronLeft, ChevronRight, ChevronDown, FilterX } from 'lucide-react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { SkeletonCard } from '@/components/common/SkeletonCard'
+import { cn } from '@/lib/utils'
 
 const ITEMS_PER_PAGE = 12
 
