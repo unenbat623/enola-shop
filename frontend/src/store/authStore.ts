@@ -14,6 +14,7 @@ interface AuthState {
   initAuth: () => Promise<void>
   setToken: (token: string) => Promise<void>
   fetchMe: () => Promise<void>
+  setUser: (user: User) => void
 }
 
 export const useAuthStore = create<AuthState>((set) => ({
@@ -103,5 +104,8 @@ export const useAuthStore = create<AuthState>((set) => ({
       set({ user: null, token: null, isAuthenticated: false, isLoading: false, error: error.message })
       throw error
     }
+  },
+  setUser: (user: User) => {
+    set({ user, isAuthenticated: true, isLoading: false })
   }
 }))
