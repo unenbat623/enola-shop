@@ -14,18 +14,17 @@ export default function Header() {
   const navigate = useNavigate()
   const [searchValue, setSearchValue] = useState('')
 
-  const handleSearchChange = (val: string) => {
-    setSearchValue(val)
-    if (val.length >= 2) {
-      navigate(`/shop?search=${encodeURIComponent(val)}`)
-    } else if (val.length === 0) {
+  const handleSearchTrigger = () => {
+    if (searchValue.trim()) {
+      navigate(`/shop?search=${encodeURIComponent(searchValue.trim())}`)
+    } else {
       navigate('/shop')
     }
   }
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
-    if (e.key === 'Enter' && searchValue.length >= 2) {
-      navigate(`/shop?search=${encodeURIComponent(searchValue)}`)
+    if (e.key === 'Enter') {
+      handleSearchTrigger()
     }
   }
 
@@ -39,15 +38,18 @@ export default function Header() {
 
         {/* Search */}
         <div className="hidden md:flex flex-1 max-w-md mx-8">
-          <div className="relative w-full">
-            <span className="absolute left-3 top-1/2 -translate-y-1/2 text-brand-hint">
-              <Search className="w-4 h-4 cursor-default" />
-            </span>
+          <div className="relative w-full text-brand-hint focus-within:text-brand-ink transition-colors">
+            <button 
+              onClick={handleSearchTrigger}
+              className="absolute left-3 top-1/2 -translate-y-1/2 p-1 hover:bg-brand-surface rounded-full transition-all cursor-pointer"
+            >
+              <Search className="w-4 h-4" />
+            </button>
             <input
               type="text"
               placeholder="Бүтээгдэхүүн хайх..."
               value={searchValue}
-              onChange={(e) => handleSearchChange(e.target.value)}
+              onChange={(e) => setSearchValue(e.target.value)}
               onKeyDown={handleKeyDown}
               className="w-full h-10 bg-brand-surface border border-brand-border rounded-[6px] pl-10 pr-4 outline-none focus:border-brand-ink transition-all text-sm text-brand-ink placeholder:text-brand-hint"
             />
@@ -108,15 +110,18 @@ export default function Header() {
       
       {/* Mobile Search */}
       <div className="md:hidden px-4 pb-3">
-        <div className="relative">
-          <span className="absolute left-3 top-1/2 -translate-y-1/2 text-brand-hint">
+        <div className="relative text-brand-hint focus-within:text-brand-ink transition-colors">
+          <button 
+            onClick={handleSearchTrigger}
+            className="absolute left-3 top-1/2 -translate-y-1/2 p-1 hover:bg-white rounded-full transition-all cursor-pointer"
+          >
             <Search className="w-4 h-4" />
-          </span>
+          </button>
           <input
             type="text"
             placeholder="Хайх..."
             value={searchValue}
-            onChange={(e) => handleSearchChange(e.target.value)}
+            onChange={(e) => setSearchValue(e.target.value)}
             onKeyDown={handleKeyDown}
             className="w-full h-10 border border-brand-border bg-brand-surface pl-10 pr-4 outline-none text-sm text-brand-ink rounded-[6px] focus:border-brand-ink"
           />
