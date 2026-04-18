@@ -40,6 +40,16 @@ app.route('/api/users', userRoutes)
 app.route('/api/seed', seedRoutes)
 app.route('/api/upload', uploadRoutes)
 
+app.get('/auth/callback', (c) => {
+  const token = c.req.query('token')
+  const frontendUrl = process.env.FRONTEND_URL || 'https://enola-shop.pages.dev'
+  if (!token) return c.json({ error: 'Token missing' }, 400)
+  
+  // Clean end slash and redirect to frontend
+  const cleanFrontendUrl = frontendUrl.replace(/\/$/, '')
+  return c.redirect(`${cleanFrontendUrl}/auth/callback?token=${token}`)
+})
+
 app.get('/', (c) => c.text('Enola Shop API is running'))
 
 const PORT = Number(process.env.PORT) || 3000
