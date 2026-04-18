@@ -17,6 +17,7 @@ import OrdersPage from '@/pages/Orders'
 import OrderDetailPage from '@/pages/OrderDetail'
 import ForgotPasswordPage from '@/pages/ForgotPassword'
 import ResetPasswordPage from '@/pages/ResetPassword'
+import NotFoundPage from '@/pages/NotFound'
 
 // Admin Pages
 import AdminDashboard from '@/admin/pages/Dashboard'
@@ -60,7 +61,7 @@ export default function AppRouter() {
         </Route>
       </Route>
       
-      <Route path="*" element={<div className="py-40 text-center font-black text-4xl">404 - Хуудас олдсонгүй</div>} />
+      <Route path="*" element={<NotFoundPage />} />
     </Routes>
   )
 }

@@ -1,133 +1,125 @@
 import { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { heroSlides } from '@/lib/constants'
+import { ChevronLeft, ChevronRight, ArrowRight } from 'lucide-react'
 import { Link } from 'react-router'
-import { cn } from '@/lib/utils'
+
+const slides = [
+  {
+    id: 1,
+    image: 'https://images.unsplash.com/photo-1552374196-1ab2a1c593e8?auto=format&fit=crop&q=80&w=2000',
+    title: 'STREETWEAR\nCOLLECTION',
+    subtitle: 'ШИНЭ ЦУГЛУУЛГА 2025',
+    description: 'Өөрийн хэв маягийг тодорхойлох цаг боллоо. Хамгийн сүүлийн үеийн тренд загваруудыг эндээс.',
+    buttonText: 'ОДОО ҮЗЭХ',
+    link: '/shop'
+  },
+  {
+    id: 2,
+    image: 'https://images.unsplash.com/photo-1509631179647-0177331693ae?auto=format&fit=crop&q=80&w=2000',
+    title: 'THE ART OF\nSTYLE',
+    subtitle: 'PREMIUM QUALITY',
+    description: 'Материал болон хийцлэлийн дээд зэргийн чанарыг мэдэр. Биднийг сонгосон танд баярлалаа.',
+    buttonText: 'ДЭЛГҮҮР ХЭСЭХ',
+    link: '/shop'
+  }
+]
 
 export default function HeroSlider() {
   const [current, setCurrent] = useState(0)
-  const [direction, setDirection] = useState(0)
-
-  const slideNext = () => {
-    setDirection(1)
-    setCurrent((prev) => (prev + 1) % heroSlides.length)
-  }
 
   useEffect(() => {
-    const timer = setInterval(slideNext, 5000)
+    const timer = setInterval(() => {
+      setCurrent((prev) => (prev === slides.length - 1 ? 0 : prev + 1))
+    }, 8000)
     return () => clearInterval(timer)
   }, [])
 
+  const nextSlide = () => setCurrent((prev) => (prev === slides.length - 1 ? 0 : prev + 1))
+  const prevSlide = () => setCurrent((prev) => (prev === 0 ? slides.length - 1 : prev - 1))
+
   return (
-    <div className="relative">
-      <div className="relative h-[500px] md:h-[650px] bg-brand-base overflow-hidden border-b border-brand-border">
-        <AnimatePresence initial={false} custom={direction} mode="wait">
-          <motion.div
-            key={heroSlides[current].id}
-            custom={direction}
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 0.8 }}
-            className={cn(
-              "absolute inset-0 flex items-center",
-              current === 0 ? "bg-brand-surface" : "bg-brand-muted"
-            )}
-          >
-            <div className="max-w-7xl mx-auto px-4 w-full grid md:grid-cols-2 items-center gap-12">
-              <div className="space-y-6 md:space-y-8">
+    <section className="relative h-[60vh] md:h-[90vh] overflow-hidden bg-brand-surface">
+      <AnimatePresence mode="wait">
+        <motion.div
+          key={current}
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          transition={{ duration: 1.2, ease: "easeInOut" }}
+          className="absolute inset-0"
+        >
+          {/* Overlay */}
+          <div className="absolute inset-0 bg-brand-ink/40 z-10" />
+          <img 
+            src={slides[current].image} 
+            alt={slides[current].title}
+            className="w-full h-full object-cover"
+          />
+          
+          <div className="absolute inset-0 z-20 flex items-center">
+            <div className="max-w-7xl mx-auto px-4 md:px-8 w-full">
+              <div className="max-w-2xl space-y-6 md:space-y-10">
                 <motion.div
-                  initial={{ opacity: 0, y: 20 }}
+                  initial={{ opacity: 0, y: 30 }}
                   animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: 0.2 }}
+                  transition={{ delay: 0.3, duration: 0.8 }}
+                  className="space-y-4"
                 >
-                  <span className="text-brand-hint text-[11px] font-bold tracking-[2px] normal-case mb-4 block">
-                    {current === 0 ? "Шинэ цуглуулга" : "Үргэлж загварлаг"}
+                  <span className="inline-block text-[11px] md:text-[13px] font-black tracking-[4px] md:tracking-[6px] text-brand-surface uppercase">
+                    {slides[current].subtitle}
                   </span>
-                  <h1 className="text-[40px] md:text-[64px] font-normal text-brand-ink leading-[1.1] tracking-[1px] font-serif">
-                    {current === 0 ? (
-                      <>Хамгийн цэвэрхэн <br /> Элементүүд</>
-                    ) : (
-                      <>Үндсэн <br /> Капсул хувцаслалт</>
-                    )}
+                  <h1 className="text-4xl md:text-8xl font-normal text-white leading-[1.1] tracking-tight whitespace-pre-line">
+                    {slides[current].title}
                   </h1>
                 </motion.div>
-                
+
                 <motion.p
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  transition={{ delay: 0.3 }}
-                  className="text-brand-sub text-[14px] max-w-sm leading-relaxed"
+                  initial={{ opacity: 0, y: 30 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.5, duration: 0.8 }}
+                  className="text-brand-surface/80 text-sm md:text-lg max-w-lg leading-relaxed font-medium"
                 >
-                  {heroSlides[current].subtitle}
+                  {slides[current].description}
                 </motion.p>
-                
+
                 <motion.div
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  transition={{ delay: 0.4 }}
-                  className="flex gap-4 pt-4"
+                  initial={{ opacity: 0, y: 30 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.7, duration: 0.8 }}
                 >
-                  <Link
-                    to={heroSlides[current].buttonHref}
-                    className="inline-flex items-center justify-center h-12 px-10 bg-brand-ink text-brand-base font-medium text-[12px] tracking-[1.5px] rounded-[6px] hover:bg-brand-ink2 transition-all normal-case"
+                  <Link 
+                    to={slides[current].link}
+                    className="group inline-flex items-center gap-4 bg-white text-brand-ink px-8 md:px-12 py-4 md:py-6 rounded-full font-black text-[11px] md:text-[13px] tracking-[2px] md:tracking-[3px] uppercase hover:bg-brand-ink hover:text-white transition-all transform hover:scale-105 shadow-2xl"
                   >
-                    Дэлгүүр орох
+                    {slides[current].buttonText} <ArrowRight className="w-5 h-5 group-hover:translate-x-2 transition-transform" />
                   </Link>
-                  <Link
-                    to="/shop"
-                    className="inline-flex items-center justify-center h-12 px-10 border border-brand-border text-brand-sub font-medium text-[12px] tracking-[1.5px] rounded-[6px] hover:border-brand-sub hover:text-brand-ink transition-all normal-case"
-                  >Бүгдийг харах</Link>
-                </motion.div>
-              </div>
-              
-              <div className="hidden md:flex justify-end pr-10">
-                <motion.div
-                  initial={{ opacity: 0, scale: 0.95 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  transition={{ delay: 0.3 }}
-                  className="relative w-72 h-72 lg:w-[400px] lg:h-[400px] bg-brand-card/20 rounded-full border border-brand-border/30 flex items-center justify-center italic font-serif text-brand-ink/5 text-[150px] select-none"
-                >
-                  {current === 0 ? "Ag" : "Est"}
                 </motion.div>
               </div>
             </div>
-          </motion.div>
-        </AnimatePresence>
+          </div>
+        </motion.div>
+      </AnimatePresence>
 
-        {/* Dots */}
-        <div className="absolute inset-x-0 bottom-10 flex items-center justify-center gap-2 z-20 px-4">
-          {heroSlides.map((_, i) => (
-            <button
-              key={i}
-              onClick={() => {
-                setDirection(i > current ? 1 : -1)
-                setCurrent(i)
-              }}
-              className={cn(
-                "h-px transition-all cursor-pointer",
-                current === i ? "w-10 bg-brand-ink" : "w-6 bg-brand-border hover:bg-brand-sub"
-              )}
-            />
-          ))}
-        </div>
+      {/* Controls */}
+      <div className="absolute bottom-10 right-10 z-30 flex items-center gap-4">
+        <button onClick={prevSlide} className="w-12 h-12 rounded-full border border-white/30 flex items-center justify-center text-white hover:bg-white hover:text-brand-ink transition-all">
+          <ChevronLeft className="w-6 h-6" />
+        </button>
+        <button onClick={nextSlide} className="w-12 h-12 rounded-full border border-white/30 flex items-center justify-center text-white hover:bg-white hover:text-brand-ink transition-all">
+          <ChevronRight className="w-6 h-6" />
+        </button>
       </div>
 
-      {/* Marquee Bar */}
-      <div className="bg-brand-muted py-3 overflow-hidden whitespace-nowrap border-b border-brand-border relative z-10">
-        <div className="inline-block animate-marquee font-normal text-brand-sub text-[10px] tracking-[2.5px] normal-case">Захиалга бүрт үнэгүй хүргэлт ✦ шинэ цуглуулга 2025 ✦ онцгой хямдрал ✦ хязгаарлагдмал тоо ✦ үнэгүй хүргэлт ✦ шинэ цуглуулга 2025 ✦ онцгой хямдрал ✦</div>
+      {/* Slide Indicators */}
+      <div className="absolute bottom-10 left-10 z-30 flex gap-3">
+        {slides.map((_, i) => (
+          <button 
+            key={i}
+            onClick={() => setCurrent(i)}
+            className={`h-1 transition-all duration-500 rounded-full ${current === i ? 'w-12 bg-white' : 'w-6 bg-white/30'}`}
+          />
+        ))}
       </div>
-
-      <style>{`
-        @keyframes marquee {
-          0% { transform: translateX(0); }
-          100% { transform: translateX(-50%); }
-        }
-        .animate-marquee {
-          display: inline-block;
-          animation: marquee 40s linear infinite;
-        }
-      `}</style>
-    </div>
+    </section>
   )
 }
