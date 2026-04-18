@@ -201,7 +201,12 @@ auth.post('/reset-password', async (c) => {
       { expiresIn: '30d' }
     )
 
-    return c.json({ token: newToken, user })
+    const userObj = user.toObject()
+    delete userObj.password
+    delete userObj.resetPasswordToken
+    delete userObj.resetPasswordExpire
+
+    return c.json({ token: newToken, user: userObj })
   } catch (error: any) {
     return c.json({ error: error.message }, 500)
   }

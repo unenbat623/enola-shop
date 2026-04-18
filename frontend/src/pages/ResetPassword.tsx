@@ -10,7 +10,7 @@ export default function ResetPasswordPage() {
   const navigate = useNavigate()
   const [searchParams] = useSearchParams()
   const token = searchParams.get('token')
-  const { setToken, fetchMe } = useAuthStore()
+  const { setToken, setUser } = useAuthStore()
   
   const [loading, setLoading] = useState(false)
   const [formData, setFormData] = useState({ password: '', confirmPassword: '' })
@@ -47,12 +47,12 @@ export default function ResetPasswordPage() {
       setLoading(true)
       const res = await authApi.resetPassword(token, formData.password)
       
-      // Автоматаар нэвтрүүлэх
+      // ✅ Автоматаар нэвтрүүлэх (Login flow-той ижил)
       localStorage.setItem('token', res.token)
       setToken(res.token)
-      await fetchMe()
+      setUser(res.user)
       
-      toast.success('Нууц үг амжилттай солигдлоо')
+      toast.success('Амжилттай нэвтэрлээ')
       navigate('/')
     } catch (err: any) {
       toast.error(err.message || 'Алдаа гарлаа')
