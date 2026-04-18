@@ -1,54 +1,45 @@
-import { useEffect, useRef } from 'react'
+import { useEffect } from 'react'
 import { useNavigate, useSearchParams } from 'react-router'
 import { useAuthStore } from '@/store/authStore'
 
 export default function AuthCallback() {
-  const [params] = useSearchParams()
+  const [searchParams] = useSearchParams()
   const navigate = useNavigate()
-  const { setToken } = useAuthStore()
-  const processing = useRef(false)
+  const { fetchMe } = useAuthStore()
 
   useEffect(() => {
-    // React 18 Strict Mode-оос болж 2 удаа дуудагдахаас сэргийлнэ
-    if (processing.current) return
-    
-    const token = params.get('token')
+    const token = searchParams.get('token')
     
     if (!token) {
-      console.error('No token found in URL')
+      console.error('No token found in callback URL')
       navigate('/login?error=oauth_failed')
       return
     }
 
-    const handleAuth = async () => {
-      try {
-        processing.current = true
-        // 1. Token-ийг localStorage-д хадгалж, /api/auth/me-ээс хэрэглэгчийн мэдээллийг авна
-        await setToken(token)
-        
-        // 2. Амжилттай бол нүүр хуудас руу шилжинэ
+    // Token-ийг хадгалах
+    localStorage.setItem('token', token)
+    
+    // Хэрэглэгчийн мэдээллийг татаж аваад нүүр хуудас руу шилжих
+    fetchMe()
+      .then(() => {
         navigate('/')
-      } catch (err) {
-        console.error('OAuth Callback Error:', err)
+      })
+      .catch((err) => {
+        console.error('Auth fetch error:', err)
         navigate('/login?error=oauth_failed')
-      }
-    }
-
-    handleAuth()
-  }, [params, navigate, setToken])
+      })
+  }, [searchParams, navigate, fetchMe])
 
   return (
     <div className="flex items-center justify-center min-h-screen bg-brand-base">
       <div className="text-center">
-        {/* Loading Spinner */}
         <div className="relative w-16 h-16 mx-auto mb-6">
           <div className="absolute inset-0 border-4 border-gray-100 rounded-full"></div>
           <div className="absolute inset-0 border-4 border-brand-mint border-t-transparent rounded-full animate-spin"></div>
         </div>
-        
-        <h2 className="text-2xl font-medium text-brand-ink mb-2">Түр хүлээнэ үү</h2>
+        <h2 className="text-2xl font-medium text-brand-ink mb-2">Нэвтэрч байна...</h2>
         <p className="text-brand-sub text-sm font-light tracking-wide">
-          Нэвтрэлтийг баталгаажуулж байна...
+          Түр хүлээнэ үү...
         </p>
       </div>
     </div>

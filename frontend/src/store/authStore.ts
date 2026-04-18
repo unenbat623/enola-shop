@@ -13,6 +13,7 @@ interface AuthState {
   logout: () => void
   initAuth: () => Promise<void>
   setToken: (token: string) => Promise<void>
+  fetchMe: () => Promise<void>
 }
 
 export const useAuthStore = create<AuthState>((set) => ({
@@ -89,6 +90,17 @@ export const useAuthStore = create<AuthState>((set) => ({
         isLoading: false,
         error: 'Failed to fetch user data'
       })
+      throw error
+    }
+  },
+  fetchMe: async () => {
+    try {
+      set({ isLoading: true, error: null })
+      const { user } = await authApi.getMe()
+      set({ user, isAuthenticated: true, isLoading: false })
+    } catch (error: any) {
+      localStorage.removeItem('token')
+      set({ user: null, token: null, isAuthenticated: false, isLoading: false, error: error.message })
       throw error
     }
   }
