@@ -92,7 +92,7 @@ auth.get('/google', (c, next) => {
     client_id: process.env.GOOGLE_CLIENT_ID!,
     client_secret: process.env.GOOGLE_CLIENT_SECRET,
     scope: ['profile', 'email'],
-    redirect_uri: process.env.GOOGLE_CALLBACK_URL || 'https://enola-shop.onrender.com/api/auth/google'
+    redirect_uri: process.env.GOOGLE_CALLBACK_URL || 'https://enola-shop-1.onrender.com/api/auth/google'
   })(c, next)
 }, async (c) => {
   const googleUser = c.get('user-google')
