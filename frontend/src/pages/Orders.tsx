@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { Link } from 'react-router'
+import { Link, useNavigate } from 'react-router'
 import { ShoppingBag, ChevronRight, Tag, Calendar, Clock, Loader2 } from 'lucide-react'
 import { formatCurrency } from '@/lib/utils'
 import { cn } from '@/lib/utils'
@@ -39,6 +39,7 @@ export default function OrdersPage() {
   const [orders, setOrders] = useState<LocalOrder[]>([])
   const [isLoading, setIsLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
+  const navigate = useNavigate()
 
   useEffect(() => {
     async function load() {
@@ -171,7 +172,10 @@ export default function OrdersPage() {
                     <p className="text-[10px] font-bold text-brand-hint tracking-widest">Нийт дүн</p>
                     <p className="text-2xl font-medium text-brand-ink">{formatCurrency(order.total)}</p>
                   </div>
-                  <button className="h-10 px-5 border border-brand-border rounded-[4px] text-[11px] font-bold tracking-widest text-brand-sub hover:text-brand-ink hover:border-brand-ink transition-all flex items-center gap-1.5">
+                  <button 
+                    onClick={() => navigate(`/orders/${order.id}`)}
+                    className="h-10 px-5 border border-brand-border rounded-[4px] text-[11px] font-bold tracking-widest text-brand-sub hover:text-brand-ink hover:border-brand-ink transition-all flex items-center gap-1.5"
+                  >
                     Дэлгэрэнгүй <ChevronRight className="w-3.5 h-3.5" />
                   </button>
                 </div>

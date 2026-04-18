@@ -13,5 +13,8 @@ export const ordersApi = {
   },
   updateOrderStatus: async (id: string, status: string) => {
     return patch<Order>(`/api/orders/${id}/status`, { status })
+  },
+  getOrderById: async (id: string) => {
+    return get<Order>(`/api/orders/${id}`)
   }
 }

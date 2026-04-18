@@ -56,4 +56,24 @@ orders.patch('/:id/status', authMiddleware, adminMiddleware, async (c) => {
   }
 })
 
+// GET /api/orders/:id — get single order
+orders.get('/:id', authMiddleware, async (c) => {
+  try {
+    const id = c.req.param('id')
+    const user = c.get('user')
+    const order = await Order.findById(id)
+    
+    if (!order) return c.json({ error: 'Order not found' }, 404)
+    
+    // Ownership check
+    if (order.userId !== user._id.toString() && user.role !== 'admin') {
+      return c.json({ error: 'Unauthorized' }, 403)
+    }
+    
+    return c.json(order)
+  } catch (error: any) {
+    return c.json({ error: error.message || 'Failed to fetch order' }, 500)
+  }
+})
+
 export default orders

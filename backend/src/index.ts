@@ -31,6 +31,9 @@ app.use(
 // 2. Health check - DB холболтгүйгээр
 app.get('/api/health', (c) => c.json({ status: 'ok', message: 'API is alive' }))
 
+// Test Route
+app.get('/api/auth/test', (c) => c.json({ message: 'Auth API is working' }))
+
 // Routes
 app.route('/api/auth', authRoutes)
 app.route('/api/payment', paymentRoutes)
