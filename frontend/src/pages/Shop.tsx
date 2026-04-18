@@ -14,15 +14,22 @@ const ITEMS_PER_PAGE = 12
 export default function ShopPage() {
   const { products, isLoading } = useProductStore()
   const [searchParams, setSearchParams] = useSearchParams()
-  const [searchQuery, setSearchQuery] = useState('')
   const [currentPage, setCurrentPage] = useState(1)
   
   const categoryFilter = searchParams.get('category')
   const generalFilter = searchParams.get('filter') // e.g. sale, new
+  const searchParam = searchParams.get('search') || ''
   const sortBy = searchParams.get('sort') || 'newest'
+
+  // Local search state for the input field
+  const [searchInputValue, setSearchInputValue] = useState(searchParam)
 
   const [isSortOpen, setIsSortOpen] = useState(false)
   const sortRef = useRef<HTMLDivElement>(null)
+
+  useEffect(() => {
+    setSearchInputValue(searchParam)
+  }, [searchParam])
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -56,8 +63,14 @@ export default function ShopPage() {
       if (categoryFilter) matches = matches && p.categorySlug === categoryFilter
       if (generalFilter === 'sale') matches = matches && (p.badge === 'Хямдрал' || p.badge === 'SALE')
       if (generalFilter === 'new') matches = matches && (p.badge === 'Шинэ' || p.badge === 'NEW')
-      if (searchQuery) {
-        matches = matches && p.name.toLowerCase().includes(searchQuery.toLowerCase())
+      
+      if (searchParam) {
+        const query = searchParam.toLowerCase()
+        matches = matches && (
+          p.name.toLowerCase().includes(query) || 
+          p.description.toLowerCase().includes(query) ||
+          p.category.toLowerCase().includes(query)
+        )
       }
       return matches
     })
@@ -74,7 +87,7 @@ export default function ShopPage() {
     }
 
     return result
-  }, [categoryFilter, generalFilter, searchQuery, sortBy, products])
+  }, [categoryFilter, generalFilter, searchParam, sortBy, products])
 
   const totalPages = Math.ceil(filteredAndSortedProducts.length / ITEMS_PER_PAGE)
   const paginatedProducts = filteredAndSortedProducts.slice(
@@ -85,6 +98,17 @@ export default function ShopPage() {
   const handlePageChange = (page: number) => {
     setCurrentPage(page)
     window.scrollTo({ top: 0, behavior: 'smooth' })
+  }
+
+  const handleSearchInputChange = (val: string) => {
+    setSearchInputValue(val)
+    if (val.length >= 2) {
+      setSearchParams({ ...Object.fromEntries(searchParams.entries()), search: val })
+    } else if (val.length === 0) {
+      const newParams = Object.fromEntries(searchParams.entries())
+      delete newParams.search
+      setSearchParams(newParams)
+    }
   }
 
   const container = {
@@ -122,8 +146,8 @@ export default function ShopPage() {
               <input 
                 type="text"
                 placeholder="Бүтээгдэхүүн хайх..."
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
+                value={searchInputValue}
+                onChange={(e) => handleSearchInputChange(e.target.value)}
                 className="w-full h-12 pl-12 pr-4 bg-brand-surface border border-brand-border rounded-[10px] text-[13px] font-medium focus:border-brand-ink outline-none transition-all placeholder:text-brand-hint shadow-sm group-hover:border-brand-hint"
               />
             </div>
@@ -138,9 +162,9 @@ export default function ShopPage() {
                     <SlidersHorizontal className="w-4 h-4" />
                     <h3 className="text-[11px] font-black uppercase tracking-[3px]">Шүүлтүүр</h3>
                   </div>
-                  {(categoryFilter || generalFilter || searchQuery) && (
+                  {(categoryFilter || generalFilter || searchParam) && (
                     <button 
-                      onClick={() => {setSearchParams({}); setSearchQuery('')}}
+                      onClick={() => {setSearchParams({}); setSearchInputValue('')}}
                       className="text-[10px] font-bold text-brand-danger uppercase tracking-widest hover:underline flex items-center gap-1.5"
                     >
                       <FilterX className="w-3 h-3" /> Арилгах
@@ -157,11 +181,11 @@ export default function ShopPage() {
                           onClick={() => {setSearchParams({}); setCurrentPage(1)}}
                           className={cn(
                             "text-[13px] transition-all flex items-center justify-between w-full group py-1",
-                            !categoryFilter && !generalFilter ? 'text-brand-ink font-bold' : 'text-brand-sub hover:text-brand-ink'
+                            !categoryFilter && !generalFilter && !searchParam ? 'text-brand-ink font-bold' : 'text-brand-sub hover:text-brand-ink'
                           )}
                         >
                           <span className="flex items-center gap-2">
-                             <span className={cn("w-1.5 h-1.5 rounded-full transition-all", !categoryFilter && !generalFilter ? 'bg-brand-ink' : 'bg-transparent group-hover:bg-brand-border')} />
+                             <span className={cn("w-1.5 h-1.5 rounded-full transition-all", !categoryFilter && !generalFilter && !searchParam ? 'bg-brand-ink' : 'bg-transparent group-hover:bg-brand-border')} />
                              Бүх бараа
                           </span>
                           <span className="text-[10px] font-bold text-brand-hint bg-brand-surface px-2 py-0.5 rounded-full border border-brand-border">{(products.length)}</span>
@@ -220,7 +244,11 @@ export default function ShopPage() {
             <main className="flex-1 space-y-10">
               <div className="flex flex-col sm:flex-row justify-between items-center bg-white p-5 rounded-[12px] border border-brand-border shadow-sm gap-4">
                 <p className="text-[12px] font-bold text-brand-sub uppercase tracking-widest">
-                  Нийт <span className="text-brand-ink font-black">{filteredAndSortedProducts.length}</span> бүтээгдэхүүн
+                  {searchParam ? (
+                    <>"{searchParam}" хайлтын үр дүн: <span className="text-brand-ink font-black">{filteredAndSortedProducts.length}</span> бүтээгдэхүүн</>
+                  ) : (
+                    <>Нийт <span className="text-brand-ink font-black">{filteredAndSortedProducts.length}</span> бүтээгдэхүүн</>
+                  )}
                 </p>
                 <div className="flex items-center gap-4">
                   <span className="text-[11px] font-black text-brand-ghost uppercase tracking-[2px]">Эрэмбэлэх:</span>
@@ -337,7 +365,7 @@ export default function ShopPage() {
                     <p className="text-brand-sub text-[15px] font-medium max-w-sm mx-auto leading-relaxed">Харамсалтай нь таны хайлт болон шүүлтүүрт тохирох бүтээгдэхүүн байхгүй байна.</p>
                   </div>
                   <button 
-                    onClick={() => {setSearchParams({}); setSearchQuery('')}} 
+                    onClick={() => {setSearchParams({}); setSearchInputValue('')}} 
                     className="bg-brand-ink text-brand-base px-10 py-4 rounded-[10px] font-black text-[12px] tracking-[2.5px] hover:bg-brand-ink2 transition-all transform hover:scale-105 active:scale-95 uppercase shadow-2xl shadow-brand-ink/20"
                   >
                     Бүх барааг харах

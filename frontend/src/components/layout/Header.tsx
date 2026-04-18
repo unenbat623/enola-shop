@@ -1,15 +1,33 @@
 import { Search, Heart, ShoppingBag, User } from 'lucide-react'
-import { Link } from 'react-router'
+import { Link, useNavigate } from 'react-router'
 import { useCartStore } from '@/store/cartStore'
 import { useWishlistStore } from '@/store/wishlistStore'
 import { useAuthStore } from '@/store/authStore'
 import { formatCurrency } from '@/lib/utils'
+import { useState } from 'react'
 
 export default function Header() {
   const cartTotal = useCartStore((state) => state.totalItems())
   const cartPrice = useCartStore((state) => state.totalPrice())
   const wishlistTotal = useWishlistStore((state) => state.totalItems())
   const { user, isAuthenticated, logout } = useAuthStore()
+  const navigate = useNavigate()
+  const [searchValue, setSearchValue] = useState('')
+
+  const handleSearchChange = (val: string) => {
+    setSearchValue(val)
+    if (val.length >= 2) {
+      navigate(`/shop?search=${encodeURIComponent(val)}`)
+    } else if (val.length === 0) {
+      navigate('/shop')
+    }
+  }
+
+  const handleKeyDown = (e: React.KeyboardEvent) => {
+    if (e.key === 'Enter' && searchValue.length >= 2) {
+      navigate(`/shop?search=${encodeURIComponent(searchValue)}`)
+    }
+  }
 
   return (
     <header className="sticky top-0 bg-brand-base border-b border-brand-border z-50">
@@ -28,6 +46,9 @@ export default function Header() {
             <input
               type="text"
               placeholder="Бүтээгдэхүүн хайх..."
+              value={searchValue}
+              onChange={(e) => handleSearchChange(e.target.value)}
+              onKeyDown={handleKeyDown}
               className="w-full h-10 bg-brand-surface border border-brand-border rounded-[6px] pl-10 pr-4 outline-none focus:border-brand-ink transition-all text-sm text-brand-ink placeholder:text-brand-hint"
             />
           </div>
@@ -94,6 +115,9 @@ export default function Header() {
           <input
             type="text"
             placeholder="Хайх..."
+            value={searchValue}
+            onChange={(e) => handleSearchChange(e.target.value)}
+            onKeyDown={handleKeyDown}
             className="w-full h-10 border border-brand-border bg-brand-surface pl-10 pr-4 outline-none text-sm text-brand-ink rounded-[6px] focus:border-brand-ink"
           />
         </div>
